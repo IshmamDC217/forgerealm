@@ -127,11 +127,11 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           </div>
 
           <p className="mt-4 text-xl text-blue-200 text-center lg:text-left">
-            A creative hub for sleek, sustainable 3D models.
+            Your vision, printed with purpose.
           </p>
 
           <p className="mt-6 text-md sm:text-md lg:text-lg text-gray-300 max-w-lg leading-relaxed text-center lg:text-left mx-auto lg:mx-0">
-            Thoughtfully made pieces that bring your ideas into focus. Sleek collectibles, modern accessories, and bold designs for everyday life, crafted with planet‑friendly materials.
+            Slick sculptures, modular accents, and daily essentials engineered with planet-first materials.
           </p>
 
           {/* Buttons */}
