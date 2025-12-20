@@ -1,6 +1,4 @@
 "use client";
-
-import Image from "next/image";
 import { FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import { FaPhoneAlt } from "react-icons/fa";
 
@@ -22,12 +20,13 @@ export default function Contact() {
             <div className="flex items-center">
               <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[color:var(--fg)]">Contact</h2>
               <div className="relative animate-float flex-shrink-0 mt-1 sm:mt-1">
-                <Image
+                <img
                   src="/contact.gif"
                   alt="Contact Animation"
                   width={56}
                   height={56}
                   className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
+                  loading="lazy"
                 />
               </div>
             </div>

@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 export default function Testimonials() {
   return (
     <section className="relative py-24 bg-gradient-to-br from-[#0b0b0e] via-[#101018] to-blue-900 overflow-hidden">
@@ -14,12 +12,13 @@ export default function Testimonials() {
         <div className="flex items-center justify-center gap-3 sm:gap-4 text-center">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">Testimonials</h2>
           <div className="relative animate-float flex-shrink-0 mt-1 sm:mt-2">
-            <Image
+            <img
               src="/testimonials.gif"
               alt="Testimonials Animation"
               width={56}
               height={56}
               className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(96,165,250,0.6)]"
+              loading="lazy"
             />
           </div>
         </div>

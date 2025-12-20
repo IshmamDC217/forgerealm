@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { HiOutlineMenu, HiX, HiOutlineMoon, HiOutlineSun } from "react-icons/hi";
+import { FaShoppingBag } from "react-icons/fa";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -42,14 +41,7 @@ export default function Navbar() {
         <div className="flex border border-white/60 items-center justify-between px-8 py-2.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 shadow-lg backdrop-blur-sm">
           {/* Logo */}
           <a href="#homepage" className="inline-flex items-center" aria-label="ForgeRealm home">
-            <Image
-              src="/frowl.png"
-              alt="ForgeRealm Logo"
-              width={32}
-              height={32}
-              className="h-8 w-8 rounded-full mr-3"
-              priority
-            />
+            <img src="/frowl.png" alt="ForgeRealm Logo" width={32} height={32} className="h-8 w-8 rounded-full mr-3" loading="lazy" />
             <span className="font-extrabold tracking-widest text-sm font-display text-white uppercase">
               Forge<span className="text-black">REALM</span>
             </span>
@@ -68,7 +60,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Right side: theme toggle + subscribe */}
+          {/* Right side: theme toggle + shop + subscribe */}
           <div className="hidden sm:flex items-center gap-3">
             <button
               onClick={toggleTheme}
@@ -79,12 +71,17 @@ export default function Navbar() {
               {theme === "dark" ? <HiOutlineSun /> : <HiOutlineMoon />}
             </button>
 
-            <Link
-              href="/subscribe"
-              className="rounded-full bg-white text-blue-600 font-semibold text-xs uppercase tracking-wide px-5 py-2 hover:bg-black hover:text-white transition-colors duration-200 shadow-sm"
+            <a
+              href="/shop"
+              className="inline-flex items-center gap-2 rounded-full bg-[#FBA93A] text-slate-900 font-semibold text-xs uppercase tracking-wide px-5 py-2 hover:bg-[#fbbf6a] transition-colors duration-200 shadow-sm"
             >
+              <FaShoppingBag />
+              <span>Shop</span>
+            </a>
+
+            <a href="/subscribe" className="rounded-full bg-white text-blue-600 font-semibold text-xs uppercase tracking-wide px-5 py-2 hover:bg-black hover:text-white transition-colors duration-200 shadow-sm">
               Subscribe
-            </Link>
+            </a>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -138,13 +135,21 @@ export default function Navbar() {
 
         <div className="my-6 border-t border-white/20" />
 
-        <Link
+        <a
+          href="/shop"
+          onClick={() => setOpen(false)}
+          className="rounded-full bg-[#FBA93A] px-5 py-2 text-xs font-bold uppercase tracking-wide text-slate-900 hover:bg-[#fbbf6a] transition-colors duration-200 text-center inline-flex items-center justify-center gap-2"
+        >
+          <FaShoppingBag /> Shop
+        </a>
+
+        <a
           href="/subscribe"
           onClick={() => setOpen(false)}
           className="rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wide text-blue-600 hover:bg-black hover:text-white transition-colors duration-200 text-center"
         >
           Subscribe
-        </Link>
+        </a>
 
         <button
           onClick={() => {

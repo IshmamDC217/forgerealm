@@ -1,8 +1,9 @@
-@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap");
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-display: "Sora", "Sora Fallback", ui-sans-serif, system-ui, -apple-system, sans-serif;
   /* theme tokens for adaptive UI */
   --fg: var(--foreground);
   --fg-muted: #374151; /* gray-700 for stronger contrast on light */
@@ -73,21 +74,21 @@ body {
 
 /* Basic, global light-mode expectation */
 [data-theme="light"] #theme-scope {
-  background: #ffffff !important;
-  color: #000000 !important;
+  background: #dbe8ff !important;
+  color: #0f172a !important;
 }
 
 /* In light theme, force section surfaces to white while keeping accents */
 [data-theme="light"] #theme-scope .theme-surface {
-  background-color: #ffffff !important;
+  background-color: #eef3ff !important;
 }
 
 /* Preserve blue gradients in light mode for Services and Materials */
 [data-theme="light"] #theme-scope #services {
-  background-image: linear-gradient(135deg, #ffffff 0%, #ffffff 60%, #6366f1 60%, #3b82f6 100%) !important;
+  background-image: linear-gradient(135deg, #dbe8ff 0%, #dbe8ff 60%, #6366f1 60%, #3b82f6 100%) !important;
 }
 [data-theme="light"] #theme-scope #materials {
-  background-image: linear-gradient(315deg, #ffffff 0%, #ffffff 40%, #6366f1 40%, #3b82f6 100%) !important;
+  background-image: linear-gradient(315deg, #dbe8ff 0%, #dbe8ff 40%, #6366f1 40%, #3b82f6 100%) !important;
 }
 
 /* In light mode, give Work a full blue gradient background instead of white */
@@ -97,10 +98,10 @@ body {
 
 /* Polar opposite gradients for FAQ and Contact in light mode */
 [data-theme="light"] #theme-scope #faq {
-  background-image: linear-gradient(135deg, #ffffff 0%, #ffffff 60%, #6366f1 60%, #3b82f6 100%) !important;
+  background-image: linear-gradient(135deg, #dbe8ff 0%, #dbe8ff 60%, #6366f1 60%, #3b82f6 100%) !important;
 }
 [data-theme="light"] #theme-scope #contact {
-  background-image: linear-gradient(315deg, #ffffff 0%, #ffffff 60%, #6366f1 60%, #3b82f6 100%) !important;
+  background-image: linear-gradient(315deg, #dbe8ff 0%, #dbe8ff 60%, #6366f1 60%, #3b82f6 100%) !important;
 }
 
 /* Make specific CTA text white in light mode for contrast on dark button */
