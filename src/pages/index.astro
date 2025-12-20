@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar';
+import Hero from '../components/Hero';
+import Partners from '../components/Partners';
+import Services from '../components/Services';
+import Materials from '../components/Materials';
+import Work from '../components/Work';
+import Faq from '../components/Faq';
+import Contact from '../components/Contact';
+import Footer from '../components/Footer';
+---
+
+<BaseLayout>
+  <Navbar client:load />
+  <Hero client:load />
+  <div id="theme-scope">
+    <Partners client:load />
+    <Services client:load />
+    <Materials client:load />
+    <Work client:load />
+    <Faq client:load />
+    <Contact client:load />
+  </div>
+  <Footer client:load />
+</BaseLayout>

@@ -1,7 +1,4 @@
 "use client";
-
-import Image from "next/image";
-import Script from "next/script";
 import { HiChevronDown } from "react-icons/hi";
 
 export default function Faq() {
@@ -37,12 +34,13 @@ export default function Faq() {
         <div className="flex items-center">
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[color:var(--fg)]">FAQs</h2>
           <div className="relative animate-float flex-shrink-0">
-            <Image
+            <img
               src="/faq.gif"
               alt="FAQ Animation"
               width={56}
               height={56}
               className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(250,204,21,0.6)]"
+              loading="lazy"
             />
           </div>
         </div>
@@ -63,17 +61,21 @@ export default function Faq() {
         </div>
 
         {/* FAQPage JSON-LD */}
-        <Script id="ld-faq" type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((f) => ({
-              "@type": "Question",
-              name: f.q,
-              acceptedAnswer: { "@type": "Answer", text: f.a },
-            })),
-          })}
-        </Script>
+        <script
+          id="ld-faq"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqs.map((f) => ({
+                "@type": "Question",
+                name: f.q,
+                acceptedAnswer: { "@type": "Answer", text: f.a },
+              })),
+            }),
+          }}
+        />
       </div>
     </section>
   );

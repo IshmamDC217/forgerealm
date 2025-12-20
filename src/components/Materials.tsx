@@ -1,6 +1,4 @@
 "use client";
-
-import Image from "next/image";
 import { useRef } from "react";
 
 export default function Materials() {
@@ -27,12 +25,13 @@ export default function Materials() {
             Materials
           </h2>
           <div className="relative flex-shrink-0 flex items-center">
-            <Image
+            <img
               src="/material.gif"
               alt="Materials Animation"
               width={56}
               height={56}
               className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
+              loading="lazy"
             />
           </div>
         </div>
@@ -109,7 +108,7 @@ export default function Materials() {
       </div>
 
       {/* Float animation keyframes */}
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0% {
             transform: translateY(0);

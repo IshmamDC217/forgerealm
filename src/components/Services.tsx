@@ -1,6 +1,4 @@
 "use client";
-
-import Image from "next/image";
 import { useRef } from "react";
 import {
   FaShoppingCart,
@@ -32,12 +30,13 @@ export default function Services() {
             Our Services
           </h2>
           <div>
-            <Image
+            <img
               src="/services.gif"
               alt="Services Animation"
               width={56}
               height={56}
               className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_12px_rgba(99,102,241,0.6)]"
+              loading="lazy"
             />
           </div>
         </div>

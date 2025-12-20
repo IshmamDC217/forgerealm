@@ -1,6 +1,4 @@
 "use client";
-
-import Image from "next/image";
 import { useState } from "react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
@@ -27,12 +25,13 @@ export default function Work() {
             <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-[color:var(--fg)] whitespace-nowrap">Recent Work</h2>
             {/* Use flex alignment to vertically center the GIF with the heading */}
             <div className="relative flex-shrink-0 flex items-center">
-              <Image
+              <img
                 src="/work.gif"
                 alt="Work Animation"
                 width={64}
                 height={64}
                 className="w-10 sm:w-16 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(236,72,153,0.6)]"
+                loading="lazy"
               />
             </div>
           </div>
@@ -53,14 +52,12 @@ export default function Work() {
             <div className="grid grid-cols-1 md:grid-cols-2 items-stretch">
               {/* Image Carousel */}
               <div className="relative overflow-hidden h-[50vh] sm:h-[60vh] md:h-[70vh] w-full">
-                <Image
+                <img
                   key={index}
                   src={images[index]}
                   alt={`Aurora Bloom ${index + 1}`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
-                  className="object-cover absolute top-0 left-0"
-                  priority={index === 0}
+                  className="object-cover absolute inset-0 h-full w-full"
+                  loading={index === 0 ? "eager" : "lazy"}
                 />
 
                 {/* Navigation Buttons (hidden on mobile) */}
@@ -110,12 +107,11 @@ export default function Work() {
           {/* Owl */}
           <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-pink-400/50 hover:shadow-[0_0_50px_-5px_rgba(236,72,153,0.5)] hover:-translate-y-3">
             <div className="aspect-square overflow-hidden relative">
-              <Image
+              <img
                 src="/owl.jpg"
                 alt="Coat of Arms Owl"
-                fill
-                sizes="(max-width: 1024px) 100vw, 33vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
+                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1 absolute inset-0 h-full w-full"
+                loading="lazy"
               />
             </div>
             <div className="p-6 sm:p-8 text-center sm:text-left">
@@ -130,12 +126,11 @@ export default function Work() {
           {/* Forest Dragon */}
           <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-emerald-400/50 hover:shadow-[0_0_50px_-5px_rgba(16,185,129,0.5)] hover:-translate-y-3">
             <div className="aspect-square overflow-hidden relative">
-              <Image
+              <img
                 src="/dragon.jpg"
                 alt="Forest Dragon"
-                fill
-                sizes="(max-width: 1024px) 100vw, 33vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
+                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1 absolute inset-0 h-full w-full"
+                loading="lazy"
               />
             </div>
             <div className="p-6 sm:p-8 text-center sm:text-left">
@@ -150,12 +145,11 @@ export default function Work() {
           {/* Dice Dragon */}
           <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-sky-400/50 hover:shadow-[0_0_50px_-5px_rgba(56,189,248,0.5)] hover:-translate-y-3">
             <div className="aspect-square overflow-hidden relative">
-              <Image
+              <img
                 src="/dice-dragon.jpg"
                 alt="Dice Holder Dragon"
-                fill
-                sizes="(max-width: 1024px) 100vw, 33vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
+                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1 absolute inset-0 h-full w-full"
+                loading="lazy"
               />
             </div>
             <div className="p-6 sm:p-8 text-center sm:text-left">

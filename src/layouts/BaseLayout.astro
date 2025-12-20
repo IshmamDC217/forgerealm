@@ -1,0 +1,30 @@
+---
+import '~/assets/styles/tailwind.css';
+import '~/app/globals.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'ForgeRealm', description = 'ForgeRealm powered by Astro' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap"
+    />
+  </head>
+  <body class="min-h-screen antialiased" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
+    <slot />
+  </body>
+</html>
