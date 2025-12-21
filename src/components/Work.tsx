@@ -48,7 +48,7 @@ export default function Work() {
           {/* Ambient Glow Aura */}
           <div className="absolute -inset-12 rounded-[2.5rem] bg-gradient-to-tr from-fuchsia-500/25 via-emerald-400/20 to-sky-400/10 blur-[140px] opacity-70 -z-10" />
 
-          <div className="overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md hover:bg-[color:var(--surface)] transition-all duration-500 hover:shadow-[0_0_100px_-10px_rgba(99,102,241,0.5)]">
+          <div className="overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md hover:bg-[color:var(--surface)] transition-all duration-500 hover:shadow-[0_0_100px_-10px_rgba(99,102,241,0.5)] light-panel">
             <div className="grid grid-cols-1 md:grid-cols-2 items-stretch">
               {/* Image Carousel */}
               <div className="relative overflow-hidden h-[50vh] sm:h-[60vh] md:h-[70vh] w-full">
@@ -105,7 +105,7 @@ export default function Work() {
         {/* Other projects */}
         <div className="mt-24 sm:mt-32 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {/* Owl */}
-          <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-pink-400/50 hover:shadow-[0_0_50px_-5px_rgba(236,72,153,0.5)] hover:-translate-y-3">
+          <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-pink-400/50 hover:shadow-[0_0_50px_-5px_rgba(236,72,153,0.5)] hover:-translate-y-3 light-panel">
             <div className="aspect-square overflow-hidden relative">
               <img
                 src="/owl.jpg"
@@ -124,7 +124,7 @@ export default function Work() {
           </div>
 
           {/* Forest Dragon */}
-          <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-emerald-400/50 hover:shadow-[0_0_50px_-5px_rgba(16,185,129,0.5)] hover:-translate-y-3">
+          <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-emerald-400/50 hover:shadow-[0_0_50px_-5px_rgba(16,185,129,0.5)] hover:-translate-y-3 light-panel">
             <div className="aspect-square overflow-hidden relative">
               <img
                 src="/dragon.jpg"
@@ -143,7 +143,7 @@ export default function Work() {
           </div>
 
           {/* Dice Dragon */}
-          <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-sky-400/50 hover:shadow-[0_0_50px_-5px_rgba(56,189,248,0.5)] hover:-translate-y-3">
+          <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-sky-400/50 hover:shadow-[0_0_50px_-5px_rgba(56,189,248,0.5)] hover:-translate-y-3 light-panel">
             <div className="aspect-square overflow-hidden relative">
               <img
                 src="/dice-dragon.jpg"

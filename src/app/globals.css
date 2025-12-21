@@ -109,6 +109,15 @@ body {
   color: #ffffff !important;
 }
 
+/* Light mode card treatment */
+[data-theme="light"] .light-panel {
+  background: linear-gradient(45deg, #fff -25%, transparent);
+  box-shadow: inset -5px 5px 5px -5px #fff8, inset 5px -5px 5px -5px #fff8,
+    var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
+    var(--tw-shadow), 2px -1px 14px -10px #0004;
+  border-color: rgba(203, 213, 225, 0.8);
+}
+
 code, pre {
   font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }

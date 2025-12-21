@@ -48,7 +48,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="mt-8 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6 backdrop-blur-xl hover:bg-white/10 hover:border-blue-400 transition">
+            <div className="mt-8 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6 backdrop-blur-xl hover:bg-white/10 hover:border-blue-400 transition light-panel">
               <div className="flex items-center gap-2 text-[color:var(--fg)] font-semibold">
                 <FaClock className="text-blue-400" />
                 <span>Business hours</span>

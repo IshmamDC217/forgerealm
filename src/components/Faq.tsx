@@ -46,7 +46,7 @@ export default function Faq() {
         </div>
 
         {/* FAQ items */}
-        <div className="mt-8 divide-y divide-[color:var(--border)] rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md">
+        <div className="mt-8 divide-y divide-[color:var(--border)] rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md light-panel">
           {faqs.map((item) => (
             <details key={item.q} className="group p-6">
               <summary className="flex cursor-pointer list-none items-center justify-between text-[color:var(--fg)]/80 font-semibold">

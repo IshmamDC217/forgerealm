@@ -68,7 +68,7 @@ export default function Materials() {
           ].map((item, i) => (
             <div
               key={i}
-              className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] surface-strong p-8 backdrop-blur-2xl transition-all hover:border-blue-400 hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.3)]"
+              className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] surface-strong p-8 backdrop-blur-2xl transition-all hover:border-blue-400 hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.3)] light-panel"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-[color:var(--fg)]">

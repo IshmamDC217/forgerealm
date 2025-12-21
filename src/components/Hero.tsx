@@ -74,6 +74,13 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene();
   const theme = useTheme();
   const isLight = theme === "light";
+  const lightPanelStyle = isLight
+    ? {
+        background: "linear-gradient(45deg, #fff -25%, transparent)",
+        boxShadow:
+          "inset -5px 5px 5px -5px #fff8, inset 5px -5px 5px -5px #fff8, var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow), 2px -1px 14px -10px #0004",
+      }
+    : undefined;
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
@@ -92,29 +99,25 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const showPreloader = !splineLoaded && !useFallback && !isLight;
 
   return (
-    <section id="homepage" className="relative min-h-[100dvh] md:min-h-[100svh] overflow-hidden">
+    <section id="homepage" className="relative min-h-[100svh] sm:min-h-[100dvh] overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 -z-20 flex items-center justify-center">
         {!isLight && !useFallback && (
-          <div className={`w-full h-full transition-opacity duration-700 flex items-center justify-center ${splineVisible ? "opacity-100" : "opacity-0"}`}>
-            <div className="w-full max-w-[1600px] h-full max-h-[900px]">
-              <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} onError={markError} />
-            </div>
+          <div className={`w-full h-full transition-opacity duration-700 ${splineVisible ? "opacity-100" : "opacity-0"}`}>
+            <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} onError={markError} />
           </div>
         )}
         {isLight && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-full max-w-[1600px] h-full max-h-[900px] relative">
-              <video
-                className="absolute inset-0 h-full w-full object-cover object-left sm:object-center rounded-[2rem]"
-                src="/whitebg.mp4"
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-white/30 rounded-[2rem]" />
-            </div>
+          <div className="absolute inset-0">
+            <video
+              className="absolute inset-0 h-full w-full object-cover object-left sm:object-center"
+              src="/whitebg.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-white/30" />
           </div>
         )}
       </div>
@@ -161,7 +164,10 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           }`}
       >
         {/* Left side */}
-        <div className={`${isLight ? "bg-white/90 border border-slate-200 text-slate-900 shadow-lg rounded-3xl p-6 sm:p-8 backdrop-blur w-full overflow-hidden" : ""}`}>
+        <div
+          className={`${isLight ? "bg-white/90 border border-slate-200 text-slate-900 shadow-lg rounded-3xl p-6 sm:p-8 backdrop-blur w-full overflow-hidden" : ""}`}
+          style={lightPanelStyle}
+        >
           <div className="flex items-center gap-6 mb-2 justify-center lg:justify-start">
             <img
               src="/notitlefrwatermark.png"
@@ -229,6 +235,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           ref={widgetRef}
           className={`hidden lg:flex flex-col gap-12 transition-all duration-700 ease-out ${visible ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
             } ${isLight ? "bg-white/90 border border-slate-200 text-slate-900 rounded-3xl p-6 sm:p-8 backdrop-blur" : "text-white bg-transparent border-0"}`}
+          style={lightPanelStyle}
         >
           <div className="flex items-start gap-4">
             <HiOutlineLightBulb className="text-blue-400 text-4xl shrink-0" />
