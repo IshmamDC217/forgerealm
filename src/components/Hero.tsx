@@ -69,7 +69,6 @@ const useTheme = () => {
 export default function Hero({ onLoadComplete }: HeroProps) {
   const [splineLoaded, setSplineLoaded] = useState(false);
   const buttonsRef = useRef(null);
-  const [heroVh, setHeroVh] = useState<number | null>(null);
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene();
   const theme = useTheme();
   const isLight = theme === "light";
@@ -81,17 +80,6 @@ export default function Hero({ onLoadComplete }: HeroProps) {
       }
     : undefined;
 
-  useEffect(() => {
-    const updateVh = () => setHeroVh(window.innerHeight);
-    updateVh();
-    window.addEventListener("resize", updateVh);
-    window.addEventListener("orientationchange", updateVh);
-    return () => {
-      window.removeEventListener("resize", updateVh);
-      window.removeEventListener("orientationchange", updateVh);
-    };
-  }, []);
-
   const handleSplineLoad = () => {
     setSplineLoaded(true);
     markLoaded();
@@ -101,15 +89,10 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const showPreloader = !splineLoaded && !useFallback && !isLight;
 
   return (
-    <section
-      id="homepage"
-      className="relative min-h-[100svh] lg:min-h-[100vh] overflow-hidden z-0"
-      style={heroVh ? { minHeight: heroVh, height: heroVh } : undefined}
-    >
+    <section id="homepage" className="relative min-h-[100svh] lg:min-h-[100vh] overflow-hidden z-0">
       {/* Background fixed to viewport to avoid iOS visual viewport resizes */}
       <div
-        className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none"
-        style={heroVh ? { height: heroVh } : undefined}
+        className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none w-screen h-screen overflow-hidden"
       >
         {!isLight && !useFallback && (
           <div className={`w-full h-full transition-opacity duration-700 ${splineVisible ? "opacity-100" : "opacity-0"}`}>
@@ -117,7 +100,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           </div>
         )}
         {isLight && (
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 w-full h-full overflow-hidden">
             <video
               className="absolute inset-0 h-full w-full object-cover object-left sm:object-center will-change-transform"
               src="/whitebg.mp4"
