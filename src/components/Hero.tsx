@@ -69,6 +69,7 @@ const useTheme = () => {
 export default function Hero({ onLoadComplete }: HeroProps) {
   const [splineLoaded, setSplineLoaded] = useState(false);
   const buttonsRef = useRef(null);
+  const [heroVh, setHeroVh] = useState<number | null>(null);
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene();
   const theme = useTheme();
   const isLight = theme === "light";
@@ -80,6 +81,17 @@ export default function Hero({ onLoadComplete }: HeroProps) {
       }
     : undefined;
 
+  useEffect(() => {
+    const updateVh = () => setHeroVh(window.innerHeight);
+    updateVh();
+    window.addEventListener("resize", updateVh);
+    window.addEventListener("orientationchange", updateVh);
+    return () => {
+      window.removeEventListener("resize", updateVh);
+      window.removeEventListener("orientationchange", updateVh);
+    };
+  }, []);
+
   const handleSplineLoad = () => {
     setSplineLoaded(true);
     markLoaded();
@@ -89,9 +101,16 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const showPreloader = !splineLoaded && !useFallback && !isLight;
 
   return (
-    <section id="homepage" className="relative min-h-[100svh] lg:min-h-[100vh] overflow-hidden z-0">
+    <section
+      id="homepage"
+      className="relative min-h-[100svh] lg:min-h-[100vh] overflow-hidden z-0"
+      style={heroVh ? { minHeight: heroVh, height: heroVh } : undefined}
+    >
       {/* Background fixed to viewport to avoid iOS visual viewport resizes */}
-      <div className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none">
+      <div
+        className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none"
+        style={heroVh ? { height: heroVh } : undefined}
+      >
         {!isLight && !useFallback && (
           <div className={`w-full h-full transition-opacity duration-700 ${splineVisible ? "opacity-100" : "opacity-0"}`}>
             <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} onError={markError} />
