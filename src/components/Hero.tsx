@@ -89,9 +89,9 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const showPreloader = !splineLoaded && !useFallback && !isLight;
 
   return (
-    <section id="homepage" className="relative min-h-[100svh] lg:min-h-[100vh] overflow-hidden">
+    <section id="homepage" className="relative min-h-[100svh] lg:min-h-[100vh] overflow-hidden z-0">
       {/* Background fixed to viewport to avoid iOS visual viewport resizes */}
-      <div className="fixed inset-0 -z-20 flex items-center justify-center pointer-events-none">
+      <div className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none">
         {!isLight && !useFallback && (
           <div className={`w-full h-full transition-opacity duration-700 ${splineVisible ? "opacity-100" : "opacity-0"}`}>
             <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} onError={markError} />
@@ -100,12 +100,13 @@ export default function Hero({ onLoadComplete }: HeroProps) {
         {isLight && (
           <div className="absolute inset-0">
             <video
-              className="absolute inset-0 h-full w-full object-cover object-left sm:object-center"
+              className="absolute inset-0 h-full w-full object-cover object-left sm:object-center will-change-transform"
               src="/whitebg.mp4"
               autoPlay
               muted
               loop
               playsInline
+              style={{ transform: "translateZ(0)" }}
             />
             <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-white/30" />
           </div>
@@ -150,7 +151,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
 
       {/* Main Hero */}
       <div
-        className={`relative grid grid-cols-1 lg:grid-cols-2 items-center max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-24 lg:py-32 gap-16 lg:gap-36 xl:gap-40 transition-opacity duration-700 ${splineLoaded || isLight ? "opacity-100" : "opacity-0"
+        className={`relative z-10 grid grid-cols-1 lg:grid-cols-2 items-center max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-24 lg:py-32 gap-16 lg:gap-36 xl:gap-40 transition-opacity duration-700 ${splineLoaded || isLight ? "opacity-100" : "opacity-0"
           }`}
       >
         {/* Left side */}
