@@ -90,8 +90,8 @@ export default function Hero({ onLoadComplete }: HeroProps) {
 
   return (
     <section id="homepage" className="relative min-h-[100svh] lg:min-h-[100vh] overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 -z-20 flex items-center justify-center">
+      {/* Background fixed to viewport to avoid iOS visual viewport resizes */}
+      <div className="fixed inset-0 -z-20 flex items-center justify-center pointer-events-none">
         {!isLight && !useFallback && (
           <div className={`w-full h-full transition-opacity duration-700 ${splineVisible ? "opacity-100" : "opacity-0"}`}>
             <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} onError={markError} />
