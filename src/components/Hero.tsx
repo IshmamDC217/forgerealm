@@ -96,21 +96,25 @@ export default function Hero({ onLoadComplete }: HeroProps) {
       {/* Background */}
       <div className="absolute inset-0 -z-20 flex items-center justify-center">
         {!isLight && !useFallback && (
-          <div className={`w-full h-full transition-opacity duration-700 ${splineVisible ? "opacity-100" : "opacity-0"}`}>
-            <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} onError={markError} />
+          <div className={`w-full h-full transition-opacity duration-700 flex items-center justify-center ${splineVisible ? "opacity-100" : "opacity-0"}`}>
+            <div className="w-full max-w-[1600px] h-full max-h-[900px]">
+              <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} onError={markError} />
+            </div>
           </div>
         )}
         {isLight && (
-          <div className="absolute inset-0">
-            <video
-              className="absolute inset-0 h-full w-full object-cover object-left sm:object-center"
-              src="/whitebg.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-white/30" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-full max-w-[1600px] h-full max-h-[900px] relative">
+              <video
+                className="absolute inset-0 h-full w-full object-cover object-left sm:object-center rounded-[2rem]"
+                src="/whitebg.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-white/30 rounded-[2rem]" />
+            </div>
           </div>
         )}
       </div>
