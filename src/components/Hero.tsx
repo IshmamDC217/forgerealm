@@ -92,7 +92,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const showPreloader = !splineLoaded && !useFallback && !isLight;
 
   return (
-    <section id="homepage" className="relative min-h-screen overflow-hidden">
+    <section id="homepage" className="relative min-h-[100svh] overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 -z-20 flex items-center justify-center">
         {!isLight && !useFallback && (
