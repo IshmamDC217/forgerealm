@@ -67,9 +67,7 @@ const useTheme = () => {
 };
 
 export default function Hero({ onLoadComplete }: HeroProps) {
-  const [visible, setVisible] = useState(false);
   const [splineLoaded, setSplineLoaded] = useState(false);
-  const widgetRef = useRef<HTMLDivElement | null>(null);
   const buttonsRef = useRef(null);
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene();
   const theme = useTheme();
@@ -82,14 +80,6 @@ export default function Hero({ onLoadComplete }: HeroProps) {
       }
     : undefined;
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) setVisible(true);
-    }, { threshold: 0.3 });
-    if (widgetRef.current) observer.observe(widgetRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   const handleSplineLoad = () => {
     setSplineLoaded(true);
     markLoaded();
@@ -99,7 +89,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const showPreloader = !splineLoaded && !useFallback && !isLight;
 
   return (
-    <section id="homepage" className="relative min-h-[100svh] sm:min-h-[100dvh] overflow-hidden">
+    <section id="homepage" className="relative min-h-[100svh] lg:min-h-[100vh] overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 -z-20 flex items-center justify-center">
         {!isLight && !useFallback && (
@@ -232,9 +222,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
 
         {/* Right side */}
         <div
-          ref={widgetRef}
-          className={`hidden lg:flex flex-col gap-12 transition-all duration-700 ease-out ${visible ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
-            } ${isLight ? "bg-white/90 border border-slate-200 text-slate-900 rounded-3xl p-6 sm:p-8 backdrop-blur" : "text-white bg-transparent border-0"}`}
+          className={`hidden lg:flex flex-col gap-12 transition-all duration-700 ease-out translate-x-0 opacity-100 ${isLight ? "bg-white/90 border border-slate-200 text-slate-900 rounded-3xl p-6 sm:p-8 backdrop-blur" : "text-white bg-transparent border-0"}`}
           style={lightPanelStyle}
         >
           <div className="flex items-start gap-4">
