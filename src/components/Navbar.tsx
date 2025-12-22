@@ -6,7 +6,7 @@ import { FaShoppingBag } from "react-icons/fa";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
 
   const navLinks = [
     ["Services", "#services"],
@@ -19,8 +19,7 @@ export default function Navbar() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem("fr-theme") as "light" | "dark" | null;
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const initial = saved || (prefersDark ? "dark" : "light");
+      const initial = saved || "dark";
       setTheme(initial);
       document.documentElement.setAttribute("data-theme", initial);
     } catch {}
