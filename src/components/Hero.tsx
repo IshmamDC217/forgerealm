@@ -146,7 +146,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
             <div className="absolute inset-[8px] rounded-full bg-blue-400/10 animate-pulse-soft" />
             <div className="relative z-10">
               <img
-                src="/notitlefrwatermark.png"
+                src="/notitlefrwatermark.webp"
                 alt="ForgeRealm Watermark"
                 width={72}
                 height={72}
@@ -176,7 +176,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
         >
           <div className="flex items-center gap-6 mb-2 justify-center lg:justify-start">
             <img
-              src="/notitlefrwatermark.png"
+              src="/notitlefrwatermark.webp"
               alt="ForgeRealm Logo"
               width={90}
               height={90}

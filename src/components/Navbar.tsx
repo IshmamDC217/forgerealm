@@ -40,7 +40,7 @@ export default function Navbar() {
         <div className="flex border border-white/60 items-center justify-between px-8 py-2.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 shadow-lg backdrop-blur-sm">
           {/* Logo */}
           <a href="#homepage" className="inline-flex items-center" aria-label="ForgeRealm home">
-            <img src="/frowl.png" alt="ForgeRealm Logo" width={32} height={32} className="h-8 w-8 rounded-full mr-3" loading="lazy" />
+            <img src="/frowl.webp" alt="ForgeRealm Logo" width={32} height={32} className="h-8 w-8 rounded-full mr-3" loading="eager" />
             <span className="font-extrabold tracking-widest text-sm font-display text-white uppercase">
               Forge<span className="text-black">REALM</span>
             </span>

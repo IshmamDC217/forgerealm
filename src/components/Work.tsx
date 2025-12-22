@@ -3,7 +3,10 @@ import { useState } from "react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 export default function Work() {
-  const images = ["/ablamp.jpeg", "/ablamp2.jpeg"];
+  const images = [
+    { src: "/ablamp.webp", width: 1280, height: 1280, alt: "Aurora Bloom 1" },
+    { src: "/ablamp2.webp", width: 1024, height: 1536, alt: "Aurora Bloom 2" },
+  ];
   const [index, setIndex] = useState(0);
 
   const nextSlide = () => setIndex((prev) => (prev + 1) % images.length);
@@ -53,11 +56,13 @@ export default function Work() {
               {/* Image Carousel */}
               <div className="relative overflow-hidden h-[50vh] sm:h-[60vh] md:h-[70vh] w-full">
                 <img
-                  key={index}
-                  src={images[index]}
-                  alt={`Aurora Bloom ${index + 1}`}
+                  key={images[index].src}
+                  src={images[index].src}
+                  alt={images[index].alt}
                   className="object-cover absolute inset-0 h-full w-full"
                   loading={index === 0 ? "eager" : "lazy"}
+                  width={images[index].width}
+                  height={images[index].height}
                 />
 
                 {/* Navigation Buttons (hidden on mobile) */}
@@ -108,10 +113,12 @@ export default function Work() {
           <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-pink-400/50 hover:shadow-[0_0_50px_-5px_rgba(236,72,153,0.5)] hover:-translate-y-3 light-panel">
             <div className="aspect-square overflow-hidden relative">
               <img
-                src="/owl.jpg"
+                src="/owl.webp"
                 alt="Coat of Arms Owl"
                 className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1 absolute inset-0 h-full w-full"
                 loading="lazy"
+                width={1280}
+                height={1280}
               />
             </div>
             <div className="p-6 sm:p-8 text-center sm:text-left">
@@ -127,10 +134,12 @@ export default function Work() {
           <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-emerald-400/50 hover:shadow-[0_0_50px_-5px_rgba(16,185,129,0.5)] hover:-translate-y-3 light-panel">
             <div className="aspect-square overflow-hidden relative">
               <img
-                src="/dragon.jpg"
+                src="/dragon.webp"
                 alt="Forest Dragon"
                 className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1 absolute inset-0 h-full w-full"
                 loading="lazy"
+                width={1280}
+                height={1280}
               />
             </div>
             <div className="p-6 sm:p-8 text-center sm:text-left">
@@ -146,10 +155,12 @@ export default function Work() {
           <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-sky-400/50 hover:shadow-[0_0_50px_-5px_rgba(56,189,248,0.5)] hover:-translate-y-3 light-panel">
             <div className="aspect-square overflow-hidden relative">
               <img
-                src="/dice-dragon.jpg"
+                src="/dice-dragon.webp"
                 alt="Dice Holder Dragon"
                 className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1 absolute inset-0 h-full w-full"
                 loading="lazy"
+                width={1280}
+                height={1280}
               />
             </div>
             <div className="p-6 sm:p-8 text-center sm:text-left">

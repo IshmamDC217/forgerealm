@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="inline-flex items-center gap-3">
-              <img src="/frhead.png" alt="ForgeRealm Logo" width={32} height={32} className="rounded-full" loading="lazy" />
+              <img src="/frhead.webp" alt="ForgeRealm Logo" width={32} height={32} className="rounded-full" loading="lazy" />
               <span className="font-bold text-white text-lg tracking-wide">ForgeRealm</span>
             </div>
             <p className="mt-3 text-white/60 max-w-xs">UK-based creators of custom, sustainable 3D prints from concept to craft.</p>
