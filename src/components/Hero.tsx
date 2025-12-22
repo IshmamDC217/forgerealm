@@ -92,7 +92,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     <section id="homepage" className="relative min-h-[100svh] lg:min-h-[100vh] overflow-hidden z-0">
       {/* Background fixed to viewport to avoid iOS visual viewport resizes */}
       <div
-        className="fixed inset-0 z-0 flex items-center justify-center pointer-events-none w-screen h-screen overflow-hidden"
+        className="fixed inset-0 -z-10 flex items-center justify-center pointer-events-none w-screen h-screen overflow-hidden"
       >
         {!isLight && !useFallback && (
           <div className={`w-full h-full transition-opacity duration-700 ${splineVisible ? "opacity-100" : "opacity-0"}`}>
