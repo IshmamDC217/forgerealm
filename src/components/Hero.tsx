@@ -18,6 +18,7 @@ const useSplineScene = (timeoutMs = 4000) => {
   const [useFallback, setUseFallback] = useState(false);
   const [visible, setVisible] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [saveData, setSaveData] = useState(false);
 
   const clearTimer = () => {
     if (timeoutRef.current) {
@@ -27,13 +28,24 @@ const useSplineScene = (timeoutMs = 4000) => {
   };
 
   useEffect(() => {
-    timeoutRef.current = setTimeout(() => setUseFallback(true), timeoutMs);
+    const shouldSaveData = typeof navigator !== "undefined" && "connection" in navigator && (navigator as any).connection?.saveData;
+    setSaveData(Boolean(shouldSaveData));
+
+    // On data-saver connections, skip waiting for Spline to load to protect LCP.
+    if (shouldSaveData) {
+      setUseFallback(true);
+      return () => clearTimer();
+    }
+
+    const effectiveTimeout = Math.min(timeoutMs, 2500);
+    timeoutRef.current = setTimeout(() => setUseFallback(true), effectiveTimeout);
     return () => clearTimer();
   }, [timeoutMs]);
 
   return {
     useFallback,
     splineVisible: visible,
+    saveData,
     markLoaded: () => {
       clearTimer();
       setUseFallback(false);
@@ -69,9 +81,10 @@ const useTheme = () => {
 export default function Hero({ onLoadComplete }: HeroProps) {
   const [splineLoaded, setSplineLoaded] = useState(false);
   const buttonsRef = useRef(null);
-  const { useFallback, splineVisible, markLoaded, markError } = useSplineScene();
+  const { useFallback, splineVisible, markLoaded, markError, saveData } = useSplineScene();
   const theme = useTheme();
   const isLight = theme === "light";
+  const heroVisible = splineLoaded || useFallback || isLight || saveData;
   const lightPanelStyle = isLight
     ? {
         background: "linear-gradient(45deg, #fff -25%, transparent)",
@@ -153,7 +166,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
 
       {/* Main Hero */}
       <div
-        className={`relative z-10 grid grid-cols-1 lg:grid-cols-2 items-center max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-24 lg:py-32 gap-16 lg:gap-36 xl:gap-40 transition-opacity duration-700 ${splineLoaded || isLight ? "opacity-100" : "opacity-0"
+        className={`relative z-10 grid grid-cols-1 lg:grid-cols-2 items-center max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-24 lg:py-32 gap-16 lg:gap-36 xl:gap-40 transition-opacity duration-700 ${heroVisible ? "opacity-100" : "opacity-0"
           }`}
       >
         {/* Left side */}
