@@ -26,7 +26,7 @@ export default function Materials() {
           </h2>
           <div className="relative flex-shrink-0 flex items-center">
             <img
-              src="/material.gif"
+              src="/material.webp"
               alt="Materials Animation"
               width={56}
               height={56}

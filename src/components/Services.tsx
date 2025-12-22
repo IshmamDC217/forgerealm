@@ -31,7 +31,7 @@ export default function Services() {
           </h2>
           <div>
             <img
-              src="/services.gif"
+              src="/services.webp"
               alt="Services Animation"
               width={56}
               height={56}

@@ -26,7 +26,7 @@ export default function Work() {
             {/* Use flex alignment to vertically center the GIF with the heading */}
             <div className="relative flex-shrink-0 flex items-center">
               <img
-                src="/work.gif"
+                src="/work.webp"
                 alt="Work Animation"
                 width={64}
                 height={64}

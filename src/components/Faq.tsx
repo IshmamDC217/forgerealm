@@ -35,7 +35,7 @@ export default function Faq() {
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[color:var(--fg)]">FAQs</h2>
           <div className="relative animate-float flex-shrink-0">
             <img
-              src="/faq.gif"
+              src="/faq.webp"
               alt="FAQ Animation"
               width={56}
               height={56}

@@ -13,7 +13,7 @@ export default function Testimonials() {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">Testimonials</h2>
           <div className="relative animate-float flex-shrink-0 mt-1 sm:mt-2">
             <img
-              src="/testimonials.gif"
+              src="/testimonials.webp"
               alt="Testimonials Animation"
               width={56}
               height={56}

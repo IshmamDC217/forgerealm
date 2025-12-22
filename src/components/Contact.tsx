@@ -21,7 +21,7 @@ export default function Contact() {
               <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[color:var(--fg)]">Contact</h2>
               <div className="relative animate-float flex-shrink-0 mt-1 sm:mt-1">
                 <img
-                  src="/contact.gif"
+                  src="/contact.webp"
                   alt="Contact Animation"
                   width={56}
                   height={56}
