@@ -135,21 +135,23 @@ export default function Navbar() {
 
         <div className="my-6 border-t border-white/20" />
 
-        <a
-          href="/shop"
-          onClick={() => setOpen(false)}
-          className="rounded-full bg-[#FBA93A] px-5 py-2 text-xs font-bold uppercase tracking-wide text-slate-900 hover:bg-[#fbbf6a] transition-colors duration-200 text-center inline-flex items-center justify-center gap-2"
-        >
-          <FaShoppingBag /> Shop
-        </a>
+        <div className="flex flex-col gap-3">
+          <a
+            href="/shop"
+            onClick={() => setOpen(false)}
+            className="rounded-full bg-[#FBA93A] px-5 py-2 text-xs font-bold uppercase tracking-wide text-slate-900 hover:bg-[#fbbf6a] transition-colors duration-200 text-center inline-flex items-center justify-center gap-2"
+          >
+            <FaShoppingBag /> Shop
+          </a>
 
-        <a
-          href="/subscribe"
-          onClick={() => setOpen(false)}
-          className="rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wide text-blue-600 hover:bg-black hover:text-white transition-colors duration-200 text-center"
-        >
-          Subscribe
-        </a>
+          <a
+            href="/subscribe"
+            onClick={() => setOpen(false)}
+            className="rounded-full bg-white px-5 py-2 text-xs font-bold uppercase tracking-wide text-blue-600 hover:bg-black hover:text-white transition-colors duration-200 text-center"
+          >
+            Subscribe
+          </a>
+        </div>
 
         <button
           onClick={() => {
