@@ -1,5 +1,6 @@
 "use client";
 import { useRef } from "react";
+import { TbLeaf } from "react-icons/tb";
 
 export default function Materials() {
   const ref = useRef(null);
@@ -19,20 +20,13 @@ export default function Materials() {
         ref={ref}
         className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative"
       >
-        {/* Header with floating GIF */}
+        {/* Header with icon */}
         <div className="max-w-2xl flex items-center gap-3">
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[color:var(--fg)] whitespace-nowrap">
             Materials
           </h2>
-          <div className="relative flex-shrink-0 flex items-center">
-            <img
-              src="/material.webp"
-              alt="Materials Animation"
-              width={56}
-              height={56}
-              className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
-              loading="lazy"
-            />
+          <div className="relative flex-shrink-0 flex items-center text-emerald-200 drop-shadow-[0_0_16px_rgba(110,231,183,0.55)]">
+            <TbLeaf className="w-8 h-8 sm:w-10 sm:h-10" aria-hidden />
           </div>
         </div>
 

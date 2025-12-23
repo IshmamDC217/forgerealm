@@ -1,4 +1,5 @@
 "use client";
+import { FaCommentDots } from "react-icons/fa";
 
 export default function Testimonials() {
   return (
@@ -8,18 +9,11 @@ export default function Testimonials() {
       <div className="absolute left-24 bottom-12 h-56 w-56 rounded-full bg-purple-500/20 blur-[100px] -z-10" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header with floating GIF */}
+        {/* Header with icon */}
         <div className="flex items-center justify-center gap-3 sm:gap-4 text-center">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">Testimonials</h2>
-          <div className="relative animate-float flex-shrink-0 mt-1 sm:mt-2">
-            <img
-              src="/testimonials.webp"
-              alt="Testimonials Animation"
-              width={56}
-              height={56}
-              className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(96,165,250,0.6)]"
-              loading="lazy"
-            />
+          <div className="relative flex-shrink-0 mt-1 sm:mt-2 text-sky-200 drop-shadow-[0_0_16px_rgba(125,200,255,0.6)]">
+            <FaCommentDots className="w-8 h-8 sm:w-10 sm:h-10" aria-hidden />
           </div>
         </div>
 

@@ -24,20 +24,13 @@ export default function Services() {
       </div>
 
       <div ref={ref} className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-        {/* Header with GIF */}
+        {/* Header with icon */}
         <div className="max-w-2xl flex items-center gap-4">
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[color:var(--fg)] flex items-center">
             Our Services
           </h2>
-          <div>
-            <img
-              src="/services.webp"
-              alt="Services Animation"
-              width={56}
-              height={56}
-              className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_12px_rgba(99,102,241,0.6)]"
-              loading="lazy"
-            />
+          <div className="text-indigo-200 drop-shadow-[0_0_16px_rgba(129,140,248,0.6)]">
+            <FaCogs className="w-8 h-8 sm:w-10 sm:h-10" aria-hidden />
           </div>
         </div>
 

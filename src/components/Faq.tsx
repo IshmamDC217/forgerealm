@@ -1,5 +1,6 @@
 "use client";
 import { HiChevronDown } from "react-icons/hi";
+import { FaQuestionCircle } from "react-icons/fa";
 
 export default function Faq() {
   const faqs = [
@@ -31,17 +32,10 @@ export default function Faq() {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section header with floating GIF */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-3">
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[color:var(--fg)]">FAQs</h2>
-          <div className="relative animate-float flex-shrink-0">
-            <img
-              src="/faq.webp"
-              alt="FAQ Animation"
-              width={56}
-              height={56}
-              className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(250,204,21,0.6)]"
-              loading="lazy"
-            />
+          <div className="relative flex-shrink-0 text-amber-100 drop-shadow-[0_0_16px_rgba(255,230,150,0.55)]">
+            <FaQuestionCircle className="w-7 h-7 sm:w-9 sm:h-9" aria-hidden />
           </div>
         </div>
 

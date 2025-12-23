@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import { FaShapes } from "react-icons/fa";
 
 export default function Work() {
   const images = [
@@ -26,16 +27,8 @@ export default function Work() {
         <div className="flex items-end justify-between gap-6 flex-wrap mb-10">
           <div className="flex items-center gap-3">
             <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-[color:var(--fg)] whitespace-nowrap">Recent Work</h2>
-            {/* Use flex alignment to vertically center the GIF with the heading */}
-            <div className="relative flex-shrink-0 flex items-center">
-              <img
-                src="/work.webp"
-                alt="Work Animation"
-                width={64}
-                height={64}
-                className="w-10 sm:w-16 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(236,72,153,0.6)]"
-                loading="lazy"
-              />
+            <div className="relative flex-shrink-0 flex items-center text-pink-200 drop-shadow-[0_0_16px_rgba(244,114,182,0.6)]">
+              <FaShapes className="w-8 h-8 sm:w-11 sm:h-11" aria-hidden />
             </div>
           </div>
         </div>

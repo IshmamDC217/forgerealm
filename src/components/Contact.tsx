@@ -1,6 +1,5 @@
 "use client";
-import { FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
-import { FaPhoneAlt } from "react-icons/fa";
+import { FaEnvelope, FaMapMarkerAlt, FaClock, FaEnvelopeOpenText, FaPhoneAlt } from "react-icons/fa";
 
 export default function Contact() {
   return (
@@ -16,18 +15,11 @@ export default function Contact() {
         <div className="grid lg:grid-cols-2 gap-10 items-start">
           {/* Contact Info */}
           <div>
-            {/* Header with floating GIF */}
-            <div className="flex items-center">
+            {/* Header icon with glow */}
+            <div className="flex items-center gap-3">
               <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[color:var(--fg)]">Contact</h2>
-              <div className="relative animate-float flex-shrink-0 mt-1 sm:mt-1">
-                <img
-                  src="/contact.webp"
-                  alt="Contact Animation"
-                  width={56}
-                  height={56}
-                  className="w-10 sm:w-14 h-auto opacity-90 drop-shadow-[0_0_14px_rgba(99,102,241,0.6)]"
-                  loading="lazy"
-                />
+              <div className="relative flex-shrink-0 mt-1 sm:mt-1 text-blue-200 drop-shadow-[0_0_16px_rgba(125,200,255,0.65)]">
+                <FaEnvelopeOpenText className="w-7 h-7 sm:w-9 sm:h-9" aria-hidden />
               </div>
             </div>
 
