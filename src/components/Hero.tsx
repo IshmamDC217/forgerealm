@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ComponentType } from "react";
 import { FiStar } from "react-icons/fi";
 import { TbLeaf } from "react-icons/tb";
 import { MdBrush } from "react-icons/md";
@@ -8,53 +8,117 @@ import { GiDragonHead } from "react-icons/gi";
 import { RiEarthLine } from "react-icons/ri";
 import { HiOutlineLightBulb } from "react-icons/hi";
 import { FaRecycle, FaShoppingBag } from "react-icons/fa";
-import Spline from "@splinetool/react-spline";
 
 interface HeroProps {
   onLoadComplete?: () => void;
 }
 
-const useSplineScene = (timeoutMs = 4000) => {
+type SplineComponent = ComponentType<{
+  scene: string;
+  className?: string;
+  onLoad?: () => void;
+  onError?: () => void;
+}>;
+
+const useSaveDataPreference = () => {
+  const [saveData, setSaveData] = useState(false);
+
+  useEffect(() => {
+    const connection = typeof navigator !== "undefined" ? (navigator as any).connection : null;
+    const update = () => setSaveData(Boolean(connection?.saveData));
+
+    update();
+    connection?.addEventListener?.("change", update);
+    return () => connection?.removeEventListener?.("change", update);
+  }, []);
+
+  return saveData;
+};
+
+const useIdle = (timeoutMs = 800) => {
+  const [idle, setIdle] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const idleCallback = (window as any).requestIdleCallback;
+
+    if (typeof idleCallback === "function") {
+      const handle = idleCallback(() => setIdle(true), { timeout: timeoutMs });
+      return () => (window as any).cancelIdleCallback?.(handle);
+    }
+
+    const handle = window.setTimeout(() => setIdle(true), timeoutMs);
+    return () => clearTimeout(handle);
+  }, [timeoutMs]);
+
+  return idle;
+};
+
+const useIntersectionOnce = (rootMargin = "200px") => {
+  const targetRef = useRef<HTMLElement | null>(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  useEffect(() => {
+    if (!targetRef.current) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setIsIntersecting(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin }
+    );
+
+    observer.observe(targetRef.current);
+    return () => observer.disconnect();
+  }, [rootMargin]);
+
+  return { targetRef, isIntersecting };
+};
+
+const useSplineScene = (timeoutMs = 4000, enabled = true) => {
   const [useFallback, setUseFallback] = useState(false);
   const [visible, setVisible] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [saveData, setSaveData] = useState(false);
 
-  const clearTimer = () => {
+  const clearTimer = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-  };
+  }, []);
 
   useEffect(() => {
-    const shouldSaveData = typeof navigator !== "undefined" && "connection" in navigator && (navigator as any).connection?.saveData;
-    setSaveData(Boolean(shouldSaveData));
-
-    // On data-saver connections, skip waiting for Spline to load to protect LCP.
-    if (shouldSaveData) {
-      setUseFallback(true);
-      return () => clearTimer();
+    if (!enabled) {
+      setUseFallback(false);
+      setVisible(false);
+      clearTimer();
+      return;
     }
 
     const effectiveTimeout = Math.min(timeoutMs, 2500);
     timeoutRef.current = setTimeout(() => setUseFallback(true), effectiveTimeout);
     return () => clearTimer();
-  }, [timeoutMs]);
+  }, [timeoutMs, enabled]);
 
   return {
     useFallback,
     splineVisible: visible,
-    saveData,
-    markLoaded: () => {
+    markLoaded: useCallback(() => {
       clearTimer();
       setUseFallback(false);
       setVisible(true);
-    },
-    markError: () => {
+    }, [clearTimer]),
+    markError: useCallback(() => {
       clearTimer();
       setUseFallback(true);
-    },
+    }, [clearTimer]),
   };
 };
 
@@ -81,10 +145,14 @@ const useTheme = () => {
 export default function Hero({ onLoadComplete }: HeroProps) {
   const [splineLoaded, setSplineLoaded] = useState(false);
   const buttonsRef = useRef(null);
-  const { useFallback, splineVisible, markLoaded, markError, saveData } = useSplineScene();
+  const saveData = useSaveDataPreference();
+  const idleReady = useIdle();
+  const { targetRef: heroRef, isIntersecting } = useIntersectionOnce();
+  const [SplineComponent, setSplineComponent] = useState<SplineComponent | null>(null);
+  const shouldLoadHeavy = isIntersecting && idleReady && !saveData;
+  const { useFallback, splineVisible, markLoaded, markError } = useSplineScene(4000, shouldLoadHeavy);
   const theme = useTheme();
   const isLight = theme === "light";
-  const heroVisible = splineLoaded || useFallback || isLight || saveData;
   const lightPanelStyle = isLight
     ? {
         background: "linear-gradient(45deg, #fff -25%, transparent)",
@@ -99,33 +167,66 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     onLoadComplete?.();
   };
 
-  const showPreloader = !splineLoaded && !useFallback && !isLight;
+  const showPreloader = shouldLoadHeavy && !splineLoaded && !useFallback && !isLight;
+  const heroVisible = isLight || !shouldLoadHeavy || splineLoaded || useFallback || showPreloader;
+
+  useEffect(() => {
+    if (!shouldLoadHeavy || SplineComponent) return;
+
+    let cancelled = false;
+    import("@splinetool/react-spline")
+      .then((mod) => {
+        if (!cancelled) {
+          setSplineComponent(() => mod.default);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          markError();
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [shouldLoadHeavy, SplineComponent, markError]);
 
   return (
-    <section id="homepage" className="relative min-h-[100svh] lg:min-h-[100vh] overflow-hidden z-0">
+    <section
+      id="homepage"
+      ref={heroRef}
+      className="relative min-h-[100svh] lg:min-h-[100vh] overflow-hidden z-0"
+    >
       {/* Background fixed to viewport to avoid iOS visual viewport resizes */}
       <div
         className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none w-full h-full overflow-hidden"
       >
-        {!isLight && !useFallback && (
+        {!isLight && shouldLoadHeavy && !useFallback && SplineComponent ? (
           <div className={`w-full h-full transition-opacity duration-700 ${splineVisible ? "opacity-100" : "opacity-0"}`}>
-            <Spline className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} onError={markError} />
+            <SplineComponent className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} onError={markError} />
           </div>
+        ) : (
+          !isLight && <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.12),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(147,51,234,0.12),transparent_32%),radial-gradient(circle_at_60%_70%,rgba(14,165,233,0.18),transparent_45%)]" />
         )}
-        {isLight && (
-          <div className="absolute inset-0 w-full h-full overflow-hidden">
-            <video
-              className="absolute inset-0 h-full w-full object-cover object-left sm:object-center will-change-transform"
-              src="/whitebg.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              style={{ transform: "translateZ(0)" }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-white/30" />
-          </div>
-        )}
+        {isLight &&
+          (shouldLoadHeavy ? (
+            <div className="absolute inset-0 w-full h-full overflow-hidden">
+              <video
+                className="absolute inset-0 h-full w-full object-cover object-left sm:object-center will-change-transform"
+                src="/whitebg.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                poster="/notitlefrwatermark.webp"
+                style={{ transform: "translateZ(0)" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-white/30" />
+            </div>
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-100/70 to-slate-200/70" />
+          ))}
       </div>
 
       {/* Ambient lighting */}

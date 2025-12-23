@@ -13,14 +13,14 @@ import Footer from '../components/Footer';
 
 <BaseLayout>
   <Navbar client:load />
-  <Hero client:load />
+  <Hero client:idle />
   <div id="theme-scope">
-    <Partners client:load />
-    <Services client:load />
-    <Materials client:load />
-    <Work client:load />
-    <Faq client:load />
-    <Contact client:load />
+    <Partners client:visible />
+    <Services client:visible />
+    <Materials client:visible />
+    <Work client:visible />
+    <Faq client:visible />
+    <Contact client:visible />
   </div>
-  <Footer client:load />
+  <Footer client:idle />
 </BaseLayout>
