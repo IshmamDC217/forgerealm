@@ -160,6 +160,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const [splineLoaded, setSplineLoaded] = useState(false);
   const [splineEverLoaded, setSplineEverLoaded] = useState(false);
   const [lightVideoStarted, setLightVideoStarted] = useState(false);
+  const [forceLoad, setForceLoad] = useState(false);
   const buttonsRef = useRef(null);
   const saveData = useSaveDataPreference();
   const idleReady = useIdle();
@@ -169,11 +170,8 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     typeof navigator !== "undefined" &&
     /Lighthouse|Chrome-Lighthouse|Page Speed Insights/i.test(navigator.userAgent || "");
   const [SplineComponent, setSplineComponent] = useState<SplineComponent | null>(null);
-  const shouldLoadHeavy =
-    isIntersecting &&
-    (idleReady || interactionReady) &&
-    (!saveData || interactionReady) &&
-    !isLighthouse;
+  const allowHeavy = !isLighthouse && (!saveData || interactionReady);
+  const shouldLoadHeavy = allowHeavy && isIntersecting && (idleReady || interactionReady || forceLoad);
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene(4000, shouldLoadHeavy);
   const theme = useTheme();
   const isLight = theme === "light";
@@ -198,6 +196,12 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const heroVisible = true;
   const showDarkSpline = !isLight && SplineComponent && (splineEverLoaded || (shouldLoadHeavy && !useFallback));
   const showLightVideo = isLight && (lightVideoStarted || shouldLoadHeavy);
+
+  useEffect(() => {
+    if (!allowHeavy || !isIntersecting || forceLoad) return;
+    const timer = window.setTimeout(() => setForceLoad(true), 4000);
+    return () => clearTimeout(timer);
+  }, [allowHeavy, isIntersecting, forceLoad]);
 
   useEffect(() => {
     if (!shouldLoadHeavy || SplineComponent) return;
@@ -249,7 +253,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                preload="none"
                 onLoadedData={() => setLightVideoStarted(true)}
                 style={{ transform: "translateZ(0)" }}
               />
