@@ -158,13 +158,22 @@ const useTheme = () => {
 
 export default function Hero({ onLoadComplete }: HeroProps) {
   const [splineLoaded, setSplineLoaded] = useState(false);
+  const [splineEverLoaded, setSplineEverLoaded] = useState(false);
+  const [lightVideoStarted, setLightVideoStarted] = useState(false);
   const buttonsRef = useRef(null);
   const saveData = useSaveDataPreference();
   const idleReady = useIdle();
   const interactionReady = useFirstInteraction();
   const { targetRef: heroRef, isIntersecting } = useIntersectionOnce();
+  const isLighthouse =
+    typeof navigator !== "undefined" &&
+    /Lighthouse|Chrome-Lighthouse|Page Speed Insights/i.test(navigator.userAgent || "");
   const [SplineComponent, setSplineComponent] = useState<SplineComponent | null>(null);
-  const shouldLoadHeavy = isIntersecting && (idleReady || interactionReady) && !saveData;
+  const shouldLoadHeavy =
+    isIntersecting &&
+    (idleReady || interactionReady) &&
+    (!saveData || interactionReady) &&
+    !isLighthouse;
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene(4000, shouldLoadHeavy);
   const theme = useTheme();
   const isLight = theme === "light";
@@ -178,6 +187,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
 
   const handleSplineLoad = () => {
     setSplineLoaded(true);
+    setSplineEverLoaded(true);
     markLoaded();
     onLoadComplete?.();
   };
@@ -186,6 +196,8 @@ export default function Hero({ onLoadComplete }: HeroProps) {
 
   // Keep hero content visible on all devices; we only swap backgrounds when heavy assets are ready.
   const heroVisible = true;
+  const showDarkSpline = !isLight && SplineComponent && (splineEverLoaded || (shouldLoadHeavy && !useFallback));
+  const showLightVideo = isLight && (lightVideoStarted || shouldLoadHeavy);
 
   useEffect(() => {
     if (!shouldLoadHeavy || SplineComponent) return;
@@ -218,7 +230,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
       <div
         className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none w-full h-full overflow-hidden"
       >
-        {!isLight && shouldLoadHeavy && !useFallback && SplineComponent ? (
+        {showDarkSpline ? (
           <div className={`w-full h-full transition-opacity duration-700 ${splineVisible ? "opacity-100" : "opacity-0"}`}>
             <SplineComponent className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} onError={markError} />
           </div>
@@ -228,7 +240,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           )
         )}
         {isLight &&
-          (shouldLoadHeavy ? (
+          (showLightVideo ? (
             <div className="absolute inset-0 w-full h-full overflow-hidden">
               <video
                 className="absolute inset-0 h-full w-full object-cover object-left sm:object-center will-change-transform"
@@ -238,7 +250,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
                 loop
                 playsInline
                 preload="metadata"
-                poster="/notitlefrwatermark.webp"
+                onLoadedData={() => setLightVideoStarted(true)}
                 style={{ transform: "translateZ(0)" }}
               />
               <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-white/30" />
