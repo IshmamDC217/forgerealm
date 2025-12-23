@@ -54,6 +54,20 @@ const useIdle = (timeoutMs = 800) => {
   return idle;
 };
 
+const useFirstInteraction = () => {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const trigger = () => setReady(true);
+    const events: (keyof WindowEventMap)[] = ["pointerdown", "touchstart", "keydown", "scroll"];
+    events.forEach((evt) => window.addEventListener(evt, trigger, { passive: true }));
+    return () => events.forEach((evt) => window.removeEventListener(evt, trigger));
+  }, []);
+
+  return ready;
+};
+
 const useIntersectionOnce = (rootMargin = "200px") => {
   const targetRef = useRef<HTMLElement | null>(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
@@ -147,9 +161,10 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const buttonsRef = useRef(null);
   const saveData = useSaveDataPreference();
   const idleReady = useIdle();
+  const interactionReady = useFirstInteraction();
   const { targetRef: heroRef, isIntersecting } = useIntersectionOnce();
   const [SplineComponent, setSplineComponent] = useState<SplineComponent | null>(null);
-  const shouldLoadHeavy = isIntersecting && idleReady && !saveData;
+  const shouldLoadHeavy = isIntersecting && idleReady && interactionReady && !saveData;
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene(4000, shouldLoadHeavy);
   const theme = useTheme();
   const isLight = theme === "light";
@@ -167,8 +182,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     onLoadComplete?.();
   };
 
-  const showPreloader = shouldLoadHeavy && !splineLoaded && !useFallback && !isLight;
-  const heroVisible = isLight || !shouldLoadHeavy || splineLoaded || useFallback || showPreloader;
+  const heroVisible = isLight || !shouldLoadHeavy || splineLoaded || useFallback;
 
   useEffect(() => {
     if (!shouldLoadHeavy || SplineComponent) return;
@@ -206,7 +220,9 @@ export default function Hero({ onLoadComplete }: HeroProps) {
             <SplineComponent className="spline-scene" scene="/scene.splinecode" onLoad={handleSplineLoad} onError={markError} />
           </div>
         ) : (
-          !isLight && <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.12),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(147,51,234,0.12),transparent_32%),radial-gradient(circle_at_60%_70%,rgba(14,165,233,0.18),transparent_45%)]" />
+          !isLight && (
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.12),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(147,51,234,0.12),transparent_32%),radial-gradient(circle_at_60%_70%,rgba(14,165,233,0.18),transparent_45%)]" />
+          )
         )}
         {isLight &&
           (shouldLoadHeavy ? (
@@ -219,7 +235,6 @@ export default function Hero({ onLoadComplete }: HeroProps) {
                 loop
                 playsInline
                 preload="metadata"
-                poster="/notitlefrwatermark.webp"
                 style={{ transform: "translateZ(0)" }}
               />
               <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-white/30" />
@@ -235,33 +250,6 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           <div className="absolute top-1/3 left-[10%] h-64 w-64 bg-blue-500/20 rounded-full blur-[120px]" />
           <div className="absolute bottom-1/4 right-[10%] h-72 w-72 bg-indigo-400/20 rounded-full blur-[140px]" />
           <div className="absolute top-0 left-1/2 h-40 w-40 bg-fuchsia-500/10 rounded-full blur-[100px]" />
-        </div>
-      )}
-
-      {/* Preloader */}
-      {showPreloader && (
-        <div className="absolute inset-0 bg-[#0b0b0e] flex flex-col items-center justify-center z-50">
-          <div className="relative w-28 h-28 mb-6 flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
-            <div className="absolute inset-0 rounded-full border-t-4 border-blue-400 animate-spin-smooth" />
-            <div className="absolute inset-[8px] rounded-full bg-blue-400/10 animate-pulse-soft" />
-            <div className="relative z-10">
-              <img
-                src="/notitlefrwatermark.webp"
-                alt="ForgeRealm Watermark"
-                width={72}
-                height={72}
-                className="opacity-90 animate-fade-glow"
-                loading="lazy"
-              />
-            </div>
-          </div>
-          <p className="mt-6 text-sm tracking-widest text-blue-300/80 font-medium animate-fade-glow">
-            Loading ForgeRealm Experience...
-          </p>
-          <div className="mt-4 h-1.5 w-40 bg-gradient-to-r from-blue-500 via-indigo-400 to-blue-500 rounded-full overflow-hidden">
-            <div className="h-full w-1/3 bg-white/50 animate-shimmer" />
-          </div>
         </div>
       )}
 
