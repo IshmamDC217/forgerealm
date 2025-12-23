@@ -164,7 +164,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const interactionReady = useFirstInteraction();
   const { targetRef: heroRef, isIntersecting } = useIntersectionOnce();
   const [SplineComponent, setSplineComponent] = useState<SplineComponent | null>(null);
-  const shouldLoadHeavy = isIntersecting && idleReady && interactionReady && !saveData;
+  const shouldLoadHeavy = isIntersecting && (idleReady || interactionReady) && !saveData;
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene(4000, shouldLoadHeavy);
   const theme = useTheme();
   const isLight = theme === "light";
@@ -181,6 +181,8 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     markLoaded();
     onLoadComplete?.();
   };
+
+  // const heroVisible = isLight || !shouldLoadHeavy || splineLoaded || useFallback;
 
   // Keep hero content visible on all devices; we only swap backgrounds when heavy assets are ready.
   const heroVisible = true;
@@ -236,6 +238,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
                 loop
                 playsInline
                 preload="metadata"
+                poster="/notitlefrwatermark.webp"
                 style={{ transform: "translateZ(0)" }}
               />
               <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-white/30" />
