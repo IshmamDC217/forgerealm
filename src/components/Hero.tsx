@@ -182,7 +182,8 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     onLoadComplete?.();
   };
 
-  const heroVisible = isLight || !shouldLoadHeavy || splineLoaded || useFallback;
+  // Keep hero content visible on all devices; we only swap backgrounds when heavy assets are ready.
+  const heroVisible = true;
 
   useEffect(() => {
     if (!shouldLoadHeavy || SplineComponent) return;
