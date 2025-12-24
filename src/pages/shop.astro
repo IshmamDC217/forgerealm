@@ -1,8 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ShopNavbar from '../components/ShopNavbar';
+import ShopHeroCTA from '../components/ShopHeroCTA';
 ---
 
 <BaseLayout title="ForgeRealm Shop" description="Explore ForgeRealm products and collections.">
+  <ShopNavbar client:load />
+
   <main class="min-h-[100dvh] md:min-h-[100svh] bg-slate-950 text-white">
     {/* Hero */}
     <header class="relative overflow-hidden isolate">
@@ -14,20 +18,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <source srcset="/shop-assets/hero.jpg" media="(min-width: 1281px)" />
         <img src="/shop-assets/hero.jpg" alt="ForgeRealm hero" class="w-full h-[420px] md:h-[520px] object-cover object-center" loading="lazy" />
       </picture>
-      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent" />
-      <div class="absolute inset-0 flex flex-col justify-end px-6 sm:px-10 pb-12 gap-4">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-transparen" />
+      <div class="absolute inset-0 flex flex-col justify-end px-6 sm:px-10 pb-14 pt-24 sm:pt-32 gap-2 lg:gap-5">
         <span class="w-fit rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-slate-200 shadow-sm">
           ForgeRealm Shop
         </span>
         <h1 class="text-4xl sm:text-5xl font-extrabold drop-shadow-lg max-w-2xl leading-tight">
-          Time to suit up your space with 3D prints.
+          Switch up your space with 3D prints.
         </h1>
         <p class="text-slate-200/80 max-w-xl">
           Gradient lamps, fantasy figurines, and everyday accessories built with eco materials.
         </p>
-        <button class="w-fit rounded-full bg-white text-blue-700 font-semibold px-5 py-3 text-sm uppercase tracking-wide hover:bg-blue-100 transition-colors shadow-lg shadow-blue-500/20">
-          Shop now
-        </button>
+        <ShopHeroCTA client:load />
       </div>
     </header>
 
@@ -88,5 +90,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
       </div>
     </section>
+
   </main>
 </BaseLayout>
