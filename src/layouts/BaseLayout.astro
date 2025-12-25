@@ -7,7 +7,10 @@ interface Props {
   description?: string;
 }
 
-const { title = 'ForgeRealm', description = 'ForgeRealm powered by Astro' } = Astro.props;
+const {
+  title = 'ForgeRealm',
+  description = 'ForgeRealm powered by Astro'
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -20,7 +23,6 @@ const { title = 'ForgeRealm', description = 'ForgeRealm powered by Astro' } = As
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-    <link rel="preload" as="image" href="/notitlefrwatermark.webp" />
     <link rel="preload" as="image" href="/frowl.webp" />
     <link
       rel="stylesheet"
