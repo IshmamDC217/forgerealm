@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const productRoutes = require('./routes/products.routes');
@@ -10,9 +11,24 @@ const { notFound, errorHandler } = require('./utils/errors');
 
 const app = express();
 
+// Trust proxy so we can read real client IPs behind Cloudflare/EB
+app.set('trust proxy', 1);
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Rate limit login per real client IP (Cloudflare: cf-connecting-ip)
+const loginLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) =>
+    req.headers['cf-connecting-ip'] ||
+    (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) ||
+    req.ip
+});
 
 // Basic request logger to trace inbound API calls
 app.use((req, res, next) => {
@@ -31,7 +47,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Routes
 app.use('/api/products', productRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', loginLimiter, authRoutes);
 app.use('/api/users', userRoutes);
 
 // 404 + error handling
