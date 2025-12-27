@@ -2,7 +2,8 @@ require('dotenv').config();
 const app = require('./app');
 const pool = require('./config/db');
 
-const PORT = process.env.PORT || 8080;
+// Be explicit: run on 8080 (EB default). If EB injects a port, prefer that only if set to 8080.
+const PORT = process.env.PORT && Number(process.env.PORT) !== 0 ? Number(process.env.PORT) : 8080;
 const HOST = '0.0.0.0';
 
 async function start() {
