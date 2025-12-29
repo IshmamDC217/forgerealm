@@ -1,21 +1,31 @@
 require('dotenv').config();
+
 const app = require('./app');
 const pool = require('./config/db');
 
-// Be explicit: run on 8080 (EB default). If EB injects a port, prefer that only if set to 8080.
-const PORT = process.env.PORT && Number(process.env.PORT) !== 0 ? Number(process.env.PORT) : 8080;
+const PORT = Number(process.env.PORT) || 8080;
 const HOST = '0.0.0.0';
 
-async function start() {
+// 🔹 START SERVER IMMEDIATELY
+app.listen(PORT, HOST, () => {
+  console.log(`ForgeRealm API listening on ${HOST}:${PORT}`);
+});
+
+// 🔹 CONNECT TO DB AFTER SERVER IS UP
+(async () => {
   try {
     await pool.query('SELECT 1');
-    app.listen(PORT, HOST, () => {
-      console.log(`ForgeRealm API listening on ${HOST}:${PORT}`);
-    });
+    console.log('DB connected');
   } catch (err) {
-    console.error('Failed to start server:', err.message);
-    process.exit(1);
+    console.error('DB connection failed:', err.message);
   }
-}
+})();
 
-start();
+// 🔹 NEVER EXIT THE PROCESS
+process.on('unhandledRejection', err => {
+  console.error('Unhandled rejection:', err);
+});
+
+process.on('uncaughtException', err => {
+  console.error('Uncaught exception:', err);
+});
