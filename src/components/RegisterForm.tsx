@@ -6,7 +6,20 @@ const envBase =
     ? import.meta.env.PUBLIC_API_URL.trim().replace(/\/$/, '')
     : '';
 
-const API_BASE = envBase || 'http://localhost:4000';
+const envLocal =
+  typeof import.meta !== 'undefined' && typeof import.meta.env.PUBLIC_API_URL_LOCAL === 'string'
+    ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, '')
+    : '';
+
+// Prefer local API when running from localhost; fallback to prod base; final fallback matches backend default (8080)
+const API_BASE =
+  (typeof window !== 'undefined' && window.location.origin.startsWith('http://localhost')
+    ? envLocal || 'http://localhost:8080'
+    : envBase || envLocal || 'http://localhost:8080');
+
+const logDebug = (...args: unknown[]) => {
+  console.log('[RegisterForm]', ...args);
+};
 
 type Status =
   | { type: 'idle' }
@@ -29,24 +42,42 @@ const RegisterForm = () => {
     setLoading(true);
     setStatus({ type: 'idle' });
     setToken(null);
+    logDebug('register:start', { API_BASE, origin: window?.location?.origin });
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => {
+      controller.abort();
+      logDebug('register:abort-timeout');
+    }, 12000);
     try {
       const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password })
+        body: JSON.stringify({ username, email, password }),
+        signal: controller.signal,
+      });
+
+      logDebug('register:response', {
+        status: res.status,
+        ok: res.ok,
+        url: res.url,
+        type: res.type
       });
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
+        logDebug('register:error-body', body);
         throw new Error(body.error || 'Registration failed');
       }
 
       const data = await res.json();
+      logDebug('register:success-body', data);
       setToken(data.token);
       setStatus({ type: 'success', message: 'Account created! You can now sign in.' });
     } catch (err: any) {
+      logDebug('register:exception', err?.message || err);
       setStatus({ type: 'error', message: err.message || 'Registration failed' });
     } finally {
+      window.clearTimeout(timeout);
       setLoading(false);
     }
   };
