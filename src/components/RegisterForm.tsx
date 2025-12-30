@@ -17,9 +17,7 @@ const API_BASE =
     ? envLocal || 'http://localhost:8080'
     : envBase || envLocal || 'http://localhost:8080');
 
-const logDebug = (...args: unknown[]) => {
-  console.log('[RegisterForm]', ...args);
-};
+const logDebug = (..._args: unknown[]) => {};
 
 type Status =
   | { type: 'idle' }
@@ -42,11 +40,9 @@ const RegisterForm = () => {
     setLoading(true);
     setStatus({ type: 'idle' });
     setToken(null);
-    logDebug('register:start', { API_BASE, origin: window?.location?.origin });
     const controller = new AbortController();
     const timeout = window.setTimeout(() => {
       controller.abort();
-      logDebug('register:abort-timeout');
     }, 12000);
     try {
       const res = await fetch(`${API_BASE}/api/auth/register`, {
@@ -56,25 +52,15 @@ const RegisterForm = () => {
         signal: controller.signal,
       });
 
-      logDebug('register:response', {
-        status: res.status,
-        ok: res.ok,
-        url: res.url,
-        type: res.type
-      });
-
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        logDebug('register:error-body', body);
         throw new Error(body.error || 'Registration failed');
       }
 
       const data = await res.json();
-      logDebug('register:success-body', data);
       setToken(data.token);
       setStatus({ type: 'success', message: 'Account created! You can now sign in.' });
     } catch (err: any) {
-      logDebug('register:exception', err?.message || err);
       setStatus({ type: 'error', message: err.message || 'Registration failed' });
     } finally {
       window.clearTimeout(timeout);
