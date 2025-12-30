@@ -14,18 +14,6 @@ const app = express();
 // Trust proxies (Cloudflare/ALB) so req.ip and protocol are correct
 app.enable('trust proxy');
 
-// CORS/debug trace for every request (including preflight)
-app.use((req, res, next) => {
-  const origin = req.headers.origin || 'none';
-  const ua = req.headers['user-agent'] || 'unknown';
-  const hasAuth = Boolean(req.headers.authorization);
-  const hasCookie = Boolean(req.headers.cookie);
-  console.log(
-    `[CORS TRACE] ${req.method} ${req.originalUrl} origin=${origin} authHeader=${hasAuth} cookies=${hasCookie} ua=${ua.slice(0, 120)}`
-  );
-  next();
-});
-
 // CORS options (static allowlist, no dynamic callbacks)
 const corsOptions = {
   origin: [
@@ -83,32 +71,9 @@ app.use((req, res, next) => {
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
-// Redact sensitive fields before logging
-const redactBody = (body = {}) => {
-  const clone = { ...body };
-  ['password', 'confirmPassword', 'token'].forEach((key) => {
-    if (Object.prototype.hasOwnProperty.call(clone, key)) {
-      clone[key] = '***';
-    }
-  });
-  return clone;
-};
-
 // Routes
 app.use('/api/products', productRoutes);
-app.use('/api/auth', (req, res, next) => {
-  if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
-    try {
-      const redacted = redactBody(req.body);
-      console.log(`[AUTH TRACE] ${req.method} ${req.originalUrl} body=${JSON.stringify(redacted).slice(0, 500)}`);
-    } catch (err) {
-      console.log(`[AUTH TRACE] ${req.method} ${req.originalUrl} body=<unlogged> err=${err.message}`);
-    }
-  } else {
-    console.log(`[AUTH TRACE] ${req.method} ${req.originalUrl}`);
-  }
-  next();
-}, loginLimiter, authRoutes);
+app.use('/api/auth', loginLimiter, authRoutes);
 app.use('/api/users', userRoutes);
 
 // 404 + error handling

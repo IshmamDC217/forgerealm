@@ -17,10 +17,7 @@ const API_BASE =
     ? envLocal || 'http://localhost:8080'
     : envBase || envLocal || 'http://localhost:8080');
 
-// Debug helper to log a consistent payload
-const logDebug = (...args: unknown[]) => {
-  console.log('[AdminLogin]', ...args);
-};
+const logDebug = (..._args: unknown[]) => {};
 
 type Status =
   | { type: 'idle' }
@@ -38,7 +35,6 @@ const AdminLogin = () => {
   const hasToken = useMemo(() => Boolean(token), [token]);
 
   useEffect(() => {
-    logDebug('mount', { API_BASE, envBase, envLocal, origin: typeof window !== 'undefined' ? window.location.origin : 'ssr' });
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('forgerealm_admin_token');
       if (stored) setToken(stored);
@@ -50,14 +46,12 @@ const AdminLogin = () => {
     setLoading(true);
     setStatus({ type: 'idle' });
     setToken(null);
-    logDebug('login:start', { API_BASE, origin: window?.location?.origin });
     if (typeof window !== 'undefined') {
       localStorage.removeItem('forgerealm_admin_token');
     }
     const controller = new AbortController();
     const timeout = window.setTimeout(() => {
       controller.abort();
-      logDebug('login:abort-timeout');
     }, 12000);
 
     try {
@@ -68,21 +62,12 @@ const AdminLogin = () => {
         signal: controller.signal,
       });
 
-      logDebug('login:response', {
-        status: res.status,
-        ok: res.ok,
-        url: res.url,
-        type: res.type
-      });
-
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        logDebug('login:error-body', body);
         throw new Error(body.error || 'Login failed');
       }
 
       const data = await res.json();
-      logDebug('login:success-body', data);
       setToken(data.token);
       if (typeof window !== 'undefined') {
         localStorage.setItem('forgerealm_admin_token', data.token);
@@ -90,7 +75,6 @@ const AdminLogin = () => {
       }
       setStatus({ type: 'success', message: 'Logged in as admin' });
     } catch (err: any) {
-      logDebug('login:exception', err?.message || err);
       setToken(null);
       if (typeof window !== 'undefined') {
         localStorage.removeItem('forgerealm_admin_token');
@@ -107,14 +91,11 @@ const AdminLogin = () => {
     if (!token) return;
     setLoading(true);
     setStatus({ type: 'idle' });
-    logDebug('logout:start', { API_BASE });
     try {
       await fetch(`${API_BASE}/api/auth/logout`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
-      })
-        .then((res) => logDebug('logout:response', { status: res.status, ok: res.ok, url: res.url }))
-        .catch((err) => logDebug('logout:error', err?.message || err));
+      }).catch(() => {});
     } finally {
       setToken(null);
       if (typeof window !== 'undefined') {
