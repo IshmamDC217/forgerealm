@@ -11,27 +11,51 @@ const { notFound, errorHandler } = require('./utils/errors');
 
 const app = express();
 
-// Trust proxy so we can read real client IPs behind Cloudflare/EB
-app.set('trust proxy', 1);
+// Trust proxies (Cloudflare/ALB) so req.ip and protocol are correct
+app.enable('trust proxy');
 
+// CORS/debug trace for every request (including preflight)
+app.use((req, res, next) => {
+  const origin = req.headers.origin || 'none';
+  const ua = req.headers['user-agent'] || 'unknown';
+  const hasAuth = Boolean(req.headers.authorization);
+  const hasCookie = Boolean(req.headers.cookie);
+  console.log(
+    `[CORS TRACE] ${req.method} ${req.originalUrl} origin=${origin} authHeader=${hasAuth} cookies=${hasCookie} ua=${ua.slice(0, 120)}`
+  );
+  next();
+});
+
+// CORS options (static allowlist, no dynamic callbacks)
 const corsOptions = {
-  origin: 'https://forgerealm.co.uk',
+  origin: [
+    'https://forgerealm.co.uk',
+    'https://www.forgerealm.co.uk',
+    'https://forgerealm.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:4321',
+    'http://localhost:8080',
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204,
 };
 
+// Apply CORS middleware globally
 app.use(cors(corsOptions));
+// Respond to all preflight requests
+app.options('*', cors(corsOptions));
 
+// Built‑in body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Root + health checks for EB/ALB
-app.get('/', (req, res) => res.status(200).json({ status: 'ok' }));
-// Health endpoint for EB/ALB checks
-app.get('/health', (req, res) => res.status(200).send('ok'));
+// Health endpoints for load balancers
+app.get('/', (req, res) => res.json({ status: 'ok' }));
+app.get('/health', (req, res) => res.send('ok'));
 
-// Rate limit login per real client IP (Cloudflare: cf-connecting-ip)
+// Rate‑limit auth endpoints based on real client IP behind CF/ALB
 const loginLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: 5,
@@ -39,29 +63,52 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req) =>
     req.headers['cf-connecting-ip'] ||
-    (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) ||
-    req.ip
+    (req.headers['x-forwarded-for'] &&
+      req.headers['x-forwarded-for'].split(',')[0].trim()) ||
+    req.ip,
 });
 
-// Basic request logger to trace inbound API calls
+// Request logger for troubleshooting
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
     const duration = Date.now() - start;
     console.log(
-      `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} -> ${res.statusCode} (${duration}ms)`
+      `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} -> ${res.statusCode} (${duration}ms)`,
     );
   });
   next();
 });
 
-// Serve uploaded images
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Static file serving for uploads
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
+// Redact sensitive fields before logging
+const redactBody = (body = {}) => {
+  const clone = { ...body };
+  ['password', 'confirmPassword', 'token'].forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(clone, key)) {
+      clone[key] = '***';
+    }
+  });
+  return clone;
+};
 
 // Routes
 app.use('/api/products', productRoutes);
-// Temporarily disable rate limiter for auth to avoid preflight issues; will re-enable after stability confirmed
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', (req, res, next) => {
+  if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
+    try {
+      const redacted = redactBody(req.body);
+      console.log(`[AUTH TRACE] ${req.method} ${req.originalUrl} body=${JSON.stringify(redacted).slice(0, 500)}`);
+    } catch (err) {
+      console.log(`[AUTH TRACE] ${req.method} ${req.originalUrl} body=<unlogged> err=${err.message}`);
+    }
+  } else {
+    console.log(`[AUTH TRACE] ${req.method} ${req.originalUrl}`);
+  }
+  next();
+}, loginLimiter, authRoutes);
 app.use('/api/users', userRoutes);
 
 // 404 + error handling

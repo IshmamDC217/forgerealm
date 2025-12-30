@@ -1,31 +1,30 @@
 require('dotenv').config();
-
 const app = require('./app');
 const pool = require('./config/db');
 
-const PORT = Number(process.env.PORT) || 8080;
+const PORT = parseInt(process.env.PORT, 10) || 8080;
 const HOST = '0.0.0.0';
 
-// 🔹 START SERVER IMMEDIATELY
-app.listen(PORT, HOST, () => {
-  console.log(`ForgeRealm API listening on ${HOST}:${PORT}`);
-});
-
-// 🔹 CONNECT TO DB AFTER SERVER IS UP
-(async () => {
+// start once DB is ready
+async function start() {
   try {
     await pool.query('SELECT 1');
-    console.log('DB connected');
+    console.log('Database connected');
+    app.listen(PORT, HOST, () => {
+      console.log(`ForgeRealm API listening on ${HOST}:${PORT}`);
+    });
   } catch (err) {
-    console.error('DB connection failed:', err.message);
+    console.error('Database connection failed:', err.message);
+    process.exit(1);
   }
-})();
+}
 
-// 🔹 NEVER EXIT THE PROCESS
-process.on('unhandledRejection', err => {
+// never exit silently
+process.on('unhandledRejection', (err) => {
   console.error('Unhandled rejection:', err);
 });
-
-process.on('uncaughtException', err => {
+process.on('uncaughtException', (err) => {
   console.error('Uncaught exception:', err);
 });
+
+start();
