@@ -40,16 +40,11 @@ const RegisterForm = () => {
     setLoading(true);
     setStatus({ type: 'idle' });
     setToken(null);
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => {
-      controller.abort();
-    }, 12000);
     try {
       const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
-        signal: controller.signal,
+        body: JSON.stringify({ username, email, password })
       });
 
       if (!res.ok) {
@@ -63,7 +58,6 @@ const RegisterForm = () => {
     } catch (err: any) {
       setStatus({ type: 'error', message: err.message || 'Registration failed' });
     } finally {
-      window.clearTimeout(timeout);
       setLoading(false);
     }
   };

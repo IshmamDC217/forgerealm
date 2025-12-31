@@ -49,17 +49,11 @@ const AdminLogin = () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('forgerealm_admin_token');
     }
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => {
-      controller.abort();
-    }, 12000);
-
     try {
       const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-        signal: controller.signal,
+        body: JSON.stringify({ username, password })
       });
 
       if (!res.ok) {
@@ -82,7 +76,6 @@ const AdminLogin = () => {
       }
       setStatus({ type: 'error', message: err.message || 'Login failed' });
     } finally {
-      window.clearTimeout(timeout);
       setLoading(false);
     }
   };
