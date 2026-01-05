@@ -21,10 +21,18 @@
 # astro build output
 /dist
 /.astro
+/public/.assetsignore
 
 # production
 /build
 /backend/dist
+/backend-deploy.zip
+
+# cloudflare / wrangler temp
+/.wrangler
+/wrangler.jsonc
+# bundler tmp output
+.wrangler/tmp
 
 # environment files
 .env*

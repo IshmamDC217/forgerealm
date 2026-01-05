@@ -27,57 +27,10 @@ const createUser = async ({ username, email, password }) => {
 };
 
 const login = asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
-
-  const jwtSecret = process.env.JWT_SECRET;
-  if (!jwtSecret) {
-    throw new ApiError(500, 'JWT_SECRET is not configured');
-  }
-
-  // Prefer DB admins
-  const dbAdmin = await getDbAdmin(username);
-  if (dbAdmin) {
-    const computed = hashPassword(password, dbAdmin.salt);
-    if (computed !== dbAdmin.password_hash) {
-      throw new ApiError(401, 'Invalid credentials');
-    }
-
-    const token = jwt.sign(
-      { role: dbAdmin.role || 'admin', username: dbAdmin.username, adminId: dbAdmin.id },
-      jwtSecret,
-      { expiresIn: '12h' }
-    );
-
-    return res.json({ token });
-  }
-
-  // Fallback to env-configured admins (backwards compatibility)
-  const admins = [
-    {
-      username: process.env.ADMIN_USERNAME || 'admin',
-      password: process.env.ADMIN_PASSWORD || 'changeme'
-    },
-    {
-      username: process.env.ADMIN_USERNAME_2,
-      password: process.env.ADMIN_PASSWORD_2
-    },
-    {
-      username: process.env.ADMIN_USERNAME_3,
-      password: process.env.ADMIN_PASSWORD_3
-    }
-  ].filter((admin) => admin.username && admin.password);
-
-  const match = admins.find((admin) => admin.username === username && admin.password === password);
-
-  if (!match) {
+  if (!req.user) {
     throw new ApiError(401, 'Invalid credentials');
   }
-
-  const token = jwt.sign({ role: 'admin', username: match.username }, jwtSecret, {
-    expiresIn: '12h'
-  });
-
-  res.json({ token });
+  res.json({ user: { username: req.user.username, role: req.user.role } });
 });
 
 const register = asyncHandler(async (req, res) => {
@@ -113,8 +66,12 @@ const me = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
-  // Stateless JWT logout: client should discard token; no server blacklist for MVP.
-  res.json({ message: 'Logged out' });
+  req.logout(() => {
+    req.session.destroy(() => {
+      res.clearCookie('fr.sid');
+      res.json({ message: 'Logged out' });
+    });
+  });
 });
 
 module.exports = { login, register, me, logout };
