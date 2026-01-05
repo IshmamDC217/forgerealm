@@ -11,11 +11,11 @@ const envLocal =
     ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, '')
     : '';
 
-// Prefer local API when running from localhost; fallback to prod base; final fallback matches backend default (8080)
+// Prefer local API when running from localhost; fallback to prod base
 const API_BASE =
   (typeof window !== 'undefined' && window.location.origin.startsWith('http://localhost')
     ? envLocal || 'http://localhost:8080'
-    : envBase || envLocal || 'http://localhost:8080');
+    : envBase || envLocal || '');
 
 const logDebug = (..._args: unknown[]) => {};
 
@@ -28,32 +28,27 @@ type Status =
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState<string | null>(null);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [status, setStatus] = useState<Status>({ type: 'idle' });
   const [loading, setLoading] = useState(false);
 
-  const hasToken = useMemo(() => Boolean(token), [token]);
+  const hasToken = useMemo(() => Boolean(loggedIn), [loggedIn]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('forgerealm_admin_token');
-      if (stored) setToken(stored);
-    }
+    // Optionally we could call /api/auth/me to check session; keep it lean for now
   }, []);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setStatus({ type: 'idle' });
-    setToken(null);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('forgerealm_admin_token');
-    }
+    setLoggedIn(false);
     try {
       const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password }),
+        credentials: 'include',
       });
 
       if (!res.ok) {
@@ -62,18 +57,12 @@ const AdminLogin = () => {
       }
 
       const data = await res.json();
-      setToken(data.token);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('forgerealm_admin_token', data.token);
-        window.dispatchEvent(new Event('forgerealm-admin-token-changed'));
+      if (data.user) {
+        setLoggedIn(true);
       }
       setStatus({ type: 'success', message: 'Logged in as admin' });
     } catch (err: any) {
-      setToken(null);
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('forgerealm_admin_token');
-        window.dispatchEvent(new Event('forgerealm-admin-token-changed'));
-      }
+      setLoggedIn(false);
       setStatus({ type: 'error', message: err.message || 'Login failed' });
     } finally {
       setLoading(false);
@@ -81,20 +70,15 @@ const AdminLogin = () => {
   };
 
   const handleLogout = async () => {
-    if (!token) return;
     setLoading(true);
     setStatus({ type: 'idle' });
     try {
       await fetch(`${API_BASE}/api/auth/logout`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: 'include',
       }).catch(() => {});
     } finally {
-      setToken(null);
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('forgerealm_admin_token');
-        window.dispatchEvent(new Event('forgerealm-admin-token-changed'));
-      }
+      setLoggedIn(false);
       setStatus({ type: 'info', message: 'Logged out' });
       setLoading(false);
     }

@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { ApiError, asyncHandler } = require('../utils/errors');
 const pool = require('../config/db');
@@ -29,11 +28,6 @@ const createUser = async ({ username, email, password }) => {
 const login = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
 
-  const jwtSecret = process.env.JWT_SECRET;
-  if (!jwtSecret) {
-    throw new ApiError(500, 'JWT_SECRET is not configured');
-  }
-
   // Prefer DB admins
   const dbAdmin = await getDbAdmin(username);
   if (dbAdmin) {
@@ -42,13 +36,8 @@ const login = asyncHandler(async (req, res) => {
       throw new ApiError(401, 'Invalid credentials');
     }
 
-    const token = jwt.sign(
-      { role: dbAdmin.role || 'admin', username: dbAdmin.username, adminId: dbAdmin.id },
-      jwtSecret,
-      { expiresIn: '12h' }
-    );
-
-    return res.json({ token });
+    req.session.user = { role: dbAdmin.role || 'admin', username: dbAdmin.username, adminId: dbAdmin.id };
+    return res.json({ user: { username: dbAdmin.username, role: dbAdmin.role || 'admin' } });
   }
 
   // Fallback to env-configured admins (backwards compatibility)
@@ -73,18 +62,12 @@ const login = asyncHandler(async (req, res) => {
     throw new ApiError(401, 'Invalid credentials');
   }
 
-  const token = jwt.sign({ role: 'admin', username: match.username }, jwtSecret, {
-    expiresIn: '12h'
-  });
-
-  res.json({ token });
+  req.session.user = { role: 'admin', username: match.username };
+  res.json({ user: { username: match.username, role: 'admin' } });
 });
 
 const register = asyncHandler(async (req, res) => {
   const { username, password, email } = req.body;
-  const jwtSecret = process.env.JWT_SECRET;
-
-  if (!jwtSecret) throw new ApiError(500, 'JWT_SECRET is not configured');
   if (!username || !password) throw new ApiError(400, 'username and password are required');
   if (username.length < 3) throw new ApiError(400, 'username must be at least 3 characters');
   if (password.length < 8) throw new ApiError(400, 'password must be at least 8 characters');
@@ -98,13 +81,7 @@ const register = asyncHandler(async (req, res) => {
   }
 
   const user = await createUser({ username, email, password });
-  const token = jwt.sign(
-    { role: user.role, username: user.username, userId: user.id },
-    jwtSecret,
-    { expiresIn: '12h' }
-  );
-
-  res.status(201).json({ token, user: { id: user.id, username: user.username, email } });
+  res.status(201).json({ user: { id: user.id, username: user.username, email } });
 });
 
 const me = asyncHandler(async (req, res) => {
@@ -113,8 +90,10 @@ const me = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
-  // Stateless JWT logout: client should discard token; no server blacklist for MVP.
-  res.json({ message: 'Logged out' });
+  req.session.destroy(() => {
+    res.clearCookie('fr.sid');
+    res.json({ message: 'Logged out' });
+  });
 });
 
 module.exports = { login, register, me, logout };
