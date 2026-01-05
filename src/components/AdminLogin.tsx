@@ -11,11 +11,11 @@ const envLocal =
     ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, '')
     : '';
 
-// Prefer local API when running from localhost; fallback to prod base
+// Prefer local API when running from localhost; fallback to prod base; final fallback matches backend default (8080)
 const API_BASE =
   (typeof window !== 'undefined' && window.location.origin.startsWith('http://localhost')
-    ? envLocal || 'http://localhost:8080'
-    : envBase || envLocal || '');
+    ? envLocal || ''
+    : envBase || '');
 
 const logDebug = (..._args: unknown[]) => {};
 
@@ -34,10 +34,6 @@ const AdminLogin = () => {
 
   const hasToken = useMemo(() => Boolean(loggedIn), [loggedIn]);
 
-  useEffect(() => {
-    // Optionally we could call /api/auth/me to check session; keep it lean for now
-  }, []);
-
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -48,7 +44,7 @@ const AdminLogin = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
-        credentials: 'include',
+        // credentials: 'include',
       });
 
       if (!res.ok) {
@@ -57,9 +53,7 @@ const AdminLogin = () => {
       }
 
       const data = await res.json();
-      if (data.user) {
-        setLoggedIn(true);
-      }
+      setLoggedIn(true);
       setStatus({ type: 'success', message: 'Logged in as admin' });
     } catch (err: any) {
       setLoggedIn(false);

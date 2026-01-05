@@ -1,11 +1,15 @@
 const { ApiError } = require('../utils/errors');
 
 const requireAdmin = (req, res, next) => {
-  if (req.session && req.session.user && req.session.user.role === 'admin') {
-    req.user = req.session.user;
-    return next();
+  if (!req.isAuthenticated || !req.isAuthenticated()) {
+    return next(new ApiError(401, 'Authentication required'));
   }
-  return next(new ApiError(401, 'Authentication required'));
+
+  if (!req.user || req.user.role !== 'admin') {
+    return next(new ApiError(403, 'Admin access required'));
+  }
+
+  next();
 };
 
 module.exports = { requireAdmin };
