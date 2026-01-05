@@ -11,7 +11,7 @@ const envLocal =
     ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, '')
     : '';
 
-// Prefer local API when running from localhost; fallback to prod base; final fallback matches backend default (8080)
+// Prefer local API when running from localhost; fallback to prod base
 const API_BASE =
   (typeof window !== 'undefined' && window.location.origin.startsWith('http://localhost')
     ? envLocal || ''
@@ -34,6 +34,21 @@ const AdminLogin = () => {
 
   const hasToken = useMemo(() => Boolean(loggedIn), [loggedIn]);
 
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/me`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        setLoggedIn(res.ok);
+      } catch {
+        setLoggedIn(false);
+      }
+    };
+    checkSession();
+  }, []);
+
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -44,7 +59,7 @@ const AdminLogin = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
-        // credentials: 'include',
+        credentials: 'include',
       });
 
       if (!res.ok) {
