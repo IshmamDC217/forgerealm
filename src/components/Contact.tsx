@@ -3,7 +3,7 @@ import { FaEnvelope, FaMapMarkerAlt, FaClock, FaEnvelopeOpenText, FaPhoneAlt } f
 
 export default function Contact() {
   return (
-    <section id="contact" className="theme-surface relative py-24 overflow-hidden bg-gradient-to-br from-[#0b0b0e] via-[#101018] to-[#0d0f15]">
+    <section id="contact" className="theme-surface relative py-24 overflow-hidden bg-gradient-to-br from-[#0b0b0e] via-[#101018] to-[#0d0f15] border-y border-white/10">
       {/* Ambient lights */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/3 top-1/4 h-72 w-72 rounded-full bg-blue-500/20 blur-[140px]" />
@@ -40,7 +40,29 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="mt-8 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6 backdrop-blur-xl hover:bg-white/10 hover:border-blue-400 transition light-panel">
+            <div className="mt-6 grid gap-4 sm:grid-cols-4 auto-rows-fr">
+              {[
+                { title: "Location", detail: "Leeds, United Kingdom", icon: <FaMapMarkerAlt className="text-blue-400" /> },
+                { title: "Email", detail: "forgerealmltd@gmail.com", icon: <FaEnvelope className="text-blue-400" /> },
+                { title: "Phone", detail: "+44 (0) 7344 237800", icon: <FaPhoneAlt className="text-blue-400" /> },
+                { title: "Hours", detail: "Mon-Fri 08:00-18:00", icon: <FaClock className="text-blue-400" /> },
+              ].map((item, idx) => (
+                <div
+                  key={item.title}
+                  className={`rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-4 backdrop-blur-xl hover:border-blue-400/60 transition light-panel ${
+                    idx === 0 ? "sm:col-span-2" : idx === 1 ? "sm:col-span-2" : idx === 2 ? "sm:col-span-1" : "sm:col-span-3"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 text-[color:var(--fg)] font-semibold text-sm">
+                    {item.icon}
+                    <span>{item.title}</span>
+                  </div>
+                  <p className="mt-2 text-xs text-[color:var(--fg)]/70">{item.detail}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6 backdrop-blur-xl hover:bg-white/10 hover:border-blue-400 transition light-panel">
               <div className="flex items-center gap-2 text-[color:var(--fg)] font-semibold">
                 <FaClock className="text-blue-400" />
                 <span>Business hours</span>

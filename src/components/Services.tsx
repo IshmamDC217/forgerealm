@@ -2,12 +2,13 @@
 import { useRef } from "react";
 import {
   FaShoppingCart,
-  FaCogs,
   FaStore,
   FaInstagram,
-  FaFacebook,
-  FaTwitter,
+  FaLinkedin,
 } from "react-icons/fa";
+import { FaLeaf } from "react-icons/fa";
+import { MdBrush } from "react-icons/md";
+import { FiBox, FiHeadphones, FiLayers, FiMapPin, FiShare2, FiUsers } from "react-icons/fi";
 
 export default function Services() {
   const ref = useRef(null);
@@ -15,7 +16,7 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="theme-surface relative overflow-hidden py-24 bg-transparent border-t border-white/10"
+      className="theme-surface relative overflow-hidden py-24 bg-transparent border-y border-white/10"
     >
       {/* Subtle background accent lights */}
       <div className="absolute inset-0 -z-10">
@@ -31,7 +32,7 @@ export default function Services() {
             Our Services
           </h2>
           <div className="text-indigo-200 drop-shadow-[0_0_16px_rgba(129,140,248,0.6)]">
-            <FaCogs className="w-8 h-8 sm:w-10 sm:h-10" aria-hidden />
+            <FiLayers className="w-8 h-8 sm:w-10 sm:h-10" aria-hidden />
           </div>
         </div>
 
@@ -40,6 +41,30 @@ export default function Services() {
           3D-printed products. You can order online, contact us for bespoke
           prints, or visit us at our pop-up stalls and booths around Leeds.
         </p>
+
+        <div className="mt-8 grid gap-4 lg:grid-cols-6 auto-rows-fr">
+          {[
+            { title: "Eco Friendly", detail: "Biodegradable and low-impact materials.", icon: <FaLeaf className="text-emerald-300 text-lg" /> },
+            { title: "Material Options", detail: "PLA and PETG choices for each build.", icon: <FiBox className="text-blue-300 text-lg" /> },
+            { title: "Local Collection", detail: "Leeds pickup options when available.", icon: <FiMapPin className="text-blue-300 text-lg" /> },
+            { title: "Social Drops", detail: "New releases and stall dates posted weekly.", icon: <FiShare2 className="text-pink-300 text-lg" /> },
+            { title: "Support First", detail: "Real replies from the makers.", icon: <FiHeadphones className="text-blue-300 text-lg" /> },
+            { title: "Workshops Soon", detail: "Collaborations and events in the pipeline.", icon: <FiUsers className="text-sky-300 text-lg" /> },
+          ].map((item, idx) => (
+            <div
+              key={item.title}
+              className={`rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-2xl hover:border-blue-400/70 hover:shadow-blue-500/20 hover:shadow-lg transition ${
+                idx === 0 ? "lg:col-span-4" : idx === 1 ? "lg:col-span-2" : idx === 2 ? "lg:col-span-3" : "lg:col-span-3"
+              }`}
+            >
+              <div className="flex items-center gap-2 text-white font-semibold text-sm">
+                {item.icon}
+                <span>{item.title}</span>
+              </div>
+              <p className="mt-2 text-xs text-slate-200/80">{item.detail}</p>
+            </div>
+          ))}
+        </div>
 
         {/* Service grid */}
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -50,7 +75,7 @@ export default function Services() {
               text: "Browse and buy our 3D-printed products directly from our website, or find us on Etsy, eBay, and Vinted.",
             },
             {
-              icon: <FaCogs className="text-blue-400 text-xl" />,
+              icon: <MdBrush className="text-blue-400 text-xl" />,
               title: "Custom & Bespoke Prints",
               text: "Contact us to discuss your ideas or request a personalised print.",
             },
@@ -82,14 +107,11 @@ export default function Services() {
           </p>
 
           <div className="flex items-center gap-4 text-slate-200/80 mt-2">
-            <a href="#" aria-label="Instagram" className="hover:text-pink-400 transition">
+            <a href="https://www.instagram.com/forgerealmltd/" aria-label="Instagram" className="hover:text-pink-400 transition">
               <FaInstagram className="text-lg" />
             </a>
-            <a href="#" aria-label="Facebook" className="hover:text-blue-400 transition">
-              <FaFacebook className="text-lg" />
-            </a>
-            <a href="#" aria-label="Twitter" className="hover:text-sky-400 transition">
-              <FaTwitter className="text-lg" />
+            <a href="https://www.linkedin.com/company/forgerealm" aria-label="LinkedIn" className="hover:text-sky-400 transition">
+              <FaLinkedin className="text-lg" />
             </a>
           </div>
         </div>

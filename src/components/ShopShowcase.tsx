@@ -22,97 +22,92 @@ type Product = {
 const products: Product[] = [
   {
     id: 'aurora-lamp',
-    name: 'Aurora Bloom Lamp',
-    price: 'GBP 48',
-    category: 'Lighting',
-    description: 'Plant-based gradient diffuser with a soft, cinematic glow.',
+    name: 'Aurora Bloom',
+    price: 'GBP 14.99',
+    category: '3D Printed Lamp',
+    description:
+      'Aurora Bloom is a gradient lamp shade with a soft spiral that diffuses light into a warm glow. Printed in precision PLA with smooth layering, it brings ambient color to desks, shelves, and bedside tables.',
     longDescription:
-      'Layered diffuser petals, printed slow in Leeds with bio-based PLA. Satin-finished by hand for a glassy edge and sealed with a water-based, low-VOC coat. Ships with a dimmable LED and plastic-free packaging.',
+      'Aurora Bloom is a gradient lamp shade with a soft spiral that diffuses light into a warm glow. Printed in precision PLA with smooth layering, it brings ambient color to desks, shelves, and bedside tables.',
     image: '/ablamp2.webp',
     gallery: ['/ablamp2.webp', '/ablamp.webp'],
-    accent: 'from-blue-500/70 via-emerald-400/70 to-cyan-300/70',
-    badge: 'Glow drop',
+    accent: 'from-emerald-500/70 via-amber-400/60 to-rose-300/50',
+    badge: 'Warm glow',
     shipTime: 'Ships in 3-4 days',
-    size: '210 mm tall',
-    finish: 'Satin PLA Pro',
-    eco: 'Bio-based, low-VOC finish',
-    features: ['USB-C powered', 'Wet-sanded edges', 'Dimmable LED included', 'Plastic-free wrap']
-  },
-  {
-    id: 'forest-dragon',
-    name: 'Forest Dragon Guardian',
-    price: 'GBP 62',
-    category: 'Figurines',
-    description: 'Scaled detail for shelves and battle stations, printed slow and cool.',
-    longDescription:
-      'Micro-detail profile for scales and horns, then chilled between layers to prevent warping. Finished with a satin, water-based clear coat so it is paint-ready. Balanced tail lets it perch without wobble on plants or desks.',
-    image: '/dragon.webp',
-    gallery: ['/dragon.webp', '/dice-dragon.webp'],
-    accent: 'from-emerald-500/70 via-lime-400/70 to-sky-300/70',
-    badge: 'Paint-ready',
-    shipTime: 'Ships in 2 days',
-    size: '165 mm tall',
-    finish: 'Matte PLA+ with light sanding',
-    eco: 'Bio-based PLA+, recycled padding',
-    features: ['Ultra-detailed scales', 'Weighted tail perch', 'Paint-ready matte', 'Plastic-free mailer']
-  },
-  {
-    id: 'dice-guardian',
-    name: 'Dice Guardian Tower',
-    price: 'GBP 54',
-    category: 'Accessories',
-    description: 'Hidden tray, prismatic wings, and table-safe feet for prized dice.',
-    longDescription:
-      'Removable wing span and slotted tray keep dice tucked away between sessions. Printed in a pearl PLA blend that shifts under warm light, then backed with felt feet to protect tables. Packed in recycled paper and starch-based tape.',
-    image: '/dice-dragon.webp',
-    accent: 'from-purple-500/70 via-blue-500/70 to-fuchsia-400/70',
-    badge: 'Tabletop hit',
-    shipTime: 'Ships in 3 days',
-    size: '140 mm tall',
-    finish: 'Pearlescent PLA',
-    eco: 'Pearl PLA, paper fill',
-    features: ['Hidden dice tray', 'Pearl shimmer', 'Table-safe felt feet', 'Paper-only packaging']
+    size: '14 cm tall',
+    finish: 'Smooth PLA layering',
+    eco: 'Plant-based PLA, plastic-free wrap',
+    features: ['Soft spiral diffuser', 'Ambient glow', 'Precision PLA print', 'Leeds made']
   },
   {
     id: 'nebula-owl',
-    name: 'Nebula Owl Companion',
-    price: 'GBP 42',
-    category: 'Figurines',
-    description: 'Layered feathers with a nebula gradient and soft satin sheen.',
+    name: 'Leeds Owl',
+    price: 'GBP 5.99',
+    category: 'Display Model',
+    description:
+      'A Leeds-inspired owl with a warm gradient that fades from amber to blush. Crisp feather detail makes it a standout accent for studios and shelves.',
     longDescription:
-      'Printed with cooling towers for crisp feather edges, then misted with a satin blend to smooth the gradient. Each owl is leveled for a stable stance and ships in recycled padding with zero plastic.',
+      'A Leeds-inspired owl with a warm gradient that fades from amber to blush. Crisp feather detail makes it a standout accent for studios and shelves.',
     image: '/owl.webp',
-    accent: 'from-amber-400/70 via-rose-500/70 to-indigo-500/70',
-    badge: 'Desk mascot',
+    accent: 'from-amber-500/60 via-rose-400/50 to-red-500/50',
+    badge: 'Leeds made',
     shipTime: 'Ships in 2 days',
-    size: '125 mm tall',
-    finish: 'Satin gradient PLA',
-    eco: 'Gradient PLA, plastic-free mailer',
-    features: ['Soft gradient feathers', 'Balanced stance', 'Satin clear coat', 'Zero plastic in box']
+    size: '9 cm tall',
+    finish: 'Gradient PLA',
+    eco: 'Plant-based PLA, plastic-free mailer',
+    features: ['Crisp feather detail', 'Warm gradient tones', 'Compact display size', 'Studio-ready']
   },
   {
-    id: 'halo-orb',
-    name: 'Halo Desk Orb',
-    price: 'GBP 38',
-    category: 'Lighting',
-    description: 'Palm-sized orb with floating ring diffuser and calm, even glow.',
+    id: 'forest-dragon',
+    name: 'Forest Dragon',
+    price: 'GBP 4.99',
+    category: 'Display Model',
+    description:
+      'A detailed, articulated dragon with layered scales and a balanced pose. The green PLA blend shifts under light, making it feel alive on shelves, desks, or diorama bases.',
     longDescription:
-      'Minimalist desk light tuned for calls and late-night builds. The ring diffuser snaps in place and disperses light in a 140-degree cone for even coverage. Printed in frosted PLA with VOC-free finishing and recyclable wrap.',
-    image: '/ablamp.webp',
-    accent: 'from-cyan-400/70 via-sky-500/70 to-blue-600/70',
-    badge: 'Studio ready',
+      'A detailed, articulated dragon with layered scales and a balanced pose. The green PLA blend shifts under light, making it feel alive on shelves, desks, or diorama bases.',
+    image: '/dragon.webp',
+    gallery: ['/dragon.webp', '/dice-dragon.webp'],
+    accent: 'from-emerald-500/60 via-lime-400/50 to-slate-400/40',
+    badge: 'Layered scales',
     shipTime: 'Ships in 2 days',
-    size: '120 mm tall',
-    finish: 'Frosted PLA',
-    eco: 'Frosted PLA, recycled wrap',
-    features: ['Snap-in ring diffuser', 'USB-C powered', '140-degree throw pattern', 'Recyclable packaging']
+    size: '8 cm long',
+    finish: 'PLA blend',
+    eco: 'Plant-based PLA, recycled padding',
+    features: ['Articulated pose', 'Layered scales', 'Balanced stance', 'Leeds made']
+  },
+  {
+    id: 'dice-guardian',
+    name: 'Dice Guardian',
+    price: 'GBP 5.99',
+    category: 'Fidget Toy',
+    description:
+      'A compact dragon head designed to cradle a full set of D&D dice. PETG adds toughness, and the sculpted form keeps it sharp and tabletop-ready.',
+    longDescription:
+      'A compact dragon head designed to cradle a full set of D&D dice. PETG adds toughness, and the sculpted form keeps it sharp and tabletop-ready.',
+    image: '/dice-dragon.webp',
+    accent: 'from-indigo-500/60 via-slate-500/50 to-blue-900/40',
+    badge: 'Tabletop ready',
+    shipTime: 'Ships in 3 days',
+    size: '7 cm tall',
+    finish: 'PETG',
+    eco: 'PETG, paper fill',
+    features: ['Dice cradle form', 'Tough PETG build', 'Compact footprint', 'Clean sculpt']
   }
 ];
 
-const ProductModal = ({ product, onClose }: { product: Product; onClose: () => void }) => (
+const ProductModal = ({
+  product,
+  onClose,
+  onOpenImage,
+}: {
+  product: Product;
+  onClose: () => void;
+  onOpenImage: () => void;
+}) => (
   <div className="fixed inset-0 z-[70] flex items-center justify-center px-4 py-10 sm:px-6">
-    <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity" onClick={onClose} aria-hidden />
-    <div className="relative mx-auto flex w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/95 via-slate-950 to-slate-950 shadow-[0_30px_120px_rgba(0,0,0,0.45)]">
+    <div className="modal-overlay absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity" onClick={onClose} aria-hidden />
+    <div className="shop-modal relative mx-auto flex w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/95 via-slate-950 to-slate-950 shadow-[0_30px_120px_rgba(0,0,0,0.45)]">
       <div className="flex items-center justify-between border-b border-white/10 bg-white/5 px-6 py-4">
         <div>
           <p className="text-[11px] uppercase tracking-[0.35em] text-blue-200/80">Product window</p>
@@ -139,7 +134,15 @@ const ProductModal = ({ product, onClose }: { product: Product; onClose: () => v
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] p-6">
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 shadow-lg shadow-blue-500/10">
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            onOpenImage();
+          }}
+          className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 text-left shadow-lg shadow-blue-500/10"
+          aria-label={`Open ${product.name} image`}
+        >
           <div className={`absolute inset-0 opacity-60 blur-3xl bg-gradient-to-br ${product.accent}`} aria-hidden />
           <div className="relative aspect-[4/3] overflow-hidden">
             <img
@@ -161,6 +164,9 @@ const ProductModal = ({ product, onClose }: { product: Product; onClose: () => v
               <span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-500/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-100 backdrop-blur">
                 Eco build
               </span>
+              <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur">
+                View image
+              </span>
             </div>
           </div>
           {product.gallery && product.gallery.length > 1 ? (
@@ -172,7 +178,7 @@ const ProductModal = ({ product, onClose }: { product: Product; onClose: () => v
               ))}
             </div>
           ) : null}
-        </div>
+        </button>
 
         <div className="flex flex-col gap-5">
           <p className="text-sm leading-relaxed text-slate-200">{product.longDescription}</p>
@@ -228,6 +234,7 @@ const ProductModal = ({ product, onClose }: { product: Product; onClose: () => v
 
 const ShopShowcase = () => {
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
+  const [imageOpen, setImageOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -327,7 +334,27 @@ const ShopShowcase = () => {
         ))}
       </div>
 
-      {activeProduct ? <ProductModal product={activeProduct} onClose={() => setActiveProduct(null)} /> : null}
+      {activeProduct ? (
+        <ProductModal
+          product={activeProduct}
+          onClose={() => setActiveProduct(null)}
+          onOpenImage={() => setImageOpen(true)}
+        />
+      ) : null}
+
+      {activeProduct && imageOpen ? (
+        <div
+          className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 px-4 py-6"
+          onClick={() => setImageOpen(false)}
+        >
+          <img
+            src={activeProduct.image}
+            alt={activeProduct.name}
+            className="max-h-[90vh] w-auto max-w-[92vw] rounded-3xl border border-white/10 object-contain shadow-[0_30px_120px_rgba(0,0,0,0.55)]"
+            loading="lazy"
+          />
+        </div>
+      ) : null}
     </section>
   );
 };
