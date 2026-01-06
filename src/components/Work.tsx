@@ -33,13 +33,13 @@ export default function Work() {
           </div>
         </div>
 
-        {/* Highlights */}
+                {/* Highlights */}
         <div className="flex flex-wrap items-center gap-3 text-[color:var(--fg)]/60 text-sm sm:text-base mb-12">
-          <span className="inline-flex items-center gap-1 bg-[color:var(--surface)] px-3 py-1 sm:px-4 sm:py-2 rounded-full border border-[color:var(--border)]">• Multi-material capability</span>
-          <span className="inline-flex items-center gap-1 bg-[color:var(--surface)] px-3 py-1 sm:px-4 sm:py-2 rounded-full border border-[color:var(--border)]">• 100% biodegradable PLA used</span>
+          <span className="inline-flex items-center gap-2 bg-[color:var(--surface)] px-3 py-1 sm:px-4 sm:py-2 rounded-full border border-[color:var(--border)]">- Multi-material capability</span>
+          <span className="inline-flex items-center gap-2 bg-[color:var(--surface)] px-3 py-1 sm:px-4 sm:py-2 rounded-full border border-[color:var(--border)]">- 100% biodegradable PLA used</span>
         </div>
 
-        {/* Featured Carousel with Glow */}
+{/* Featured Carousel with Glow */}
         <div className="relative mb-24">
           {/* Ambient Glow Aura */}
           <div className="absolute -inset-12 rounded-[2.5rem] bg-gradient-to-tr from-fuchsia-500/25 via-emerald-400/20 to-sky-400/10 blur-[140px] opacity-70 -z-10" />
@@ -166,6 +166,7 @@ export default function Work() {
           </div>
         </div>
 
+        
         {/* CTA */}
         <div className="mt-24 sm:mt-32 text-center">
           <p className="text-[color:var(--fg)]/70 mb-4 text-sm sm:text-lg">More to come! Scroll back to the top to explore again.</p>
@@ -173,7 +174,7 @@ export default function Work() {
             href="#homepage"
             className="inline-block rounded-full border border-blue-400 bg-blue-400/10 px-8 py-4 text-sm sm:text-base font-semibold text-blue-300 transition hover:bg-blue-400/30"
           >
-            Scroll back to top ?
+            Scroll back to top -&gt;
           </a>
         </div>
       </div>

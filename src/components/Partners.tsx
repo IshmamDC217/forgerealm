@@ -2,21 +2,22 @@ export default function ProductsMarquee() {
   return (
     <div
       aria-label="What we make"
-      className="py-10 border-y border-white/80 bg-gradient-to-r from-blue-500 to-indigo-600 shadow-lg backdrop-blur"
+      className="relative py-8 border-y border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-blue-500/10 via-emerald-400/10 to-indigo-500/10" aria-hidden />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
         <div className="flex items-center gap-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex animate-[marquee_25s_linear_infinite] gap-12 whitespace-nowrap text-white">
-            <span className="text-sm uppercase">Fidget Toys</span>
-            <span className="text-sm uppercase">White Vases</span>
-            <span className="text-sm uppercase">Halloween Trinkets</span>
-            <span className="text-sm uppercase">D&D Dice Holders</span>
-            <span className="text-sm uppercase">Phone Stands</span>
-            <span className="text-sm uppercase">Keychains</span>
-            <span className="text-sm uppercase">Book Stands</span>
-            <span className="text-sm uppercase">Figurines (Dragons, Cats)</span>
-            <span className="text-sm uppercase">Cosplay Props</span>
-            <span className="text-sm italic">...and more</span>
+          <div className="flex animate-[marquee_25s_linear_infinite] gap-12 whitespace-nowrap text-white/90 text-xs sm:text-sm uppercase tracking-[0.2em]">
+            <span>Fidget Toys</span>
+            <span>White Vases</span>
+            <span>Halloween Trinkets</span>
+            <span>D&D Dice Holders</span>
+            <span>Phone Stands</span>
+            <span>Keychains</span>
+            <span>Book Stands</span>
+            <span>Figurines (Dragons, Cats)</span>
+            <span>Cosplay Props</span>
+            <span className="italic">...and more</span>
           </div>
         </div>
       </div>
