@@ -2,94 +2,191 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ShopNavbar from '../components/ShopNavbar';
 import ShopHeroCTA from '../components/ShopHeroCTA';
+import ShopShowcase from '../components/ShopShowcase';
 ---
 
-<BaseLayout title="ForgeRealm Shop" description="Explore ForgeRealm products and collections.">
+<BaseLayout title="Eco 3D Prints from Leeds | ForgeRealm Shop" description="Eco-friendly, micro-batch 3D prints from Leeds. Plant-based materials, low-VOC finishing, and plastic-free packaging.">
   <ShopNavbar client:load />
 
-  <main class="min-h-[100dvh] md:min-h-[100svh] bg-slate-950 text-white">
-    {/* Hero */}
-    <header class="relative overflow-hidden isolate">
-      <picture>
-        <source srcset="/shop-assets/hero.jpg" media="(max-width: 640px)" />
-        <source srcset="/shop-assets/hero.jpg" media="(max-width: 768px)" />
-        <source srcset="/shop-assets/hero.jpg" media="(max-width: 1024px)" />
-        <source srcset="/shop-assets/hero.jpg" media="(max-width: 1280px)" />
-        <source srcset="/shop-assets/hero.jpg" media="(min-width: 1281px)" />
-        <img src="/shop-assets/hero.jpg" alt="ForgeRealm hero" class="w-full h-[420px] md:h-[520px] object-cover object-center" loading="lazy" />
-      </picture>
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-transparen" />
-      <div class="absolute inset-0 flex flex-col justify-end px-6 sm:px-10 pb-14 pt-24 sm:pt-32 gap-2 lg:gap-5">
-        <span class="w-fit rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-slate-200 shadow-sm">
-          ForgeRealm Shop
-        </span>
-        <h1 class="text-4xl sm:text-5xl font-extrabold drop-shadow-lg max-w-2xl leading-tight">
-          Switch up your space with 3D prints.
-        </h1>
-        <p class="text-slate-200/80 max-w-xl">
-          Gradient lamps, fantasy figurines, and everyday accessories built with eco materials.
-        </p>
-        <ShopHeroCTA client:load />
+  <main class="relative isolate overflow-hidden bg-slate-950 text-white">
+    <div class="pointer-events-none absolute inset-0">
+      <div class="absolute -left-32 -top-24 h-[420px] w-[420px] rounded-full bg-blue-600/30 blur-[140px]" />
+      <div class="absolute right-[-160px] top-10 h-[360px] w-[360px] rounded-full bg-emerald-500/20 blur-[160px]" />
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.08),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(167,139,250,0.07),transparent_30%),radial-gradient(circle_at_50%_80%,rgba(16,185,129,0.08),transparent_35%)]" />
+    </div>
+
+    <header class="relative mx-auto max-w-6xl px-6 sm:px-10 pt-28 pb-16 lg:pt-32">
+      <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+        <div class="space-y-6">
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.35em] text-blue-200 backdrop-blur">
+            Leeds-built, eco-first
+            <span class="h-[6px] w-[6px] rounded-full bg-emerald-400 animate-pulse" />
+          </span>
+          <div class="space-y-3">
+            <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight drop-shadow-lg">
+              Eco-grade 3D prints from Leeds, built to last.
+            </h1>
+            <p class="max-w-xl text-lg text-slate-200/90">
+              Plant-based materials, low-VOC finishing, and plastic-free packaging. Click any piece to open its own window, study the finish, and lock in a build slot without losing your place.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <a href="#products" class="inline-flex items-center gap-2 rounded-full bg-blue-500 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-slate-950 shadow-lg shadow-blue-500/30 transition hover:-translate-y-[1px] hover:bg-blue-400">
+              Browse builds
+            </a>
+            <a href="/shop/register" class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:-translate-y-[1px] hover:border-white/40 hover:bg-white/10">
+              Custom print
+            </a>
+            <ShopHeroCTA client:load />
+          </div>
+          <div class="flex flex-wrap items-center gap-4 text-sm text-slate-200">
+            <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2">
+              <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              Printed in Leeds, UK
+            </div>
+            <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2">
+              <span class="h-2 w-2 rounded-full bg-blue-300" />
+              Plant-based PLA+ and low-VOC finish
+            </div>
+            <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2">
+              <span class="h-2 w-2 rounded-full bg-purple-300" />
+              Tap to open product windows
+            </div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="absolute -inset-6 rounded-3xl border border-white/10 bg-white/5 blur-3xl" aria-hidden />
+          <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900/60 shadow-2xl shadow-blue-500/20">
+            <div class="absolute inset-0 bg-gradient-to-br from-white/5 via-blue-500/10 to-emerald-400/5" aria-hidden />
+            <picture>
+              <source srcset="/shop-assets/hero-banner-sm.webp" media="(max-width: 640px)" />
+              <source srcset="/shop-assets/hero-banner-md.webp" media="(max-width: 768px)" />
+              <source srcset="/shop-assets/hero-banner-lg.webp" media="(max-width: 1024px)" />
+              <source srcset="/shop-assets/hero-banner-xl.webp" media="(max-width: 1280px)" />
+              <source srcset="/shop-assets/hero-banner-2xl.webp" media="(min-width: 1281px)" />
+              <img src="/shop-assets/hero.jpg" alt="ForgeRealm print desk" class="h-full w-full object-cover" loading="lazy" />
+            </picture>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/15 to-transparent" aria-hidden />
+            <div class="absolute bottom-5 left-5 right-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur">
+              <div>
+                <p class="text-[11px] uppercase tracking-[0.3em] text-blue-200">Live queue</p>
+                <p class="text-sm text-slate-100">3 builds in print / 2 in finishing</p>
+              </div>
+              <div class="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-100">
+                Slots open
+                <span class="h-2 w-2 rounded-full bg-emerald-300 animate-pulse" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { title: 'Micro-batch crafted', detail: 'Limited drops with QA on every piece.' },
+          { title: 'Eco materials', detail: 'Plant-based PLA+, low-VOC finishing.' },
+          { title: 'Plastic-free wrap', detail: 'Recycled paper fill and starch tape.' },
+          { title: 'Shipping worldwide', detail: 'Tracked, padded, and water-resistant.' }
+        ].map((item) => (
+          <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200 backdrop-blur">
+            <p class="text-white font-semibold">{item.title}</p>
+            <p class="text-slate-300 text-sm">{item.detail}</p>
+          </div>
+        ))}
       </div>
     </header>
 
-    {/* Featured carousel mock */}
-    <section id="products" class="mx-auto max-w-6xl px-6 sm:px-10 py-16">
-      <div class="flex items-center justify-between gap-4">
-        <h2 class="text-2xl font-semibold">Popular right now</h2>
-        <a href="#collections" class="text-sm uppercase tracking-wide text-blue-300 hover:text-white transition">View all</a>
-      </div>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {["Aurora Bloom Lamp", "Forest Dragon", "Dice Guardian"].map((name, idx) => (
-          <article class="rounded-2xl bg-white/5 border border-white/10 overflow-hidden shadow-xl hover:border-blue-400 transition-colors backdrop-blur">
-            <div class="relative overflow-hidden bg-slate-900 rounded-t-2xl aspect-[5/4] shadow-lg shadow-blue-500/10">
-              <img
-                src={idx === 0 ? "/owl.jpg" : idx === 1 ? "/dragon.jpg" : "/dice-dragon.jpg"}
-                alt={name}
-                class="absolute inset-0 h-full w-full object-cover object-center"
-                loading="lazy"
-              />
-            </div>
-            <div class="p-5 space-y-3">
-              <p class="text-xs uppercase tracking-[0.25em] text-blue-300">Featured</p>
-              <h3 class="text-lg font-semibold">{name}</h3>
-              <p class="text-sm text-slate-300">Premium 3D printed piece, made with eco materials.</p>
-              <div class="flex items-center justify-between pt-1">
-                <span class="text-blue-200 font-semibold">£48.00</span>
-                <button class="inline-flex items-center gap-2 rounded-full bg-blue-500 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wide hover:bg-blue-400 transition shadow-lg shadow-blue-500/20">
-                  Add to cart
-                </button>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
+    <ShopShowcase client:load />
 
-    {/* Collections */}
-    <section id="collections" class="bg-slate-900/60 border-t border-white/10 py-16">
-      <div class="mx-auto max-w-6xl px-6 sm:px-10 flex flex-col gap-10">
+    <section id="collections" class="relative border-t border-white/10 bg-slate-900/60 py-16">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.08),transparent_35%),radial-gradient(circle_at_70%_60%,rgba(59,130,246,0.05),transparent_40%)]" aria-hidden />
+      <div class="relative mx-auto flex max-w-6xl flex-col gap-10 px-6 sm:px-10">
         <div class="flex items-center justify-between gap-4">
-          <h2 class="text-2xl font-semibold">Collections</h2>
-          <a href="#products" class="text-sm uppercase tracking-wide text-blue-300 hover:text-white transition">Shop popular</a>
+          <div>
+            <p class="text-[11px] uppercase tracking-[0.35em] text-blue-200/80">Collections</p>
+            <h2 class="text-3xl font-extrabold">Curated for every corner.</h2>
+          </div>
+          <a href="#products" class="text-sm uppercase tracking-wide text-blue-300 hover:text-white transition">
+            Shop the drop
+          </a>
         </div>
         <div class="grid gap-6 md:grid-cols-3">
           {[
-            { title: "Figurines", blurb: "Dragons, owls, and fantasy props." },
-            { title: "Lighting", blurb: "Gradient lamps and accent lighting." },
-            { title: "Accessories", blurb: "Keychains, stands, desk pieces." },
+            { title: 'Figurines', blurb: 'Dragons, owls, and guardians with paint-ready matte finishes.', cta: 'View minis' },
+            { title: 'Lighting', blurb: 'Gradient lamps, halo orbs, and soft-bounce accent lighting.', cta: 'Light my desk' },
+            { title: 'Accessories', blurb: 'Dice towers, stands, and everyday carry trays.', cta: 'Upgrade setup' }
           ].map((item) => (
-            <article class="rounded-2xl bg-white/5 border border-white/10 p-5 backdrop-blur hover:border-blue-400 transition shadow-lg shadow-blue-500/10">
-              <h3 class="text-xl font-semibold text-white">{item.title}</h3>
-              <p class="mt-2 text-sm text-slate-300">{item.blurb}</p>
-              <button class="mt-4 inline-flex items-center gap-2 text-sm uppercase tracking-wide text-blue-300 hover:text-white transition">
-                Explore
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur shadow-lg shadow-blue-500/10 transition hover:-translate-y-[2px] hover:border-blue-400">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xl font-semibold text-white">{item.title}</h3>
+                <span class="text-xs uppercase tracking-[0.3em] text-blue-200">Eco-ready</span>
+              </div>
+              <p class="mt-3 text-sm text-slate-300">{item.blurb}</p>
+              <button class="mt-5 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-blue-200 hover:text-white transition">
+                {item.cta}
+                <span aria-hidden>-&gt;</span>
               </button>
             </article>
           ))}
         </div>
+
+        <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur shadow-inner shadow-blue-500/10">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-[11px] uppercase tracking-[0.3em] text-blue-200">Experience</p>
+                <h3 class="text-xl font-semibold text-white">From print bed to your desk.</h3>
+              </div>
+              <span class="rounded-full bg-emerald-500/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-100">
+                Guided
+              </span>
+            </div>
+            <div class="mt-4 grid gap-3 sm:grid-cols-3">
+              {[
+                { title: 'Print', detail: 'Slow profiles for crisp edges and zero ringing.' },
+                { title: 'Finish', detail: 'Satin sanding, seam hiding, and water-based coat.' },
+                { title: 'Ship', detail: 'Padded, waterproof, and plastic-free packaging.' }
+              ].map((step) => (
+                <div class="rounded-xl border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-slate-200">
+                  <p class="text-white font-semibold">{step.title}</p>
+                  <p class="text-slate-300 text-sm">{step.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-gradient-to-br from-blue-600/20 via-indigo-500/20 to-slate-900/80 p-6 shadow-lg shadow-blue-500/20">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-[11px] uppercase tracking-[0.3em] text-blue-100">Promise</p>
+                <h3 class="text-xl font-semibold text-white">UX that respects your time.</h3>
+              </div>
+              <span class="rounded-full bg-white/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
+                Fast support
+              </span>
+            </div>
+            <ul class="mt-4 space-y-2 text-sm text-slate-100">
+              <li class="flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+                Product windows keep your spot while you inspect details.
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-blue-300" />
+                Instant lead-time clarity, no hidden steps.
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-purple-300" />
+                Mobile-friendly tap targets and keyboard-friendly modals.
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-amber-300" />
+                Human responses if anything looks off before it ships.
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
-
   </main>
 </BaseLayout>

@@ -19,9 +19,9 @@ const ShopHeroCTA = () => {
 
   if (hasToken) {
     return (
-      <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-900 text-emerald-50 font-semibold px-3 py-1 text-[11px] uppercase tracking-[0.12em] shadow-md shadow-emerald-500/30 whitespace-nowrap">
-        <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-        WELCOME
+      <span className="inline-flex w-fit items-center gap-2 rounded-full bg-emerald-900 text-emerald-50 px-5 py-3 text-sm font-semibold uppercase tracking-wide shadow-md shadow-emerald-500/30 whitespace-nowrap">
+        <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+        Welcome
       </span>
     );
   }
@@ -34,7 +34,7 @@ const ShopHeroCTA = () => {
           window.location.href = '/shop/sign-in';
         }
       }}
-      className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white text-blue-700 font-semibold px-3 py-1 text-[11px] uppercase tracking-[0.12em] hover:bg-blue-100 transition-colors shadow-md shadow-blue-500/20 whitespace-nowrap"
+      className="inline-flex w-fit items-center gap-2 rounded-full bg-white text-blue-700 px-5 py-3 text-sm font-semibold uppercase tracking-wide hover:bg-blue-100 transition-colors shadow-md shadow-blue-500/20 whitespace-nowrap"
     >
       Sign In
     </button>
