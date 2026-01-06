@@ -267,8 +267,8 @@ const ShopShowcase = () => {
             Eco-forward drops, precision printed in Leeds.
           </h2>
           <p className="mt-2 text-slate-300 max-w-2xl">
-            Tap a piece to open its own window, study the finish, and lock in a build slot without losing your place.
-            Every build is plant-based, water-finished, and packed plastic-free.
+            Made in Leeds with planet-first materials, each drop is printed in small batches for crisp detail and
+            consistent finish.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-200">
