@@ -1,9 +1,29 @@
-@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap");
+@font-face {
+  font-family: "Bree Serif";
+  src: url("/fonts/Bree_Serif/BreeSerif-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Bree Serif";
+  src: url("/fonts/Bree_Serif/BreeSerif-Regular.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Bree Serif";
+  src: url("/fonts/Bree_Serif/BreeSerif-Regular.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --font-display: "Sora", "Sora Fallback", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Bree Serif", serif;
   /* theme tokens for adaptive UI */
   --fg: var(--foreground);
   --fg-muted: #374151; /* gray-700 for stronger contrast on light */
@@ -13,8 +33,12 @@
 
 /* Explicit theme override via data-theme attribute */
 [data-theme="light"] {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f5f0;
+  --foreground: #0f172a;
+  --fg: #0f172a;
+  --fg-muted: #475569;
+  --surface: rgba(255, 255, 255, 0.9);
+  --border: rgba(15, 23, 42, 0.12);
 }
 
 [data-theme="dark"] {
@@ -35,8 +59,8 @@
   --color-border: var(--border);
 
   /* ✅ Link to Next.js font variables */
-  --font-sans: var(--font-display);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 /* System preference is used only when no explicit data-theme is set */
@@ -56,7 +80,14 @@ body {
 
 /* Utility: display font for brand/headers */
 .font-display {
-  font-family: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: "Bree Serif", serif !important;
+}
+
+/* Brand display font for the main hero wordmark */
+.font-brand {
+  font-family: var(--font-display), var(--font-sans), ui-sans-serif, -apple-system, sans-serif !important;
+  letter-spacing: 0.02em;
+  font-weight: 400;
 }
 
 /* Stronger surface glass effect for select containers */
@@ -74,36 +105,111 @@ body {
 
 /* Basic, global light-mode expectation */
 [data-theme="light"] #theme-scope {
-  background: #dbe8ff !important;
+  background: #ebe2d2 !important;
   color: #0f172a !important;
 }
 
-/* In light theme, force section surfaces to white while keeping accents */
+/* Light theme surfaces: soft warm panels with subtle contrast */
 [data-theme="light"] #theme-scope .theme-surface {
-  background-color: #eef3ff !important;
+  background-color: #f2e8da !important;
 }
 
-/* Preserve blue gradients in light mode for Services and Materials */
+/* Light theme gradients aligned to warm glass aesthetic */
 [data-theme="light"] #theme-scope #services {
-  background-image: linear-gradient(135deg, #dbe8ff 0%, #dbe8ff 60%, #6366f1 60%, #3b82f6 100%) !important;
+  background-image: linear-gradient(135deg, #f7f4ee 0%, #f7f4ee 60%, #fde9c7 60%, #f6d7a8 100%) !important;
 }
 [data-theme="light"] #theme-scope #materials {
-  background-image: linear-gradient(315deg, #dbe8ff 0%, #dbe8ff 40%, #6366f1 40%, #3b82f6 100%) !important;
+  background-image: linear-gradient(315deg, #f7f4ee 0%, #f7f4ee 45%, #e9f4e7 45%, #cfe8d1 100%) !important;
 }
 
-/* In light mode, give Work a full blue gradient background instead of white */
+/* Work: neutral warm gradient to match updated dark tone */
 [data-theme="light"] #theme-scope #work {
-  background-image: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%) !important;
+  background-image: linear-gradient(135deg, #f7f4ee 0%, #efe9df 55%, #f6e4cf 100%) !important;
 }
 
-/* Polar opposite gradients for FAQ and Contact in light mode */
+/* FAQ + Contact: warm gold tones with soft contrast */
 [data-theme="light"] #theme-scope #faq {
-  background-image: linear-gradient(135deg, #dbe8ff 0%, #dbe8ff 60%, #6366f1 60%, #3b82f6 100%) !important;
+  background-image: linear-gradient(135deg, #f3e7d6 0%, #f3e7d6 60%, #f2d3a5 60%, #e6b97e 100%) !important;
 }
 [data-theme="light"] #theme-scope #contact {
-  background-image: linear-gradient(315deg, #dbe8ff 0%, #dbe8ff 60%, #6366f1 60%, #3b82f6 100%) !important;
+  background-image: linear-gradient(315deg, #f7f4ee 0%, #f7f4ee 60%, #e6eefc 60%, #cfe0f6 100%) !important;
 }
 
+/* Light mode text fixes for dark-tuned utility classes inside theme scope */
+[data-theme="light"] #theme-scope .text-slate-200,
+[data-theme="light"] #theme-scope .text-slate-200\/80,
+[data-theme="light"] #theme-scope .text-slate-300,
+[data-theme="light"] #theme-scope .text-slate-300\/70,
+[data-theme="light"] #theme-scope .text-slate-400,
+[data-theme="light"] #theme-scope .text-white,
+[data-theme="light"] #theme-scope .text-white\/90,
+[data-theme="light"] #theme-scope .text-white\/60,
+[data-theme="light"] #theme-scope .text-white\/70,
+[data-theme="light"] #theme-scope .text-white\/80 {
+  color: #1f2937 !important;
+}
+
+/* Light mode: warm amber text tokens for FAQ accents */
+[data-theme="light"] #theme-scope .text-amber-100,
+[data-theme="light"] #theme-scope .text-amber-200,
+[data-theme="light"] #theme-scope .text-amber-200\/70 {
+  color: #7c2d12 !important;
+}
+[data-theme="light"] #theme-scope .border-amber-200\/40 {
+  border-color: rgba(124, 45, 18, 0.3) !important;
+}
+[data-theme="light"] #theme-scope .bg-amber-400\/10 {
+  background-color: rgba(252, 211, 77, 0.25) !important;
+}
+
+/* Light mode modal surfaces for Work + Shop */
+[data-theme="light"] #theme-scope .work-modal,
+[data-theme="light"] #theme-scope .shop-modal {
+  background-color: #f7f4ee !important;
+  border-color: rgba(15, 23, 42, 0.16) !important;
+  color: #0f172a;
+  border-radius: 1.5rem;
+}
+
+[data-theme="light"] #theme-scope .modal-overlay {
+  background-color: rgba(15, 23, 42, 0.45) !important;
+}
+
+[data-theme="light"] #theme-scope .modal-label {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] #theme-scope .modal-header {
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+}
+
+.modal-body {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+/* Light mode card contrast + shadow for all containers */
+[data-theme="light"] #theme-scope .bg-white\/5 {
+  background-color: rgba(255, 255, 255, 0.78) !important;
+  box-shadow: 0 30px 70px -40px rgba(15, 23, 42, 0.35);
+}
+[data-theme="light"] #theme-scope .border-white\/10 {
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+[data-theme="light"] #theme-scope .border-white\/20 {
+  border-color: rgba(15, 23, 42, 0.2) !important;
+}
+
+/* Light mode: stronger contrast for FAQ sidebar KPI cards */
+[data-theme="light"] #theme-scope #faq .bg-white\/5 {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 24px 50px -35px rgba(15, 23, 42, 0.45);
+}
+[data-theme="light"] #theme-scope #faq .text-white {
+  color: #0f172a !important;
+}
 /* Make specific CTA text white in light mode for contrast on dark button */
 [data-theme="light"] #theme-scope .email-cta {
   color: #ffffff !important;
@@ -256,3 +362,21 @@ code, pre {
 .animate-fade-in-delayed { animation: fade-in-delayed 1.5s ease-out forwards; }
 .animate-fade-in-slow { animation: fade-in-slow 2s ease-out forwards; }
 .animate-gradient-move { background-size: 200% 200%; animation: gradient-move 10s ease-in-out infinite; }
+
+/* Intersection reveal for main page sections */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

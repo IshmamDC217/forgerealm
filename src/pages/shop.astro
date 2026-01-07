@@ -8,7 +8,7 @@ import ShopShowcase from '../components/ShopShowcase';
 <BaseLayout title="Eco 3D Prints from Leeds | ForgeRealm Shop" description="Eco-friendly, micro-batch 3D prints from Leeds. Plant-based materials, low-VOC finishing, and plastic-free packaging.">
   <ShopNavbar client:load />
 
-  <main class="relative isolate overflow-hidden bg-slate-950 text-white">
+  <main class="relative isolate bg-slate-950 text-white overflow-x-hidden">
     <div class="pointer-events-none absolute inset-0">
       <div class="absolute -left-32 -top-24 h-[420px] w-[420px] rounded-full bg-blue-600/30 blur-[140px]" />
       <div class="absolute right-[-160px] top-10 h-[360px] w-[360px] rounded-full bg-emerald-500/20 blur-[160px]" />
@@ -19,8 +19,7 @@ import ShopShowcase from '../components/ShopShowcase';
       <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
         <div class="space-y-6">
           <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.35em] text-blue-200 backdrop-blur">
-            Leeds-built, eco-first
-            <span class="h-[6px] w-[6px] rounded-full bg-emerald-400 animate-pulse" />
+            Leeds-built, Eco-first
           </span>
           <div class="space-y-3">
             <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight drop-shadow-lg">
@@ -40,10 +39,6 @@ import ShopShowcase from '../components/ShopShowcase';
             <ShopHeroCTA client:load />
           </div>
           <div class="flex flex-wrap items-center gap-4 text-sm text-slate-200">
-            <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2">
-              <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              Printed in Leeds, UK
-            </div>
             <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2">
               <span class="h-2 w-2 rounded-full bg-blue-300" />
               Plant-based PLA+ and low-VOC finish
@@ -160,28 +155,28 @@ import ShopShowcase from '../components/ShopShowcase';
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-[11px] uppercase tracking-[0.3em] text-blue-100">Promise</p>
-                <h3 class="text-xl font-semibold text-white">UX that respects your time.</h3>
+                <h3 class="text-xl font-semibold text-white">Leeds-first 3D printing.</h3>
               </div>
               <span class="rounded-full bg-white/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
-                Fast support
+                Local quality
               </span>
             </div>
             <ul class="mt-4 space-y-2 text-sm text-slate-100">
               <li class="flex items-center gap-2">
                 <span class="h-1.5 w-1.5 rounded-full bg-emerald-300" />
-                Product windows keep your spot while you inspect details.
+                Printed in Leeds with careful layer tuning for crisp edges.
               </li>
               <li class="flex items-center gap-2">
                 <span class="h-1.5 w-1.5 rounded-full bg-blue-300" />
-                Instant lead-time clarity, no hidden steps.
+                Plant-based PLA and PETG options for everyday durability.
               </li>
               <li class="flex items-center gap-2">
                 <span class="h-1.5 w-1.5 rounded-full bg-purple-300" />
-                Mobile-friendly tap targets and keyboard-friendly modals.
+                Small-batch runs with hands-on finishing for consistent detail.
               </li>
               <li class="flex items-center gap-2">
                 <span class="h-1.5 w-1.5 rounded-full bg-amber-300" />
-                Human responses if anything looks off before it ships.
+                Plastic-free packaging and careful QC before dispatch.
               </li>
             </ul>
           </div>

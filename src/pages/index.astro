@@ -12,15 +12,52 @@ import Footer from '../components/Footer';
 ---
 
 <BaseLayout>
-  <Navbar client:load />
-  <Hero client:idle />
-  <div id="theme-scope">
-    <Partners client:visible />
-    <Services client:visible />
-    <Materials client:visible />
-    <Work client:visible />
-    <Faq client:visible />
-    <Contact client:visible />
+  <div class="relative isolate overflow-hidden bg-slate-950 text-white">
+    <div class="pointer-events-none absolute inset-0">
+      <div class="absolute -left-24 -top-24 h-[380px] w-[380px] rounded-full bg-blue-600/25 blur-[140px]" />
+      <div class="absolute right-[-120px] top-16 h-[320px] w-[320px] rounded-full bg-emerald-500/15 blur-[160px]" />
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(59,130,246,0.08),transparent_32%),radial-gradient(circle_at_88%_8%,rgba(167,139,250,0.07),transparent_30%),radial-gradient(circle_at_50%_78%,rgba(16,185,129,0.08),transparent_35%)]" />
+      <div class="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-transparent" />
+    </div>
+
+    <Navbar client:load />
+    <Hero client:idle />
+
+    <div id="theme-scope" class="relative">
+      <Partners client:visible />
+      <div class="relative">
+        <div class="pointer-events-none absolute inset-x-0 -top-20 h-40 bg-gradient-to-b from-white/5 via-white/0 to-transparent" aria-hidden />
+        <Services client:visible />
+        <Materials client:visible />
+        <Work client:visible />
+        <Faq client:visible />
+        <Contact client:visible />
+      </div>
+    </div>
+
+    <Footer client:idle />
   </div>
-  <Footer client:idle />
 </BaseLayout>
+
+<script is:inline>
+  (() => {
+    const targets = document.querySelectorAll('[data-observe]');
+    if (!targets.length) return;
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    targets.forEach((el) => observer.observe(el));
+  })();
+</script>

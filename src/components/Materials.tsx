@@ -8,12 +8,14 @@ export default function Materials() {
   return (
     <section
       id="materials"
-      className="theme-surface relative py-24 bg-[linear-gradient(315deg,_#0b0b0e_0%,_#101018_40%,_#6366f1_40%,_#3b82f6_100%)] overflow-hidden"
+      data-observe
+      className="reveal theme-surface relative py-24 bg-transparent overflow-hidden border-y border-white/10"
     >
       {/* Subtle background lights */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute left-1/3 top-1/4 h-72 w-72 rounded-full bg-blue-500/20 blur-[120px]" />
-        <div className="absolute right-1/4 bottom-1/4 h-72 w-72 rounded-full bg-indigo-500/20 blur-[120px]" />
+        <div className="absolute left-1/3 top-1/4 h-72 w-72 rounded-full bg-blue-500/20 blur-[140px]" />
+        <div className="absolute right-1/4 bottom-1/4 h-72 w-72 rounded-full bg-indigo-500/15 blur-[140px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(59,130,246,0.08),transparent_34%),radial-gradient(circle_at_76%_16%,rgba(16,185,129,0.08),transparent_32%),radial-gradient(circle_at_55%_80%,rgba(129,140,248,0.08),transparent_32%)]" />
       </div>
 
       <div
@@ -22,7 +24,7 @@ export default function Materials() {
       >
         {/* Header with icon */}
         <div className="max-w-2xl flex items-center gap-3">
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-[color:var(--fg)] whitespace-nowrap">
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">
             Materials
           </h2>
           <div className="relative flex-shrink-0 flex items-center text-emerald-200 drop-shadow-[0_0_16px_rgba(110,231,183,0.55)]">
@@ -30,7 +32,7 @@ export default function Materials() {
           </div>
         </div>
 
-        <p className="mt-3 text-[color:var(--fg-muted)] max-w-xl">
+        <p className="mt-3 text-slate-200/80 max-w-xl">
           We offer the following filaments for 3D printing:
         </p>
 
@@ -62,7 +64,7 @@ export default function Materials() {
           ].map((item, i) => (
             <div
               key={i}
-              className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] surface-strong p-8 backdrop-blur-2xl transition-all hover:border-blue-400 hover:shadow-[0_0_25px_-5px_rgba(59,130,246,0.3)] light-panel"
+              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-2xl transition-all hover:border-blue-400/70 hover:shadow-[0_0_35px_-8px_rgba(59,130,246,0.4)]"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-[color:var(--fg)]">
@@ -74,11 +76,11 @@ export default function Materials() {
                   {item.label}
                 </span>
               </div>
-              <p className="text-sm text-[color:var(--fg-muted)] leading-relaxed">
+              <p className="text-sm text-slate-200/80 leading-relaxed">
                 {item.desc}
               </p>
 
-              <ul className="mt-5 space-y-2 text-sm text-[color:var(--fg-muted)]">
+              <ul className="mt-5 space-y-2 text-sm text-slate-200/80">
                 {item.points.map((p, idx) => (
                   <li key={idx} className="flex items-center gap-3">
                     <span
