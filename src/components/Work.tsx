@@ -86,15 +86,19 @@ export default function Work() {
   useEffect(() => {
     if (!openId) return;
     const html = document.documentElement;
-    const previousOverflow = html.style.overflow;
+    const body = document.body;
+    const previousHtmlOverflow = html.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
     html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
     return () => {
-      html.style.overflow = previousOverflow;
+      html.style.overflow = previousHtmlOverflow;
+      body.style.overflow = previousBodyOverflow;
     };
   }, [openId]);
 
   return (
-    <section id="work" className="theme-surface relative bg-transparent border-y border-white/10">
+    <section id="work" data-observe className="reveal theme-surface relative bg-transparent border-y border-white/10">
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/4 top-1/4 h-[28rem] w-[28rem] rounded-full bg-indigo-500/20 blur-[160px]" />
         <div className="absolute right-1/5 bottom-1/4 h-[30rem] w-[30rem] rounded-full bg-emerald-500/20 blur-[180px]" />
@@ -149,47 +153,60 @@ export default function Work() {
       <AnimatePresence>
         {openItem ? (
           <motion.div
-            className="fixed inset-0 z-[90] flex items-center justify-center px-4 py-10 sm:px-6"
+            className="fixed inset-0 z-[120] flex items-center justify-center px-4 py-10 sm:px-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 0.2 } }}
             exit={{ opacity: 0, transition: { duration: 0.2 } }}
           >
             <div
               className="modal-overlay absolute inset-0 bg-black/70 backdrop-blur-sm"
-              onClick={() => setOpenId(null)}
+              onClick={() => {
+                setOpenId(null);
+                setImageOpen(false);
+              }}
               aria-hidden
             />
             <motion.div
-              className="work-modal relative flex w-full max-w-5xl flex-col rounded-[2.5rem] border border-white/10 bg-slate-950/95 shadow-[0_40px_140px_rgba(0,0,0,0.55)] max-h-[85vh] sm:max-h-[90vh]"
-              initial={{ opacity: 0, y: 30, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1, transition: spring }}
-              exit={{ opacity: 0, y: 10, scale: 0.98, transition: { duration: 0.2 } }}
-            >
-              <div className="modal-header flex items-center justify-between border-b border-white/10 bg-white/5 px-6 py-4">
+                className="work-modal relative flex w-full max-w-5xl flex-col rounded-[2.5rem] border border-white/10 bg-slate-950/95 shadow-[0_40px_140px_rgba(0,0,0,0.55)] max-h-[85vh] sm:max-h-[90vh] overflow-hidden"
+                initial={{ opacity: 0, y: 30, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1, transition: spring }}
+                exit={{ opacity: 0, y: 10, scale: 0.98, transition: { duration: 0.2 } }}
+              >
+              <div className="modal-header flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-3 sm:px-6 sm:py-4">
                 <div>
-                  <p className="modal-label text-[10px] uppercase tracking-[0.35em] text-blue-200/80">Product window</p>
-                  <h3 className="text-xl font-semibold text-white">{openItem.name}</h3>
-                  <p className="text-xs text-slate-400">{openItem.category}</p>
+                  <p className="modal-label text-[9px] uppercase tracking-[0.35em] text-blue-200/80 sm:text-[10px]">Product window</p>
+                  <h3 className="text-lg font-semibold text-white sm:text-xl">{openItem.name}</h3>
+                  <p className="text-[10px] text-slate-400 sm:text-xs">{openItem.category}</p>
                 </div>
                 <button
                   type="button"
-                  onClick={() => setOpenId(null)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/5 text-lg text-white transition hover:border-white/40"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setOpenId(null);
+                    setImageOpen(false);
+                  }}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/5 text-base text-white transition hover:border-white/40 sm:h-10 sm:w-10 sm:text-lg"
                   aria-label="Close details"
                 >
                   <FiX />
                 </button>
               </div>
 
-              <div className="grid min-h-0 flex-1 gap-6 overflow-y-auto p-6 lg:grid-cols-[1.2fr_0.8fr] max-h-[calc(85vh-88px)] sm:max-h-[calc(90vh-88px)]">
+              <div className="modal-body grid min-h-0 flex-1 gap-6 overflow-y-auto overscroll-contain p-6 lg:grid-cols-[1.2fr_0.8fr] max-h-[calc(85vh-88px)] sm:max-h-[calc(90vh-88px)]">
                 <button
                   type="button"
                   onClick={() => setImageOpen(true)}
-                  className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 text-left"
+                  className="modal-image relative w-full overflow-hidden rounded-3xl border border-white/10 bg-white/5 text-left"
                   aria-label={`Open ${openItem.name} image`}
                 >
-                  <img src={openItem.imageUrl} alt={openItem.name} className="h-full w-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-black/30">
+                    <img
+                      src={openItem.imageUrl}
+                      alt={openItem.name}
+                      className="h-full w-full object-cover object-center"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  </div>
                   <span className="absolute bottom-4 right-4 rounded-full bg-black/60 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
                     View image
                   </span>
@@ -241,7 +258,7 @@ export default function Work() {
       <AnimatePresence>
         {openItem && imageOpen ? (
           <motion.div
-            className="fixed inset-0 z-[95] flex items-center justify-center bg-black/80 px-4 py-6"
+            className="fixed inset-0 z-[130] flex items-center justify-center bg-black/80 px-4 py-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 0.2 } }}
             exit={{ opacity: 0, transition: { duration: 0.2 } }}

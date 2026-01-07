@@ -169,8 +169,8 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     typeof navigator !== "undefined" &&
     /Lighthouse|Chrome-Lighthouse|Page Speed Insights/i.test(navigator.userAgent || "");
   const [SplineComponent, setSplineComponent] = useState<SplineComponent | null>(null);
-  const allowHeavy = !isLighthouse && (!saveData || interactionReady);
-  const shouldLoadHeavy = allowHeavy && isIntersecting && interactionReady && idleReady;
+  const allowHeavy = !isLighthouse;
+  const shouldLoadHeavy = allowHeavy && isIntersecting;
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene(4000, shouldLoadHeavy);
   const theme = useTheme();
   const isLight = theme === "light";

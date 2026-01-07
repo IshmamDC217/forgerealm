@@ -24,7 +24,8 @@ export default function Faq() {
   return (
     <section
       id="faq"
-      className="theme-surface relative py-24 overflow-hidden bg-gradient-to-bl from-[#0b0b0e] via-[#101018] to-[#1a1408] border-y border-white/10"
+      data-observe
+      className="reveal theme-surface relative py-24 overflow-hidden bg-gradient-to-bl from-[#0b0b0e] via-[#101018] to-[#1a1408] border-y border-white/10"
     >
       {/* Ambient yellow glow lights */}
       <div className="absolute left-0 top-0 h-80 w-80 rounded-full bg-yellow-200/30 blur-[120px] -z-10" />

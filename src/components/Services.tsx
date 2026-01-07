@@ -16,7 +16,8 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="theme-surface relative overflow-hidden py-24 bg-transparent border-y border-white/10"
+      data-observe
+      className="reveal theme-surface relative overflow-hidden py-24 bg-transparent border-y border-white/10"
     >
       {/* Subtle background accent lights */}
       <div className="absolute inset-0 -z-10">

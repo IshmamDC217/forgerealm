@@ -3,7 +3,7 @@ import { FaEnvelope, FaMapMarkerAlt, FaClock, FaEnvelopeOpenText, FaPhoneAlt } f
 
 export default function Contact() {
   return (
-    <section id="contact" className="theme-surface relative py-24 overflow-hidden bg-gradient-to-br from-[#0b0b0e] via-[#101018] to-[#0d0f15] border-y border-white/10">
+    <section id="contact" data-observe className="reveal theme-surface relative py-24 overflow-hidden bg-gradient-to-br from-[#0b0b0e] via-[#101018] to-[#0d0f15] border-y border-white/10">
       {/* Ambient lights */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/3 top-1/4 h-72 w-72 rounded-full bg-blue-500/20 blur-[140px]" />

@@ -184,6 +184,12 @@ body {
   border-top-right-radius: 1.5rem;
 }
 
+.modal-body {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
 /* Light mode card contrast + shadow for all containers */
 [data-theme="light"] #theme-scope .bg-white\/5 {
   background-color: rgba(255, 255, 255, 0.78) !important;
@@ -356,3 +362,21 @@ code, pre {
 .animate-fade-in-delayed { animation: fade-in-delayed 1.5s ease-out forwards; }
 .animate-fade-in-slow { animation: fade-in-slow 2s ease-out forwards; }
 .animate-gradient-move { background-size: 200% 200%; animation: gradient-move 10s ease-in-out infinite; }
+
+/* Intersection reveal for main page sections */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

@@ -2,7 +2,8 @@ export default function ProductsMarquee() {
   return (
     <div
       aria-label="What we make"
-      className="relative py-8 border-y border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden"
+      data-observe
+      className="reveal relative py-8 border-y border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden"
     >
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-blue-500/10 via-emerald-400/10 to-indigo-500/10" aria-hidden />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">

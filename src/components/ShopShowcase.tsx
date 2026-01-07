@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FiArrowUpRight, FiClock, FiFeather, FiPackage, FiX, FiZap } from 'react-icons/fi';
 
 type Product = {
@@ -105,27 +106,30 @@ const ProductModal = ({
   onClose: () => void;
   onOpenImage: () => void;
 }) => (
-  <div className="fixed inset-0 z-[70] flex items-center justify-center px-4 py-10 sm:px-6">
-    <div className="modal-overlay absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity" onClick={onClose} aria-hidden />
-    <div className="shop-modal relative mx-auto flex w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/95 via-slate-950 to-slate-950 shadow-[0_30px_120px_rgba(0,0,0,0.45)]">
-      <div className="flex items-center justify-between border-b border-white/10 bg-white/5 px-6 py-4">
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 py-10 sm:px-6">
+    <div
+      className="modal-overlay absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity"
+      onClick={onClose}
+      aria-hidden
+    />
+    <div className="shop-modal relative mx-auto flex min-h-0 w-full max-w-5xl flex-col overflow-hidden rounded-[2.5rem] border border-white/10 bg-slate-950/95 shadow-[0_40px_140px_rgba(0,0,0,0.55)] max-h-[85vh] sm:max-h-[90vh]">
+      <div className="modal-header flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-3 sm:px-6 sm:py-4">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.35em] text-blue-200/80">Product window</p>
-          <div className="flex items-center gap-2">
-            <h3 className="text-xl font-semibold text-white">{product.name}</h3>
-            <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-blue-200">
-              {product.category}
-            </span>
-          </div>
+          <p className="modal-label text-[9px] uppercase tracking-[0.35em] text-blue-200/80 sm:text-[10px]">Product window</p>
+          <h3 className="text-lg font-semibold text-white sm:text-xl">{product.name}</h3>
+          <p className="text-[10px] text-slate-400 sm:text-xs">{product.category}</p>
         </div>
         <div className="flex items-center gap-3">
-          <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm font-semibold text-blue-100 shadow-inner shadow-blue-500/30">
+          <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-blue-100 shadow-inner shadow-blue-500/30 sm:text-sm">
             {product.price}
           </span>
           <button
             type="button"
-            onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-lg text-white transition hover:-translate-y-[1px] hover:border-white/30 hover:bg-white/10"
+            onClick={(event) => {
+              event.stopPropagation();
+              onClose();
+            }}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/5 text-base text-white transition hover:-translate-y-[1px] hover:border-white/30 hover:bg-white/10 sm:h-10 sm:w-10 sm:text-lg"
             aria-label="Close product window"
           >
             <FiX />
@@ -133,55 +137,36 @@ const ProductModal = ({
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] p-6">
+      <div className="modal-body flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto overscroll-contain p-6 lg:grid lg:grid-cols-[1.2fr_0.8fr] max-h-[calc(85vh-88px)] sm:max-h-[calc(90vh-88px)]">
         <button
           type="button"
           onClick={(event) => {
             event.stopPropagation();
             onOpenImage();
           }}
-          className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60 text-left shadow-lg shadow-blue-500/10"
+          className="modal-image relative w-full flex-shrink-0 overflow-hidden rounded-3xl border border-white/10 bg-white/5 text-left"
           aria-label={`Open ${product.name} image`}
         >
-          <div className={`absolute inset-0 opacity-60 blur-3xl bg-gradient-to-br ${product.accent}`} aria-hidden />
-          <div className="relative aspect-[4/3] overflow-hidden">
+          <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-black/30">
             <img
               src={product.gallery?.[0] ?? product.image}
               alt={product.name}
               className="h-full w-full object-cover object-center"
-              loading="lazy"
+              loading="eager"
+              decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
-            <div className="absolute left-4 bottom-4 flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-100 backdrop-blur">
-                <FiZap className="text-sm" />
-                {product.badge}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-100 backdrop-blur">
-                <FiClock className="text-sm" />
-                {product.shipTime}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-500/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-100 backdrop-blur">
-                Eco build
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white backdrop-blur">
-                View image
-              </span>
-            </div>
           </div>
-          {product.gallery && product.gallery.length > 1 ? (
-            <div className="relative grid grid-cols-2 gap-3 p-3">
-              {product.gallery.slice(1).map((src) => (
-                <div key={src} className="overflow-hidden rounded-xl border border-white/10 bg-slate-900/70">
-                  <img src={src} alt={`${product.name} detail`} className="h-28 w-full object-cover" loading="lazy" />
-                </div>
-              ))}
-            </div>
-          ) : null}
+          <span className="absolute bottom-4 right-4 rounded-full bg-black/60 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+            View image
+          </span>
         </button>
 
         <div className="flex flex-col gap-5">
-          <p className="text-sm leading-relaxed text-slate-200">{product.longDescription}</p>
+          <div>
+            <p className="modal-label text-sm uppercase tracking-[0.3em] text-blue-200/70">Full description</p>
+            <p className="mt-3 text-base leading-relaxed text-slate-200">{product.longDescription}</p>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
               <p className="text-[11px] uppercase tracking-[0.28em] text-slate-300">Finish</p>
@@ -235,14 +220,23 @@ const ProductModal = ({
 const ShopShowcase = () => {
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [imageOpen, setImageOpen] = useState(false);
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    setPortalTarget(document.body);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (!activeProduct) return;
 
     const html = document.documentElement;
-    const previousOverflow = html.style.overflow;
+    const body = document.body;
+    const previousHtmlOverflow = html.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
     html.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
 
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -253,7 +247,8 @@ const ShopShowcase = () => {
     window.addEventListener('keydown', handleKey);
 
     return () => {
-      html.style.overflow = previousOverflow;
+      html.style.overflow = previousHtmlOverflow;
+      body.style.overflow = previousBodyOverflow;
       window.removeEventListener('keydown', handleKey);
     };
   }, [activeProduct]);
@@ -279,82 +274,92 @@ const ShopShowcase = () => {
       </div>
 
       <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {products.map((product) => (
+        {products.map((product, idx) => {
+          const indexLabel = String(idx + 1).padStart(2, "0");
+          const metaChips = [product.price, product.size].filter(Boolean);
+          return (
           <button
             key={product.id}
             type="button"
             onClick={() => setActiveProduct(product)}
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 text-left shadow-xl shadow-blue-500/10 transition hover:-translate-y-[3px] hover:border-blue-300/60 hover:shadow-blue-500/25"
+            className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 text-left shadow-xl shadow-blue-500/10 transition hover:-translate-y-[3px] hover:border-blue-300/60 hover:shadow-blue-500/25"
           >
             <div className={`absolute inset-0 opacity-50 blur-3xl bg-gradient-to-br ${product.accent}`} aria-hidden />
-            <div className="relative overflow-hidden">
-              <div className="aspect-[5/4] overflow-hidden rounded-b-3xl rounded-t-2xl">
+            <div className="flex items-center justify-between text-xs text-slate-400 uppercase tracking-[0.3em] px-5 pt-5">
+              <span>{indexLabel}</span>
+              <span>{product.category}</span>
+            </div>
+            <div className="mt-4 flex flex-col gap-4 px-5 pb-5">
+              <div className="relative h-48 w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105 group-hover:rotate-[0.4deg]"
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   loading="lazy"
                 />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent opacity-80" aria-hidden />
-              <div className="absolute right-4 top-4 flex flex-col items-end gap-2">
-                <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-blue-100 backdrop-blur">
-                  <FiZap className="text-sm" />
-                  {product.badge}
-                </span>
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white backdrop-blur">
-                  <FiClock className="text-sm" />
-                  {product.shipTime}
-                </span>
-              </div>
-            </div>
-
-            <div className="relative space-y-2 px-5 pb-5 pt-4">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-slate-300">{product.category}</p>
-                  <h3 className="text-lg font-semibold text-white">{product.name}</h3>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" aria-hidden />
+                <div className="absolute right-3 top-3 flex flex-col items-end gap-2 text-[10px] font-semibold uppercase tracking-wide text-white/90">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-black/50 px-3 py-1 backdrop-blur">
+                    <FiZap className="text-[11px]" />
+                    {product.badge}
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur">
+                    <FiClock className="text-[11px]" />
+                    {product.shipTime}
+                  </span>
                 </div>
-                <span className="rounded-full border border-white/15 bg-slate-900/70 px-3 py-1 text-sm font-semibold text-blue-100">
-                  {product.price}
-                </span>
               </div>
-              <p className="text-sm text-slate-200/90">{product.description}</p>
-              <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs font-semibold uppercase tracking-wide text-blue-200">
-                <span className="inline-flex items-center gap-2">
+              <div className="flex min-h-[180px] flex-col">
+                <h3 className="text-lg font-semibold text-white">{product.name}</h3>
+                <p className="mt-2 text-sm text-slate-300 line-clamp-4">{product.description}</p>
+                <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-300">
+                  {metaChips.map((chip) => (
+                    <span key={chip} className="rounded-full border border-white/10 bg-white/5 px-3 py-1">
+                      {chip}
+                    </span>
+                  ))}
+                </div>
+                <div className="mt-auto pt-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-blue-200">
                   <FiArrowUpRight className="text-base" />
                   Open product window
-                </span>
-                <span className="rounded-full bg-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.28em] text-slate-100">
-                  Plant-based build
-                </span>
+                </div>
               </div>
             </div>
           </button>
-        ))}
+        );
+        })}
       </div>
 
-      {activeProduct ? (
-        <ProductModal
-          product={activeProduct}
-          onClose={() => setActiveProduct(null)}
-          onOpenImage={() => setImageOpen(true)}
-        />
-      ) : null}
+      {portalTarget && activeProduct
+        ? createPortal(
+            <>
+              <ProductModal
+                product={activeProduct}
+                onClose={() => {
+                  setActiveProduct(null);
+                  setImageOpen(false);
+                }}
+                onOpenImage={() => setImageOpen(true)}
+              />
 
-      {activeProduct && imageOpen ? (
-        <div
-          className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 px-4 py-6"
-          onClick={() => setImageOpen(false)}
-        >
-          <img
-            src={activeProduct.image}
-            alt={activeProduct.name}
-            className="max-h-[90vh] w-auto max-w-[92vw] rounded-3xl border border-white/10 object-contain shadow-[0_30px_120px_rgba(0,0,0,0.55)]"
-            loading="lazy"
-          />
-        </div>
-      ) : null}
+              {imageOpen ? (
+                <div
+                  className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/80 px-4 py-6"
+                  onClick={() => setImageOpen(false)}
+                >
+                  <img
+                    src={activeProduct.image}
+                    alt={activeProduct.name}
+                    className="max-h-[90vh] w-auto max-w-[92vw] rounded-3xl border border-white/10 object-contain shadow-[0_30px_120px_rgba(0,0,0,0.55)]"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
+              ) : null}
+            </>,
+            portalTarget
+          )
+        : null}
     </section>
   );
 };
