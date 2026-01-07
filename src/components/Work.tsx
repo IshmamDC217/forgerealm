@@ -14,8 +14,7 @@ export default function Work() {
   const prevSlide = () => setIndex((prev) => (prev - 1 + images.length) % images.length);
 
   return (
-    <section id="work" className="theme-surface relative overflow-hidden bg-gradient-to-br from-[#0b0b0e] via-[#101018] to-[#0d0f15]">
-      {/* Ambient background lighting */}
+    <section id="work" className="theme-surface relative bg-transparent border-y border-white/10">
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/3 top-1/4 h-[40rem] w-[40rem] rounded-full bg-pink-500/20 blur-[200px]" />
         <div className="absolute right-1/4 bottom-1/4 h-[40rem] w-[40rem] rounded-full bg-emerald-500/20 blur-[200px]" />
