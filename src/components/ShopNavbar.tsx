@@ -54,7 +54,7 @@ const ShopNavbar = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40">
+    <header className="fixed top-0 left-0 right-0 z-20">
       <div className="mx-auto max-w-7xl px-4 py-4">
         <div className="flex items-center justify-between rounded-full border border-white/20 bg-slate-950/70 px-5 py-3 shadow-lg shadow-blue-500/15 backdrop-blur">
           <a href="/" className="inline-flex items-center gap-2 text-white" aria-label="ForgeRealm home">
@@ -106,7 +106,7 @@ const ShopNavbar = () => {
 
       {/* Mobile overlay */}
       <div
-        className={`fixed inset-0 z-30 bg-black/60 backdrop-blur transition-opacity ${
+        className={`fixed inset-0 z-20 bg-black/60 backdrop-blur transition-opacity ${
           open ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={() => setOpen(false)}
@@ -114,7 +114,7 @@ const ShopNavbar = () => {
 
       {/* Mobile drawer */}
       <aside
-        className={`fixed right-0 top-0 bottom-0 z-40 w-64 bg-slate-950/90 backdrop-blur border-l border-white/10 p-6 transform transition-transform ${
+        className={`fixed right-0 top-0 bottom-0 z-30 w-64 bg-slate-950/90 backdrop-blur border-l border-white/10 p-6 transform transition-transform ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
         aria-hidden={!open}

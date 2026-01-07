@@ -1,182 +1,280 @@
 "use client";
-import { useState } from "react";
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
-import { FaShapes } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { FiArrowUpRight, FiX } from "react-icons/fi";
+
+type PrintItem = {
+  id: string;
+  indexLabel: string;
+  name: string;
+  category: string;
+  priceGBP: number;
+  material: "PLA" | "PETG" | "ABS" | "Resin";
+  size: string;
+  colors: string[];
+  imageUrl: string;
+  description: string;
+  accent: string;
+};
+
+const prints: PrintItem[] = [
+  {
+    id: "aurora-lamp",
+    indexLabel: "01",
+    name: "Aurora Bloom",
+    category: "3D Printed Lamp",
+    priceGBP: 14.99,
+    material: "PLA",
+    size: "14 cm tall",
+    colors: ["#2c522d", "#dc8a54", "#cf8678", "#f3d7ae"],
+    imageUrl: "/ablamp.webp",
+    accent: "from-emerald-500/15 via-amber-400/10 to-rose-300/10",
+    description:
+      "Aurora Bloom is a gradient lamp shade with a soft spiral that diffuses light into a warm glow. Printed in precision PLA with smooth layering, it brings ambient color to desks, shelves, and bedside tables.",
+  },
+  {
+    id: "nebula-owl",
+    indexLabel: "02",
+    name: "Leeds Owl",
+    category: "Display Model",
+    priceGBP: 5.99,
+    material: "PLA",
+    size: "9 cm tall",
+    colors: ["#cca671", "#bd7d5e", "#bd7d5e", "#e98492", "#a23b40"],
+    imageUrl: "/owl.webp",
+    accent: "from-amber-500/15 via-rose-400/10 to-red-500/10",
+    description:
+      "A Leeds-inspired owl with a warm gradient that fades from amber to blush. Crisp feather detail makes it a standout accent for studios and shelves.",
+  },
+  {
+    id: "forest-dragon",
+    indexLabel: "03",
+    name: "Forest Dragon",
+    category: "Display Model",
+    priceGBP: 4.99,
+    material: "PLA",
+    size: "8 cm long",
+    colors: ["#14532d", "#86efac", "#0f172a"],
+    imageUrl: "/dragon.webp",
+    accent: "from-emerald-500/15 via-lime-400/10 to-slate-400/10",
+    description:
+      "A detailed, articulated dragon with layered scales and a balanced pose. The green PLA blend shifts under light, making it feel alive on shelves, desks, or diorama bases.",
+  },
+  {
+    id: "dice-guardian",
+    indexLabel: "04",
+    name: "Dice Guardian",
+    category: "Fidget Toy",
+    priceGBP: 5.99,
+    material: "PETG",
+    size: "7 cm tall",
+    colors: ["#474a6a", "#2f3341", "#121013", "#0b1d3a"],
+    imageUrl: "/dice-dragon.webp",
+    accent: "from-indigo-500/15 via-slate-500/10 to-blue-900/10",
+    description:
+      "A compact dragon head designed to cradle a full set of D&D dice. PETG adds toughness, and the sculpted form keeps it sharp and tabletop-ready.",
+  },
+];
+
+const spring = { type: "spring", stiffness: 140, damping: 22, mass: 0.6 };
 
 export default function Work() {
-  const images = [
-    { src: "/ablamp.webp", width: 1280, height: 1280, alt: "Aurora Bloom 1" },
-    { src: "/ablamp2.webp", width: 1024, height: 1536, alt: "Aurora Bloom 2" },
-  ];
-  const [index, setIndex] = useState(0);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [imageOpen, setImageOpen] = useState(false);
+  const openItem = prints.find((item) => item.id === openId) ?? null;
 
-  const nextSlide = () => setIndex((prev) => (prev + 1) % images.length);
-  const prevSlide = () => setIndex((prev) => (prev - 1 + images.length) % images.length);
+  useEffect(() => {
+    if (!openId) return;
+    const html = document.documentElement;
+    const body = document.body;
+    const previousHtmlOverflow = html.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = previousHtmlOverflow;
+      body.style.overflow = previousBodyOverflow;
+    };
+  }, [openId]);
 
   return (
-    <section id="work" className="theme-surface relative bg-transparent border-y border-white/10">
+    <section id="work" data-observe className="reveal theme-surface relative bg-transparent border-y border-white/10">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute left-1/3 top-1/4 h-[40rem] w-[40rem] rounded-full bg-pink-500/20 blur-[200px]" />
-        <div className="absolute right-1/4 bottom-1/4 h-[40rem] w-[40rem] rounded-full bg-emerald-500/20 blur-[200px]" />
-        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white/5 to-transparent" />
+        <div className="absolute left-1/4 top-1/4 h-[28rem] w-[28rem] rounded-full bg-indigo-500/20 blur-[160px]" />
+        <div className="absolute right-1/5 bottom-1/4 h-[30rem] w-[30rem] rounded-full bg-emerald-500/20 blur-[180px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(59,130,246,0.12),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(99,102,241,0.12),transparent_32%)]" />
       </div>
 
-      <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 relative py-24 sm:py-32">
-        {/* Header */}
-        <div className="flex items-end justify-between gap-6 flex-wrap mb-10">
-          <div className="flex items-center gap-3">
-            <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-[color:var(--fg)] whitespace-nowrap">Recent Work</h2>
-            <div className="relative flex-shrink-0 flex items-center text-pink-200 drop-shadow-[0_0_16px_rgba(244,114,182,0.6)]">
-              <FaShapes className="w-8 h-8 sm:w-11 sm:h-11" aria-hidden />
-            </div>
+      <div className="mx-auto max-w-6xl px-6 sm:px-10 py-20 lg:py-24">
+        <div className="flex items-center justify-between gap-6">
+          <div>
+            <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Featured Prints</p>
+            <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-white">Featured Prints</h2>
+            <p className="mt-2 text-sm text-slate-400">ForgeRealm - Made to Order</p>
           </div>
         </div>
 
-        {/* Highlights */}
-        <div className="flex flex-wrap items-center gap-3 text-[color:var(--fg)]/60 text-sm sm:text-base mb-12">
-          <span className="inline-flex items-center gap-1 bg-[color:var(--surface)] px-3 py-1 sm:px-4 sm:py-2 rounded-full border border-[color:var(--border)]">• Multi-material capability</span>
-          <span className="inline-flex items-center gap-1 bg-[color:var(--surface)] px-3 py-1 sm:px-4 sm:py-2 rounded-full border border-[color:var(--border)]">• 100% biodegradable PLA used</span>
-        </div>
-
-        {/* Featured Carousel with Glow */}
-        <div className="relative mb-24">
-          {/* Ambient Glow Aura */}
-          <div className="absolute -inset-12 rounded-[2.5rem] bg-gradient-to-tr from-fuchsia-500/25 via-emerald-400/20 to-sky-400/10 blur-[140px] opacity-70 -z-10" />
-
-          <div className="overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md hover:bg-[color:var(--surface)] transition-all duration-500 hover:shadow-[0_0_100px_-10px_rgba(99,102,241,0.5)] light-panel">
-            <div className="grid grid-cols-1 md:grid-cols-2 items-stretch">
-              {/* Image Carousel */}
-              <div className="relative overflow-hidden h-[50vh] sm:h-[60vh] md:h-[70vh] w-full">
-                <img
-                  key={images[index].src}
-                  src={images[index].src}
-                  alt={images[index].alt}
-                  className="object-cover absolute inset-0 h-full w-full"
-                  loading={index === 0 ? "eager" : "lazy"}
-                  width={images[index].width}
-                  height={images[index].height}
-                />
-
-                {/* Navigation Buttons (hidden on mobile) */}
-                <button
-                  onClick={prevSlide}
-                  className="hidden md:flex absolute left-8 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-[color:var(--fg)] rounded-full p-6 sm:p-7 transition text-xl"
-                  aria-label="Previous"
-                >
-                  <HiChevronLeft />
-                </button>
-                <button
-                  onClick={nextSlide}
-                  className="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-[color:var(--fg)] rounded-full p-6 sm:p-7 transition text-xl"
-                  aria-label="Next"
-                >
-                  <HiChevronRight />
-                </button>
-
-                {/* Dots */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
-                  {images.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setIndex(i)}
-                      aria-label={`Show image ${i + 1}`}
-                      className={`h-3 w-3 rounded-full transition ${i === index ? "bg-fuchsia-400" : "bg-white/40"}`}
-                    />
-                  ))}
+        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+          {prints.map((item, idx) => (
+            <motion.button
+              key={item.id}
+              type="button"
+              onClick={() => setOpenId(item.id)}
+              whileHover={{ y: -6 }}
+              whileTap={{ scale: 0.98 }}
+              className={`group relative text-left rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-2xl p-5 transition hover:border-blue-400/60 hover:shadow-[0_20px_60px_rgba(0,0,0,0.35)] ${
+                idx % 3 === 0 ? "lg:col-span-2" : "lg:col-span-1"
+              }`}
+            >
+              <div className={`absolute inset-0 rounded-[2rem] bg-gradient-to-br ${item.accent}`} aria-hidden />
+              <div className="flex items-center justify-between text-xs text-slate-400 uppercase tracking-[0.3em]">
+                <span>{item.indexLabel}</span>
+                <span>{item.category}</span>
+              </div>
+              <div className="mt-4 grid gap-4 sm:grid-cols-[180px_1fr] items-center">
+                <div className="relative h-40 w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40">
+                  <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">{item.name}</h3>
+                  <p className="mt-2 text-sm text-slate-300 line-clamp-3">{item.description}</p>
+                  <div className="mt-4 flex items-center gap-3 text-xs text-slate-400">
+                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">GBP {item.priceGBP}</span>
+                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{item.material}</span>
+                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{item.size}</span>
+                  </div>
                 </div>
               </div>
-
-              {/* Text Content */}
-              <div className="p-8 sm:p-12 lg:p-20 flex flex-col justify-center text-center md:text-left max-w-2xl mx-auto">
-                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-[color:var(--fg)] mb-5">Featured: Aurora Bloom</h3>
-                <p className="text-[color:var(--fg)]/70 text-base sm:text-lg leading-relaxed mb-8">
-                  Aurora Bloom is a 3D printed lamp shade with a gradient flowing from green to yellow to pink. Its spiral
-                  layering diffuses light softly, giving a natural glow. Printed in precision gradient PLA for strength and
-                  style.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Other projects */}
-        <div className="mt-24 sm:mt-32 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Owl */}
-          <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-pink-400/50 hover:shadow-[0_0_50px_-5px_rgba(236,72,153,0.5)] hover:-translate-y-3 light-panel">
-            <div className="aspect-square overflow-hidden relative">
-              <img
-                src="/owl.webp"
-                alt="Coat of Arms Owl"
-                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1 absolute inset-0 h-full w-full"
-                loading="lazy"
-                width={1280}
-                height={1280}
-              />
-            </div>
-            <div className="p-6 sm:p-8 text-center sm:text-left">
-              <h3 className="text-lg sm:text-2xl font-semibold text-[color:var(--fg)] mb-3">Coat of Arms Owl</h3>
-              <p className="text-sm sm:text-base text-[color:var(--fg)]/70 mb-5">
-                A Leeds-inspired owl printed in PLA, fading from warm yellow at the feet to soft pink at the head. Inspired
-                by the Leeds Coat of Arms and local heritage.
-              </p>
-            </div>
-          </div>
-
-          {/* Forest Dragon */}
-          <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-emerald-400/50 hover:shadow-[0_0_50px_-5px_rgba(16,185,129,0.5)] hover:-translate-y-3 light-panel">
-            <div className="aspect-square overflow-hidden relative">
-              <img
-                src="/dragon.webp"
-                alt="Forest Dragon"
-                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1 absolute inset-0 h-full w-full"
-                loading="lazy"
-                width={1280}
-                height={1280}
-              />
-            </div>
-            <div className="p-6 sm:p-8 text-center sm:text-left">
-              <h3 className="text-lg sm:text-2xl font-semibold text-[color:var(--fg)] mb-3">Forest Dragon</h3>
-              <p className="text-sm sm:text-base text-[color:var(--fg)]/70 mb-5">
-                A forest dragon printed in green PLA with tones that shift in the light. The natural finish gives a
-                lifelike, earthy feel.
-              </p>
-            </div>
-          </div>
-
-          {/* Dice Dragon */}
-          <div className="group relative overflow-hidden rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] backdrop-blur-md transition-all duration-500 hover:border-sky-400/50 hover:shadow-[0_0_50px_-5px_rgba(56,189,248,0.5)] hover:-translate-y-3 light-panel">
-            <div className="aspect-square overflow-hidden relative">
-              <img
-                src="/dice-dragon.webp"
-                alt="Dice Holder Dragon"
-                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1 absolute inset-0 h-full w-full"
-                loading="lazy"
-                width={1280}
-                height={1280}
-              />
-            </div>
-            <div className="p-6 sm:p-8 text-center sm:text-left">
-              <h3 className="text-lg sm:text-2xl font-semibold text-[color:var(--fg)] mb-3">Dice Holder Dragon</h3>
-              <p className="text-sm sm:text-base text-[color:var(--fg)]/70 mb-5">
-                A metallic blue dragon head built to hold a full set of D&amp;D dice. Compact, sleek, and printed in
-                biodegradable PLA.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="mt-24 sm:mt-32 text-center">
-          <p className="text-[color:var(--fg)]/70 mb-4 text-sm sm:text-lg">More to come! Scroll back to the top to explore again.</p>
-          <a
-            href="#homepage"
-            className="inline-block rounded-full border border-blue-400 bg-blue-400/10 px-8 py-4 text-sm sm:text-base font-semibold text-blue-300 transition hover:bg-blue-400/30"
-          >
-            Scroll back to top ?
-          </a>
+            </motion.button>
+          ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {openItem ? (
+          <motion.div
+            className="fixed inset-0 z-[120] flex items-center justify-center px-4 py-10 sm:px-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { duration: 0.2 } }}
+            exit={{ opacity: 0, transition: { duration: 0.2 } }}
+          >
+            <div
+              className="modal-overlay absolute inset-0 bg-black/70 backdrop-blur-sm"
+              onClick={() => {
+                setOpenId(null);
+                setImageOpen(false);
+              }}
+              aria-hidden
+            />
+            <motion.div
+                className="work-modal relative flex w-full max-w-5xl flex-col rounded-[2.5rem] border border-white/10 bg-slate-950/95 shadow-[0_40px_140px_rgba(0,0,0,0.55)] max-h-[85vh] sm:max-h-[90vh] overflow-hidden"
+                initial={{ opacity: 0, y: 30, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1, transition: spring }}
+                exit={{ opacity: 0, y: 10, scale: 0.98, transition: { duration: 0.2 } }}
+              >
+              <div className="modal-header flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-3 sm:px-6 sm:py-4">
+                <div>
+                  <p className="modal-label text-[9px] uppercase tracking-[0.35em] text-blue-200/80 sm:text-[10px]">Product window</p>
+                  <h3 className="text-lg font-semibold text-white sm:text-xl">{openItem.name}</h3>
+                  <p className="text-[10px] text-slate-400 sm:text-xs">{openItem.category}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setOpenId(null);
+                    setImageOpen(false);
+                  }}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/5 text-base text-white transition hover:border-white/40 sm:h-10 sm:w-10 sm:text-lg"
+                  aria-label="Close details"
+                >
+                  <FiX />
+                </button>
+              </div>
+
+              <div className="modal-body grid min-h-0 flex-1 gap-6 overflow-y-auto overscroll-contain p-6 lg:grid-cols-[1.2fr_0.8fr] max-h-[calc(85vh-88px)] sm:max-h-[calc(90vh-88px)]">
+                <button
+                  type="button"
+                  onClick={() => setImageOpen(true)}
+                  className="modal-image relative w-full overflow-hidden rounded-3xl border border-white/10 bg-white/5 text-left"
+                  aria-label={`Open ${openItem.name} image`}
+                >
+                  <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-black/30">
+                    <img
+                      src={openItem.imageUrl}
+                      alt={openItem.name}
+                      className="h-full w-full object-cover object-center"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  </div>
+                  <span className="absolute bottom-4 right-4 rounded-full bg-black/60 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+                    View image
+                  </span>
+                </button>
+                <div className="flex flex-col gap-4 text-slate-200">
+                  <div>
+                    <p className="text-sm uppercase tracking-[0.3em] text-blue-200/70 modal-label">Full description</p>
+                    <p className="mt-3 text-base leading-relaxed">{openItem.description}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                      <p className="uppercase tracking-[0.2em] text-[10px] text-slate-400">Price</p>
+                      <p className="text-white font-semibold">GBP {openItem.priceGBP}</p>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                      <p className="uppercase tracking-[0.2em] text-[10px] text-slate-400">Material</p>
+                      <p className="text-white font-semibold">{openItem.material}</p>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                      <p className="uppercase tracking-[0.2em] text-[10px] text-slate-400">Size</p>
+                      <p className="text-white font-semibold">{openItem.size}</p>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                      <p className="uppercase tracking-[0.2em] text-[10px] text-slate-400">Colors</p>
+                      <div className="mt-1 flex items-center gap-2">
+                        {openItem.colors.map((color) => (
+                          <span
+                            key={color}
+                            className="h-4 w-4 rounded-full border border-white/20"
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pt-2">
+                    <button className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-950 transition hover:bg-blue-400">
+                      Reserve print
+                      <FiArrowUpRight />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {openItem && imageOpen ? (
+          <motion.div
+            className="fixed inset-0 z-[130] flex items-center justify-center bg-black/80 px-4 py-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { duration: 0.2 } }}
+            exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            onClick={() => setImageOpen(false)}
+          >
+            <motion.img
+              src={openItem.imageUrl}
+              alt={openItem.name}
+              className="max-h-[90vh] w-auto max-w-[92vw] rounded-3xl border border-white/10 object-contain shadow-[0_30px_120px_rgba(0,0,0,0.55)]"
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1, transition: spring }}
+              exit={{ scale: 0.98, opacity: 0, transition: { duration: 0.2 } }}
+            />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </section>
   );
 }
-

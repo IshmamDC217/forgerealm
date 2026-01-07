@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type ComponentType } from "react";
 import { FiStar } from "react-icons/fi";
-import { TbLeaf } from "react-icons/tb";
+import { RiLeafFill } from "react-icons/ri";
 import { MdBrush } from "react-icons/md";
 import { GiDragonHead } from "react-icons/gi";
 import { RiEarthLine } from "react-icons/ri";
@@ -169,8 +169,8 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     typeof navigator !== "undefined" &&
     /Lighthouse|Chrome-Lighthouse|Page Speed Insights/i.test(navigator.userAgent || "");
   const [SplineComponent, setSplineComponent] = useState<SplineComponent | null>(null);
-  const allowHeavy = !isLighthouse && (!saveData || interactionReady);
-  const shouldLoadHeavy = allowHeavy && isIntersecting && interactionReady && idleReady;
+  const allowHeavy = !isLighthouse;
+  const shouldLoadHeavy = allowHeavy && isIntersecting;
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene(4000, shouldLoadHeavy);
   const theme = useTheme();
   const isLight = theme === "light";
@@ -287,7 +287,9 @@ export default function Hero({ onLoadComplete }: HeroProps) {
             />
             <div className="relative inline-block max-w-full">
               <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-600 blur-xl opacity-40 rounded-lg block" />
-              <h1 className={`relative font-display ${isLight ? "text-5xl sm:text-6xl lg:text-6xl" : "text-5xl sm:text-6xl lg:text-7xl"} font-extrabold tracking-tight break-words ${isLight ? "text-slate-900" : "text-white"}`}>
+              <h1
+                className={`relative max-w-full font-display leading-[0.95] ${isLight ? "text-5xl sm:text-6xl lg:text-6xl" : "text-5xl sm:text-6xl lg:text-7xl"} font-bold tracking-tight break-words ${isLight ? "text-slate-900" : "text-white"}`}
+              >
                 Forge<span className="text-blue-400">Realm</span>
               </h1>
             </div>
@@ -324,7 +326,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           {/* Tags */}
           <div className="hidden lg:flex gap-2 mt-10">
             <div className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors border ${isLight ? "bg-white/80 border-green-300/70 hover:border-green-500" : "bg-white/5 border-white/10 hover:bg-white/10"}`}>
-              <TbLeaf className="text-green-400 text-xl" />
+              <RiLeafFill className="text-green-400 text-xl" />
               <span className={`text-base ${isLight ? "text-slate-700" : "text-gray-300"}`}>Eco-Friendly</span>
             </div>
             <div className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors border ${isLight ? "bg-white/80 border-pink-300/70 hover:border-pink-500" : "bg-white/5 border-white/10 hover:bg-white/10"}`}>
@@ -340,46 +342,61 @@ export default function Hero({ onLoadComplete }: HeroProps) {
 
         {/* Right side */}
         <div
-          className={`hidden lg:flex flex-col gap-12 transition-all duration-700 ease-out translate-x-0 opacity-100 ${isLight ? "bg-white/90 border border-slate-200 text-slate-900 rounded-3xl p-6 sm:p-8 backdrop-blur" : "text-white bg-transparent border-0"}`}
+          className={`hidden lg:grid gap-4 transition-all duration-700 ease-out translate-x-0 opacity-100 ${isLight ? "bg-white/90 border border-slate-200 text-slate-900 rounded-3xl p-6 sm:p-8 backdrop-blur" : "text-white bg-transparent border-0"}`}
           style={lightPanelStyle}
         >
-          <div className="flex items-start gap-4">
-            <HiOutlineLightBulb className="text-blue-400 text-4xl shrink-0" />
-            <div>
-              <h3 className={`text-xl font-semibold mb-1 ${isLight ? "text-slate-900" : "text-white"}`}>
-                Designed for Creativity
-              </h3>
-              <p className={`leading-relaxed max-w-sm text-sm ${isLight ? "text-slate-700" : "text-gray-400"}`}>
-                A solid base for your ideas, built to be clean, minimal, and ready for customization.
-              </p>
+          <div className={`rounded-3xl border ${isLight ? "border-slate-200 bg-white/80" : "border-white/10 bg-white/5"} p-6`}>
+            <div className="flex items-start gap-4">
+              <HiOutlineLightBulb className="text-blue-400 text-4xl shrink-0" />
+              <div>
+                <h3 className={`text-xl font-semibold mb-1 ${isLight ? "text-slate-900" : "text-white"}`}>
+                  Designed for Creativity
+                </h3>
+                <p className={`leading-relaxed max-w-sm text-sm ${isLight ? "text-slate-700" : "text-gray-400"}`}>
+                  A solid base for your ideas, built to be clean, minimal, and ready for customization.
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="flex items-start gap-4">
-            <FiStar className="text-blue-300 text-3xl shrink-0" />
-            <div>
-              <h3 className={`text-xl font-semibold mb-1 ${isLight ? "text-slate-900" : "text-white"}`}>
-                Built to Inspire
-              </h3>
-              <p className={`leading-relaxed max-w-sm text-sm ${isLight ? "text-slate-700" : "text-gray-400"}`}>
-                From bold figurines to fine details, every piece is designed to spark imagination.
-              </p>
+          <div className={`rounded-3xl border ${isLight ? "border-slate-200 bg-white/80" : "border-white/10 bg-white/5"} p-6`}>
+            <div className="flex items-start gap-4">
+              <FiStar className="text-blue-300 text-3xl shrink-0" />
+              <div>
+                <h3 className={`text-xl font-semibold mb-1 ${isLight ? "text-slate-900" : "text-white"}`}>
+                  Built to Inspire
+                </h3>
+                <p className={`leading-relaxed max-w-sm text-sm ${isLight ? "text-slate-700" : "text-gray-400"}`}>
+                  From bold figurines to fine details, every piece is designed to spark imagination.
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Floating Feature Cards */}
-          <div className="hidden lg:grid grid-cols-3 gap-4 mt-6">
+          <div className="grid grid-cols-6 gap-4 auto-rows-fr">
             <div className={`p-4 rounded-2xl backdrop-blur-xl flex flex-col items-center text-center transition-all ${isLight ? "bg-white/80 border border-blue-300/70 hover:border-blue-500" : "bg-white/10 border border-white/10 hover:border-blue-400"}`}>
               <RiEarthLine className="text-2xl text-blue-300 mb-2" />
               <p className={`text-base font-medium ${isLight ? "text-slate-800" : "text-white/80"}`}>UK Based</p>
             </div>
-            <div className={`p-4 rounded-2xl backdrop-blur-xl flex flex-col items-center text-center transition-all ${isLight ? "bg-white/80 border border-indigo-300/70 hover:border-indigo-500" : "bg-white/10 border border-white/10 hover:border-indigo-400"}`}>
+            <div className={`p-4 rounded-2xl backdrop-blur-xl flex flex-col items-center text-center transition-all lg:col-span-3 ${isLight ? "bg-white/80 border border-indigo-300/70 hover:border-indigo-500" : "bg-white/10 border border-white/10 hover:border-indigo-400"}`}>
               <HiOutlineLightBulb className="text-2xl text-indigo-300 mb-2" />
               <p className={`text-base font-medium ${isLight ? "text-slate-800" : "text-white/80"}`}>3D Innovation</p>
             </div>
-            <div className={`p-4 rounded-2xl backdrop-blur-xl flex flex-col items-center text-center transition-all ${isLight ? "bg-white/80 border border-green-300/70 hover:border-green-500" : "bg-white/10 border border-white/10 hover:border-green-400"}`}>
+            <div className={`p-4 rounded-2xl backdrop-blur-xl flex flex-col items-center text-center transition-all lg:col-span-2 ${isLight ? "bg-white/80 border border-green-300/70 hover:border-green-500" : "bg-white/10 border border-white/10 hover:border-green-400"}`}>
               <FaRecycle className="text-2xl text-green-300 mb-2" />
               <p className={`text-base font-medium ${isLight ? "text-slate-800" : "text-white/80"}`}>Sustainable</p>
+            </div>
+            <div className={`p-4 rounded-2xl backdrop-blur-xl flex flex-col items-center text-center transition-all lg:col-span-2 ${isLight ? "bg-white/80 border border-emerald-300/70 hover:border-emerald-500" : "bg-white/10 border border-white/10 hover:border-emerald-400"}`}>
+              <RiLeafFill className="text-2xl text-emerald-300 mb-2" />
+              <p className={`text-base font-medium ${isLight ? "text-slate-800" : "text-white/80"}`}>Eco Friendly</p>
+            </div>
+            <div className={`p-4 rounded-2xl backdrop-blur-xl flex flex-col items-center text-center transition-all lg:col-span-2 ${isLight ? "bg-white/80 border border-pink-300/70 hover:border-pink-500" : "bg-white/10 border border-white/10 hover:border-pink-400"}`}>
+              <MdBrush className="text-2xl text-pink-300 mb-2" />
+              <p className={`text-base font-medium ${isLight ? "text-slate-800" : "text-white/80"}`}>Paint Ready</p>
+            </div>
+            <div className={`p-4 rounded-2xl backdrop-blur-xl flex flex-col items-center text-center transition-all lg:col-span-2 ${isLight ? "bg-white/80 border border-indigo-300/70 hover:border-indigo-500" : "bg-white/10 border border-white/10 hover:border-indigo-400"}`}>
+              <GiDragonHead className="text-2xl text-indigo-300 mb-2" />
+              <p className={`text-base font-medium ${isLight ? "text-slate-800" : "text-white/80"}`}>Fantasy Figurines</p>
             </div>
           </div>
         </div>

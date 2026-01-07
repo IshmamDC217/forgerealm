@@ -41,7 +41,7 @@ export default function Navbar() {
           {/* Logo */}
           <a href="#homepage" className="inline-flex items-center" aria-label="ForgeRealm home">
             <img src="/frowl.webp" alt="ForgeRealm Logo" width={32} height={32} className="h-8 w-8 rounded-full mr-3" loading="eager" />
-            <span className="font-extrabold tracking-widest text-sm font-display text-white uppercase">
+            <span className="font-extrabold tracking-[0.2em] text-xs text-white uppercase">
               Forge<span className="text-black">REALM</span>
             </span>
           </a>
