@@ -98,7 +98,7 @@ export default function Work() {
   }, [openId]);
 
   return (
-    <section id="work" data-observe className="reveal theme-surface relative bg-transparent border-y border-white/10">
+    <section id="work" className="theme-surface relative bg-transparent border-y border-white/10">
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/4 top-1/4 h-[28rem] w-[28rem] rounded-full bg-indigo-500/20 blur-[160px]" />
         <div className="absolute right-1/5 bottom-1/4 h-[30rem] w-[30rem] rounded-full bg-emerald-500/20 blur-[180px]" />
