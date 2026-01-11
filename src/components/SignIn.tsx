@@ -25,7 +25,7 @@ type Status =
   | { type: 'error'; message: string }
   | { type: 'info'; message: string };
 
-const AdminLogin = () => {
+const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
@@ -69,7 +69,7 @@ const AdminLogin = () => {
 
       const data = await res.json();
       setLoggedIn(true);
-      setStatus({ type: 'success', message: 'Logged in as admin' });
+      setStatus({ type: 'success', message: 'Signed in successfully' });
     } catch (err: any) {
       setLoggedIn(false);
       setStatus({ type: 'error', message: err.message || 'Login failed' });
@@ -190,4 +190,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default SignIn;

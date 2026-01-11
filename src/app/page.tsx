@@ -2,7 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import Partners from "@/components/Partners";
+import Slider from "@/components/Slider";
 import Services from "@/components/Services";
 import Materials from "@/components/Materials";
 import Work from "@/components/Work";
@@ -22,7 +22,7 @@ export default function Home() {
       <Hero />
       {/* Theme scope: everything below can switch themes */}
       <div id="theme-scope">
-        <Partners />
+        <Slider />
         <Services />
         <Materials />
         <Work />

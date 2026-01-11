@@ -373,6 +373,12 @@ code, pre {
   opacity: 1;
   transform: translateY(0);
 }
+@media (max-width: 768px) {
+  .reveal {
+    transform: translateY(16px);
+    transition-duration: 0.45s;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;

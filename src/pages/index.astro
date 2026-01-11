@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
-import Partners from '../components/Partners';
+import Slider from '../components/Slider';
 import Services from '../components/Services';
 import Materials from '../components/Materials';
 import Work from '../components/Work';
@@ -24,7 +24,7 @@ import Footer from '../components/Footer';
     <Hero client:idle />
 
     <div id="theme-scope" class="relative">
-      <Partners client:visible />
+      <Slider client:visible />
       <div class="relative">
         <div class="pointer-events-none absolute inset-x-0 -top-20 h-40 bg-gradient-to-b from-white/5 via-white/0 to-transparent" aria-hidden />
         <Services client:visible />
@@ -56,7 +56,7 @@ import Footer from '../components/Footer';
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.12, rootMargin: '120px 0px -10% 0px' }
     );
     targets.forEach((el) => observer.observe(el));
   })();
