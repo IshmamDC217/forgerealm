@@ -9,7 +9,7 @@ export default function Materials() {
     <section
       id="materials"
       data-observe
-      className="reveal theme-surface relative py-24 bg-transparent overflow-hidden border-y border-white/10"
+      className="theme-surface relative py-24 bg-transparent overflow-hidden border-y border-white/10"
     >
       {/* Subtle background lights */}
       <div className="absolute inset-0 -z-10">
