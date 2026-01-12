@@ -177,13 +177,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene(4000, shouldLoadHeavy);
   const theme = useTheme();
   const isLight = theme === "light";
-  const lightPanelStyle = isLight
-    ? {
-        background: "linear-gradient(45deg, #fff -25%, transparent)",
-        boxShadow:
-          "inset -5px 5px 5px -5px #fff8, inset 5px -5px 5px -5px #fff8, var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow), 2px -1px 14px -10px #0004",
-      }
-    : undefined;
+  const lightPanelStyle = undefined;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -243,25 +237,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
         {!isLight && (
           <div className="absolute inset-0 bg-[#0a1222] bg-[radial-gradient(circle_at_18%_12%,rgba(10,18,34,0.9),transparent_60%),radial-gradient(circle_at_78%_18%,rgba(30,58,138,0.22),transparent_50%),radial-gradient(circle_at_55%_80%,rgba(8,47,73,0.28),transparent_60%)]" />
         )}
-        {isLight &&
-          (showLightVideo ? (
-            <div className="absolute inset-0 w-full h-full overflow-hidden">
-              <video
-                className="absolute inset-0 h-full w-full object-cover object-left sm:object-center will-change-transform"
-                src="/whitebg.mp4"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="none"
-                onLoadedData={() => setLightVideoStarted(true)}
-                style={{ transform: "translateZ(0)" }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-white/30" />
-            </div>
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-100/70 to-slate-200/70" />
-          ))}
+        {isLight && <div className="absolute inset-0 bg-[#f5f7fb]" />}
       </div>
 
       {/* Ambient lighting */}
@@ -272,6 +248,13 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           <div className="absolute top-0 left-1/2 h-40 w-40 bg-fuchsia-500/10 rounded-full blur-[100px]" />
         </div>
       )}
+      {isLight && (
+        <div className="hidden lg:block absolute inset-0 -z-10">
+          <div className="absolute top-1/3 left-[10%] h-64 w-64 bg-blue-200/40 rounded-full blur-[140px]" />
+          <div className="absolute bottom-1/4 right-[10%] h-72 w-72 bg-indigo-200/40 rounded-full blur-[160px]" />
+          <div className="absolute top-0 left-1/2 h-40 w-40 bg-slate-200/50 rounded-full blur-[120px]" />
+        </div>
+      )}
 
       {/* Main Hero */}
       <div
@@ -279,10 +262,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           }`}
       >
         {/* Left side */}
-        <div
-          className={`${isLight ? "bg-white/90 border border-slate-200 text-slate-900 shadow-lg rounded-3xl p-6 sm:p-8 backdrop-blur w-full overflow-hidden" : ""}`}
-          style={lightPanelStyle}
-        >
+        <div className="" style={lightPanelStyle}>
           <div className="flex items-center gap-6 mb-2 justify-center lg:justify-start">
             <img
               src="/notitlefrwatermark.webp"
