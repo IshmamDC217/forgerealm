@@ -170,7 +170,8 @@ export default function Hero({ onLoadComplete }: HeroProps) {
     /Lighthouse|Chrome-Lighthouse|Page Speed Insights/i.test(navigator.userAgent || "");
   const [SplineComponent, setSplineComponent] = useState<SplineComponent | null>(null);
   const allowHeavy = !isLighthouse;
-  const shouldLoadHeavy = allowHeavy && isIntersecting;
+  const enableSpline = false;
+  const shouldLoadHeavy = enableSpline && allowHeavy && isIntersecting;
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene(4000, shouldLoadHeavy);
   const theme = useTheme();
   const isLight = theme === "light";
@@ -193,7 +194,7 @@ export default function Hero({ onLoadComplete }: HeroProps) {
 
   // Keep hero content visible on all devices; we only swap backgrounds when heavy assets are ready.
   const heroVisible = true;
-  const showDarkSpline = !isLight && SplineComponent && (splineEverLoaded || (shouldLoadHeavy && !useFallback));
+  const showDarkSpline = false;
   const showLightVideo = isLight && (lightVideoStarted || shouldLoadHeavy);
 
   useEffect(() => {
