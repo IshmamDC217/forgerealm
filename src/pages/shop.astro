@@ -222,14 +222,13 @@ const apiLocal = import.meta.env.PUBLIC_API_URL_LOCAL ? import.meta.env.PUBLIC_A
 </BaseLayout>
 
 <script is:inline>
-  const apiBase = {apiBase: JSON.stringify(apiBase), apiLocal: JSON.stringify(apiLocal)};
+  const apiConfig = { apiBase: JSON.stringify(apiBase), apiLocal: JSON.stringify(apiLocal) };
   const gate = document.getElementById('shop-gate');
   const content = document.getElementById('shop-content');
   const base =
     window.location.origin.startsWith('http://localhost')
-      ? apiBase.apiLocal || ''
-      : apiBase.apiBase || '';
-  const token = localStorage.getItem('forgerealm_admin_token');
+      ? apiConfig.apiLocal || ''
+      : apiConfig.apiBase || '';
   const showContent = () => {
     if (content) content.classList.remove('hidden');
     if (gate) gate.classList.add('hidden');
@@ -238,14 +237,19 @@ const apiLocal = import.meta.env.PUBLIC_API_URL_LOCAL ? import.meta.env.PUBLIC_A
     if (content) content.classList.add('hidden');
     if (gate) gate.classList.remove('hidden');
   };
-  if (token) {
-    showContent();
-  } else {
-    fetch(`${base}/api/auth/me`, { credentials: 'include' })
+  const checkAuth = () => {
+    const token = localStorage.getItem('forgerealm_admin_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+    fetch(`${base}/api/auth/me`, { credentials: 'include', headers })
       .then((res) => {
         if (res.ok) showContent();
         else showGate();
       })
       .catch(() => showGate());
-  }
+  };
+  checkAuth();
+  window.addEventListener('forgerealm-admin-token-changed', checkAuth);
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'forgerealm_admin_token') checkAuth();
+  });
 </script>

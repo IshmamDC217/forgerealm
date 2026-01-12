@@ -50,7 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 const isProd = process.env.NODE_ENV === 'production';
 const sessionSecret = process.env.SESSION_SECRET || 'change-me';
 const cookieDomain = process.env.SESSION_COOKIE_DOMAIN || (isProd ? '.forgerealm.co.uk' : undefined);
-const secureCookie = process.env.SESSION_COOKIE_SECURE !== 'false';
+const secureCookie = isProd ? process.env.SESSION_COOKIE_SECURE !== 'false' : false;
 app.use(
   session({
     name: 'fr.sid',
@@ -59,8 +59,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      sameSite: 'none', // required for cross-site (frontend on forgerealm.co.uk, API on api.forgerealm.co.uk)
-      secure: secureCookie, // must be true on HTTPS; set SESSION_COOKIE_SECURE=false only for local HTTP dev
+      sameSite: isProd ? 'none' : 'lax',
+      secure: secureCookie,
       domain: cookieDomain,
       maxAge: 1000 * 60 * 60 * 12, // 12h
     },

@@ -30,7 +30,17 @@ const login = asyncHandler(async (req, res) => {
   if (!req.user) {
     throw new ApiError(401, 'Invalid credentials');
   }
-  res.json({ user: { username: req.user.username, role: req.user.role } });
+  const jwtSecret = process.env.JWT_SECRET;
+  if (!jwtSecret) throw new ApiError(500, 'JWT_SECRET is not configured');
+  const token = jwt.sign(
+    { role: req.user.role, username: req.user.username, userId: req.user.id },
+    jwtSecret,
+    { expiresIn: '12h' }
+  );
+  if (req.session) {
+    await new Promise((resolve) => req.session.save(() => resolve()));
+  }
+  res.json({ token, user: { username: req.user.username, role: req.user.role } });
 });
 
 const register = asyncHandler(async (req, res) => {

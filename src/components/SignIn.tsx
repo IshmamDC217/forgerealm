@@ -31,17 +31,33 @@ const SignIn = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [status, setStatus] = useState<Status>({ type: 'idle' });
   const [loading, setLoading] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   const hasToken = useMemo(() => Boolean(loggedIn), [loggedIn]);
+
+  const redirectToShop = () => {
+    if (typeof window === 'undefined') return;
+    if (window.location.pathname.includes('/shop/sign-in')) {
+      window.location.assign('/shop');
+    }
+  };
+
+  useEffect(() => {
+    if (!shouldRedirect) return;
+    redirectToShop();
+  }, [shouldRedirect]);
 
   useEffect(() => {
     const checkSession = async () => {
       try {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('forgerealm_admin_token') : null;
         const res = await fetch(`${API_BASE}/api/auth/me`, {
           method: 'GET',
           credentials: 'include',
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         });
         setLoggedIn(res.ok);
+        if (res.ok) redirectToShop();
       } catch {
         setLoggedIn(false);
       }
@@ -68,8 +84,13 @@ const SignIn = () => {
       }
 
       const data = await res.json();
+      if (data?.token && typeof window !== 'undefined') {
+        localStorage.setItem('forgerealm_admin_token', data.token);
+        window.dispatchEvent(new Event('forgerealm-admin-token-changed'));
+      }
       setLoggedIn(true);
       setStatus({ type: 'success', message: 'Signed in successfully' });
+      setShouldRedirect(true);
     } catch (err: any) {
       setLoggedIn(false);
       setStatus({ type: 'error', message: err.message || 'Login failed' });
@@ -87,6 +108,10 @@ const SignIn = () => {
         credentials: 'include',
       }).catch(() => {});
     } finally {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('forgerealm_admin_token');
+        window.dispatchEvent(new Event('forgerealm-admin-token-changed'));
+      }
       setLoggedIn(false);
       setStatus({ type: 'info', message: 'Logged out' });
       setLoading(false);

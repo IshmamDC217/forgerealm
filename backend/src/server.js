@@ -1,4 +1,10 @@
-require('dotenv').config();
+const path = require('path');
+const fs = require('fs');
+const dotenv = require('dotenv');
+
+const localEnv = path.join(__dirname, '..', '.env.local');
+const defaultEnv = path.join(__dirname, '..', '.env');
+dotenv.config({ path: fs.existsSync(localEnv) ? localEnv : defaultEnv });
 const app = require('./app');
 const pool = require('./config/db');
 
