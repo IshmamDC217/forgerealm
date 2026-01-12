@@ -4,7 +4,6 @@ import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import Slider from '../components/Slider';
 import Services from '../components/Services';
-import Materials from '../components/Materials';
 import Work from '../components/Work';
 import Faq from '../components/Faq';
 import Contact from '../components/Contact';
@@ -12,7 +11,7 @@ import Footer from '../components/Footer';
 ---
 
 <BaseLayout>
-  <div class="relative isolate overflow-hidden bg-slate-950 text-white">
+  <div class="relative isolate bg-slate-950 text-white overflow-x-clip">
     <div class="pointer-events-none absolute inset-0">
       <div class="absolute -left-24 -top-24 h-[380px] w-[380px] rounded-full bg-blue-600/25 blur-[140px]" />
       <div class="absolute right-[-120px] top-16 h-[320px] w-[320px] rounded-full bg-emerald-500/15 blur-[160px]" />
@@ -28,7 +27,6 @@ import Footer from '../components/Footer';
       <div class="relative">
         <div class="pointer-events-none absolute inset-x-0 -top-20 h-40 bg-gradient-to-b from-white/5 via-white/0 to-transparent" aria-hidden />
         <Services client:visible />
-        <Materials client:visible />
         <Work client:visible />
         <Faq client:visible />
         <Contact client:visible />

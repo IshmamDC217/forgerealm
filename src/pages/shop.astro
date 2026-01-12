@@ -3,6 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ShopNavbar from '../components/ShopNavbar';
 import ShopHeroCTA from '../components/ShopHeroCTA';
 import ShopShowcase from '../components/ShopShowcase';
+import SignIn from '../components/SignIn';
+
+const apiBase = import.meta.env.PUBLIC_API_URL ? import.meta.env.PUBLIC_API_URL.trim().replace(/\/$/, '') : '';
+const apiLocal = import.meta.env.PUBLIC_API_URL_LOCAL ? import.meta.env.PUBLIC_API_URL_LOCAL.trim().replace(/\/$/, '') : '';
 ---
 
 <BaseLayout title="Eco 3D Prints from Leeds | ForgeRealm Shop" description="Eco-friendly, micro-batch 3D prints from Leeds. Plant-based materials, low-VOC finishing, and plastic-free packaging.">
@@ -15,7 +19,37 @@ import ShopShowcase from '../components/ShopShowcase';
       <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.08),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(167,139,250,0.07),transparent_30%),radial-gradient(circle_at_50%_80%,rgba(16,185,129,0.08),transparent_35%)]" />
     </div>
 
-    <header class="relative mx-auto max-w-6xl px-6 sm:px-10 pt-28 pb-16 lg:pt-32">
+    <section id="shop-gate" class="relative mx-auto max-w-6xl px-6 sm:px-10 pt-28 pb-20 lg:pt-32">
+      <div class="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] items-start">
+        <div class="space-y-6">
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.35em] text-blue-200 backdrop-blur">
+            Store locked
+          </span>
+          <div class="space-y-3">
+            <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight drop-shadow-lg">
+              ForgeRealm Shop is coming soon.
+            </h1>
+            <p class="max-w-xl text-lg text-slate-200/90">
+              We are fine-tuning the drops, checkout, and live inventory. The full shop will open after testing.
+            </p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-slate-200/90 backdrop-blur">
+            <p class="text-[11px] uppercase tracking-[0.3em] text-blue-200/80">Launch updates</p>
+            <p class="mt-2">
+              Follow our socials for launch dates. Admins can sign in below to access the shop preview.
+            </p>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="absolute -inset-6 rounded-3xl border border-white/10 bg-white/5 blur-3xl" aria-hidden />
+          <SignIn client:load />
+        </div>
+      </div>
+    </section>
+
+    <div id="shop-content" class="hidden">
+      <header class="relative mx-auto max-w-6xl px-6 sm:px-10 pt-28 pb-16 lg:pt-32">
       <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
         <div class="space-y-6">
           <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.35em] text-blue-200 backdrop-blur">
@@ -92,9 +126,9 @@ import ShopShowcase from '../components/ShopShowcase';
       </div>
     </header>
 
-    <ShopShowcase client:load />
+      <ShopShowcase client:load />
 
-    <section id="collections" class="relative border-t border-white/10 bg-slate-900/60 py-16">
+      <section id="collections" class="relative border-t border-white/10 bg-slate-900/60 py-16">
       <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.08),transparent_35%),radial-gradient(circle_at_70%_60%,rgba(59,130,246,0.05),transparent_40%)]" aria-hidden />
       <div class="relative mx-auto flex max-w-6xl flex-col gap-10 px-6 sm:px-10">
         <div class="flex items-center justify-between gap-4">
@@ -182,6 +216,36 @@ import ShopShowcase from '../components/ShopShowcase';
           </div>
         </div>
       </div>
-    </section>
+      </section>
+    </div>
   </main>
 </BaseLayout>
+
+<script is:inline>
+  const apiBase = {apiBase: JSON.stringify(apiBase), apiLocal: JSON.stringify(apiLocal)};
+  const gate = document.getElementById('shop-gate');
+  const content = document.getElementById('shop-content');
+  const base =
+    window.location.origin.startsWith('http://localhost')
+      ? apiBase.apiLocal || ''
+      : apiBase.apiBase || '';
+  const token = localStorage.getItem('forgerealm_admin_token');
+  const showContent = () => {
+    if (content) content.classList.remove('hidden');
+    if (gate) gate.classList.add('hidden');
+  };
+  const showGate = () => {
+    if (content) content.classList.add('hidden');
+    if (gate) gate.classList.remove('hidden');
+  };
+  if (token) {
+    showContent();
+  } else {
+    fetch(`${base}/api/auth/me`, { credentials: 'include' })
+      .then((res) => {
+        if (res.ok) showContent();
+        else showGate();
+      })
+      .catch(() => showGate());
+  }
+</script>

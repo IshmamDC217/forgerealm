@@ -1,7 +1,9 @@
 "use client";
+import { useState } from "react";
 import { FaInstagram, FaFacebook, FaTwitter, FaEtsy } from "react-icons/fa";
 
 export default function Footer() {
+  const [modal, setModal] = useState<"privacy" | "terms" | "sla" | null>(null);
   return (
     <footer className="relative overflow-hidden py-16 bg-slate-950/85 border-t border-white/10 backdrop-blur">
       <div
@@ -144,18 +146,72 @@ export default function Footer() {
         <div className="mt-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/60">
           <div>(c) {new Date().getFullYear()} ForgeRealm Ltd. All rights reserved.</div>
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-white transition">
+            <button type="button" onClick={() => setModal("privacy")} className="hover:text-white transition">
               Privacy
-            </a>
-            <a href="#" className="hover:text-white transition">
+            </button>
+            <button type="button" onClick={() => setModal("terms")} className="hover:text-white transition">
               Terms
-            </a>
-            <a href="#" className="hover:text-white transition">
+            </button>
+            <button type="button" onClick={() => setModal("sla")} className="hover:text-white transition">
               SLA
-            </a>
+            </button>
           </div>
         </div>
       </div>
+
+      {modal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-6">
+          <div className="relative w-full max-w-2xl rounded-2xl border border-white/15 bg-slate-950/95 p-6 text-white shadow-2xl">
+            <button
+              type="button"
+              aria-label="Close"
+              className="absolute right-4 top-4 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-white/80 hover:bg-white/20"
+              onClick={() => setModal(null)}
+            >
+              Close
+            </button>
+            {modal === "privacy" ? (
+              <>
+                <h3 className="text-xl font-semibold">Privacy Policy</h3>
+                <p className="mt-3 text-sm text-white/80">
+                  We only collect the details needed to process orders, respond to inquiries, and send updates you opt
+                  in to receive. We never sell your data.
+                </p>
+                <ul className="mt-4 space-y-2 text-sm text-white/70">
+                  <li>We store email and order details for fulfillment and support.</li>
+                  <li>You can opt out of marketing emails at any time.</li>
+                  <li>Contact us to request access or deletion of your data.</li>
+                </ul>
+              </>
+            ) : modal === "terms" ? (
+              <>
+                <h3 className="text-xl font-semibold">Terms of Service</h3>
+                <p className="mt-3 text-sm text-white/80">
+                  Orders are made to order. Production times vary by item and load. We will confirm timelines and keep
+                  you updated on progress.
+                </p>
+                <ul className="mt-4 space-y-2 text-sm text-white/70">
+                  <li>Custom orders are final once production begins.</li>
+                  <li>Damaged deliveries must be reported within 48 hours.</li>
+                  <li>By ordering, you agree to our print and fulfillment timelines.</li>
+                </ul>
+              </>
+            ) : (
+              <>
+                <h3 className="text-xl font-semibold">Service Level Agreement</h3>
+                <p className="mt-3 text-sm text-white/80">
+                  Our standard service levels outline communication and fulfillment expectations for ForgeRealm orders.
+                </p>
+                <ul className="mt-4 space-y-2 text-sm text-white/70">
+                  <li>Responses within 24 hours on business days.</li>
+                  <li>Production timelines shared before your order is confirmed.</li>
+                  <li>Priority support for time-sensitive or event orders.</li>
+                </ul>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </footer>
   );
 }
