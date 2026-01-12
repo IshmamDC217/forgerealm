@@ -78,6 +78,8 @@ export default function Work() {
   const wasExpandedRef = useRef(false);
   const storedViewportWidthRef = useRef<number | null>(null);
   const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
+  const touchMovedRef = useRef(false);
   const autoScrollTimerRef = useRef<number | null>(null);
   const autoIndexRef = useRef(0);
 
@@ -379,12 +381,31 @@ export default function Work() {
             onClick={handleClose}
             onTouchStart={(event) => {
               touchStartXRef.current = event.touches[0]?.clientX ?? null;
+              touchStartYRef.current = event.touches[0]?.clientY ?? null;
+              touchMovedRef.current = false;
+            }}
+            onTouchMove={(event) => {
+              if (touchStartXRef.current === null || touchStartYRef.current === null) return;
+              const moveX = event.touches[0]?.clientX ?? touchStartXRef.current;
+              const moveY = event.touches[0]?.clientY ?? touchStartYRef.current;
+              const deltaX = Math.abs(moveX - touchStartXRef.current);
+              const deltaY = Math.abs(moveY - touchStartYRef.current);
+              if (deltaY > deltaX) {
+                touchMovedRef.current = true;
+              }
             }}
             onTouchEnd={(event) => {
               if (touchStartXRef.current === null) return;
+              if (touchMovedRef.current) {
+                touchStartXRef.current = null;
+                touchStartYRef.current = null;
+                touchMovedRef.current = false;
+                return;
+              }
               const endX = event.changedTouches[0]?.clientX ?? touchStartXRef.current;
               const deltaX = endX - touchStartXRef.current;
               touchStartXRef.current = null;
+              touchStartYRef.current = null;
               if (Math.abs(deltaX) < 50) return;
               if (deltaX < 0) {
                 setDirection(1);
@@ -405,9 +426,10 @@ export default function Work() {
             <motion.div
               className={`relative flex h-full w-full px-6 sm:px-12 lg:pr-0 ${
                 isNarrowScreen
-                  ? "flex-col items-start justify-start"
+                  ? "flex-col items-start justify-start overflow-y-auto"
                   : "flex-col items-center justify-center lg:flex-row lg:items-center lg:justify-start lg:gap-0"
               }`}
+              style={isNarrowScreen ? { WebkitOverflowScrolling: "touch" } : undefined}
               initial={{ scale: 0.96, opacity: 0 }}
               animate={{ scale: 1, opacity: 1, transition: { type: "spring", stiffness: 160, damping: 22 } }}
               exit={{ scale: 0.98, opacity: 0, transition: { duration: 0.2 } }}
