@@ -71,6 +71,7 @@ export default function Work() {
   const [isCoarsePointer, setIsCoarsePointer] = useState(false);
   const [isNarrowScreen, setIsNarrowScreen] = useState(false);
   const [direction, setDirection] = useState(0);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [isCarouselInView, setIsCarouselInView] = useState(true);
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const panelRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -99,11 +100,16 @@ export default function Work() {
   }, []);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 900px)");
-    const update = () => setIsNarrowScreen(mediaQuery.matches);
+    if (!containerRef.current || typeof ResizeObserver === "undefined") return;
+    const element = containerRef.current;
+    const update = () => {
+      const width = element.clientWidth || 0;
+      setIsNarrowScreen(width < 900);
+    };
     update();
-    mediaQuery.addEventListener("change", update);
-    return () => mediaQuery.removeEventListener("change", update);
+    const observer = new ResizeObserver(update);
+    observer.observe(element);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -299,7 +305,7 @@ export default function Work() {
           </p>
         </div>
       </div>
-      <div className="relative z-10 mx-auto mt-6 h-[70vh] w-full max-w-[90vw] px-0">
+      <div ref={containerRef} className="relative z-10 mx-auto mt-6 h-[70vh] w-full max-w-[90vw] px-0">
         <div
           ref={carouselRef}
           className={`flex h-full w-full overflow-y-hidden scrollbar-hidden scroll-smooth ${
