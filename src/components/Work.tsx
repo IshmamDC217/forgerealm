@@ -313,7 +313,7 @@ export default function Work() {
           } ${isCoarsePointer && isNarrowScreen ? "justify-start px-[8vw]" : "justify-center"}`}
           style={{
             WebkitOverflowScrolling: "touch",
-            touchAction: isExpanded ? "none" : "pan-x",
+            touchAction: isExpanded ? "none" : "auto",
             scrollPaddingLeft: isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
             scrollPaddingRight: isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
           }}
