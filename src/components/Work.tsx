@@ -1,90 +1,125 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FiArrowUpRight, FiX } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
 
-type PrintItem = {
+type Product = {
   id: string;
-  indexLabel: string;
   name: string;
-  category: string;
-  priceGBP: number;
-  material: "PLA" | "PETG" | "ABS" | "Resin";
-  size: string;
-  colors: string[];
-  imageUrl: string;
   description: string;
-  accent: string;
+  shopDescription: string;
+  detail: string;
+  image: string;
+  background: string;
 };
 
-const prints: PrintItem[] = [
+const products: Product[] = [
   {
     id: "aurora-lamp",
-    indexLabel: "01",
-    name: "Aurora Bloom",
-    category: "3D Printed Lamp",
-    priceGBP: 14.99,
-    material: "PLA",
-    size: "14 cm tall",
-    colors: ["#2c522d", "#dc8a54", "#cf8678", "#f3d7ae"],
-    imageUrl: "/ablamp.webp",
-    accent: "from-emerald-500/15 via-amber-400/10 to-rose-300/10",
+    name: "Aurora Bloom Lamp",
     description:
+      "A layered spiral lamp shade that glows warm and soft, printed in high-detail PLA for a clean, modern finish.",
+    shopDescription:
       "Aurora Bloom is a gradient lamp shade with a soft spiral that diffuses light into a warm glow. Printed in precision PLA with smooth layering, it brings ambient color to desks, shelves, and bedside tables.",
+    detail:
+      "The spiral fins catch light in layers, creating a subtle gradient halo that feels calm and cozy in the evening.",
+    image: "/ablamp-nbg.webp",
+    background: "linear-gradient(140deg, #16213e 0%, #1b2f4a 45%, #2d4c73 100%)",
   },
   {
     id: "nebula-owl",
-    indexLabel: "02",
     name: "Leeds Owl",
-    category: "Display Model",
-    priceGBP: 5.99,
-    material: "PLA",
-    size: "9 cm tall",
-    colors: ["#cca671", "#bd7d5e", "#bd7d5e", "#e98492", "#a23b40"],
-    imageUrl: "/owl.webp",
-    accent: "from-amber-500/15 via-rose-400/10 to-red-500/10",
     description:
+      "A compact guardian owl with gradient feathers and crisp silhouette, designed to sit proudly on desks and shelves.",
+    shopDescription:
       "A Leeds-inspired owl with a warm gradient that fades from amber to blush. Crisp feather detail makes it a standout accent for studios and shelves.",
+    detail:
+      "The owl is a symbol woven through Leeds, appearing across the city and in the Leeds United crest, making this piece a small tribute to home.",
+    image: "/owl-nbg.webp",
+    background: "linear-gradient(140deg, #3b1f2b 0%, #4a2a2a 50%, #6d3b3b 100%)",
   },
   {
     id: "forest-dragon",
-    indexLabel: "03",
     name: "Forest Dragon",
-    category: "Display Model",
-    priceGBP: 4.99,
-    material: "PLA",
-    size: "8 cm long",
-    colors: ["#14532d", "#86efac", "#0f172a"],
-    imageUrl: "/dragon.webp",
-    accent: "from-emerald-500/15 via-lime-400/10 to-slate-400/10",
     description:
+      "An articulated dragon printed in emerald PLA, poised for display or as a dramatic tabletop companion.",
+    shopDescription:
       "A detailed, articulated dragon with layered scales and a balanced pose. The green PLA blend shifts under light, making it feel alive on shelves, desks, or diorama bases.",
+    detail:
+      "Layered scales and a balanced stance give it a lifelike posture, perfect for collectors who want a mythic centerpiece.",
+    image: "/dragon-nbg.webp",
+    background: "linear-gradient(140deg, #0e2b1f 0%, #184234 50%, #1f5a44 100%)",
   },
   {
     id: "dice-guardian",
-    indexLabel: "04",
     name: "Dice Guardian",
-    category: "Fidget Toy",
-    priceGBP: 5.99,
-    material: "PETG",
-    size: "7 cm tall",
-    colors: ["#474a6a", "#2f3341", "#121013", "#0b1d3a"],
-    imageUrl: "/dice-dragon.webp",
-    accent: "from-indigo-500/15 via-slate-500/10 to-blue-900/10",
     description:
+      "A sculpted dice cradle with bold angles and sturdy PETG layers for tabletop nights.",
+    shopDescription:
       "A compact dragon head designed to cradle a full set of D&D dice. PETG adds toughness, and the sculpted form keeps it sharp and tabletop-ready.",
+    detail:
+      "The open jaw holds a full set of dice while the PETG build keeps it tough enough for regular game nights.",
+    image: "/dice-dragon-nbg.webp",
+    background: "linear-gradient(140deg, #1b1f3a 0%, #2a2f52 55%, #3b4a7a 100%)",
   },
 ];
 
-const spring = { type: "spring", stiffness: 140, damping: 22, mass: 0.6 };
-
 export default function Work() {
-  const [openId, setOpenId] = useState<string | null>(null);
-  const [imageOpen, setImageOpen] = useState(false);
-  const openItem = prints.find((item) => item.id === openId) ?? null;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+  const [isNarrowScreen, setIsNarrowScreen] = useState(false);
+  const [direction, setDirection] = useState(0);
+  const [isCarouselInView, setIsCarouselInView] = useState(true);
+  const carouselRef = useRef<HTMLDivElement | null>(null);
+  const panelRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const storedScrollLeftRef = useRef<number | null>(null);
+  const wasExpandedRef = useRef(false);
+  const storedViewportWidthRef = useRef<number | null>(null);
+  const touchStartXRef = useRef<number | null>(null);
+  const autoScrollTimerRef = useRef<number | null>(null);
+  const autoIndexRef = useRef(0);
+
+  const activeProduct = useMemo(() => products[activeIndex], [activeIndex]);
+
+  const clampIndex = useCallback((index: number) => {
+    const max = products.length;
+    return ((index % max) + max) % max;
+  }, []);
 
   useEffect(() => {
-    if (!openId) return;
+    const mediaQuery = window.matchMedia("(pointer: coarse)");
+    const update = () => setIsCoarsePointer(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 900px)");
+    const update = () => setIsNarrowScreen(mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener("change", update);
+    return () => mediaQuery.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setIsCarouselInView(entry.isIntersecting);
+      },
+      { threshold: 0.35 }
+    );
+    observer.observe(carousel);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isExpanded) return;
     const html = document.documentElement;
     const body = document.body;
     const previousHtmlOverflow = html.style.overflow;
@@ -95,185 +130,462 @@ export default function Work() {
       html.style.overflow = previousHtmlOverflow;
       body.style.overflow = previousBodyOverflow;
     };
-  }, [openId]);
+  }, [isExpanded]);
+
+  useEffect(() => {
+    const wasExpanded = wasExpandedRef.current;
+    wasExpandedRef.current = isExpanded;
+    if (!wasExpanded || isExpanded) return;
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    const recenter = () => {
+      const maxScroll = Math.max(0, carousel.scrollWidth - carousel.clientWidth);
+      let target = storedScrollLeftRef.current ?? carousel.scrollLeft;
+      if (storedViewportWidthRef.current) {
+        target = (target * carousel.clientWidth) / storedViewportWidthRef.current;
+      }
+      const clamped = Math.min(Math.max(target, 0), maxScroll);
+      carousel.scrollTo({ left: clamped, behavior: "auto" });
+    };
+    requestAnimationFrame(() => {
+      recenter();
+      storedScrollLeftRef.current = null;
+      storedViewportWidthRef.current = null;
+    });
+    const settleTimer = window.setTimeout(recenter, 320);
+    return () => window.clearTimeout(settleTimer);
+  }, [activeIndex, isExpanded]);
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel || isExpanded) return;
+    let ticking = false;
+    const handleScroll = () => {
+      if (isExpanded) return;
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const width = carousel.clientWidth || 1;
+        const approxPanelWidth = isCoarsePointer && isNarrowScreen ? width * 0.8 : width * 0.2;
+        const index = Math.round(carousel.scrollLeft / approxPanelWidth);
+        const nextIndex = clampIndex(index);
+        autoIndexRef.current = nextIndex;
+        setActiveIndex(nextIndex);
+      });
+    };
+    carousel.addEventListener("scroll", handleScroll, { passive: true });
+    return () => carousel.removeEventListener("scroll", handleScroll);
+  }, [clampIndex, isCoarsePointer, isExpanded, isNarrowScreen]);
+
+  useEffect(() => {
+    if (!isExpanded) return;
+    setHoveredIndex(null);
+  }, [isExpanded]);
+
+  useEffect(() => {
+    if (!(isCoarsePointer && isNarrowScreen) || isExpanded || !isCarouselInView) return;
+    autoIndexRef.current = 0;
+    const startTimer = window.setTimeout(() => {
+      const carousel = carouselRef.current;
+      const panel = panelRefs.current[0];
+      if (!carousel || !panel) return;
+      const target = panel.offsetLeft - (carousel.clientWidth - panel.offsetWidth) / 2;
+      carousel.scrollTo({ left: Math.max(0, target), behavior: "auto" });
+    }, 60);
+    const step = () => {
+      const carousel = carouselRef.current;
+      const nextIndex = clampIndex(autoIndexRef.current + 1);
+      autoIndexRef.current = nextIndex;
+      setActiveIndex(nextIndex);
+      const panel = panelRefs.current[nextIndex];
+      if (!carousel || !panel) return;
+      const target = panel.offsetLeft - (carousel.clientWidth - panel.offsetWidth) / 2;
+      carousel.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
+    };
+    autoScrollTimerRef.current = window.setInterval(step, 4200);
+    return () => {
+      window.clearTimeout(startTimer);
+      if (autoScrollTimerRef.current) {
+        window.clearInterval(autoScrollTimerRef.current);
+        autoScrollTimerRef.current = null;
+      }
+    };
+  }, [clampIndex, isCarouselInView, isCoarsePointer, isExpanded, isNarrowScreen]);
+
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent) => {
+      if (!isExpanded) return;
+      if (event.key === "Escape") {
+        setIsExpanded(false);
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        setDirection(1);
+        setActiveIndex((prev) => clampIndex(prev + 1));
+      }
+      if (event.key === "ArrowLeft") {
+        setDirection(-1);
+        setActiveIndex((prev) => clampIndex(prev - 1));
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isExpanded]);
+
+  const getPanelWidth = (index: number) => {
+    if (isCoarsePointer && isNarrowScreen) {
+      return "72vw";
+    }
+    if (isExpanded && activeIndex === index) {
+      return "100vw";
+    }
+    return hoveredIndex === index ? "28vw" : "20vw";
+  };
+
+
+  const getImageScale = (index: number) => {
+    if (isCoarsePointer && isNarrowScreen) return "scale(1.05)";
+    return hoveredIndex === index ? "scale(1.06)" : "scale(1)";
+  };
+
+  const handleOpen = (index: number) => {
+    if (isExpanded && activeIndex === index) return;
+    const carousel = carouselRef.current;
+    if (carousel && storedScrollLeftRef.current === null) {
+      storedScrollLeftRef.current = carousel.scrollLeft;
+      storedViewportWidthRef.current = carousel.clientWidth;
+    }
+    setActiveIndex(index);
+    setHoveredIndex(null);
+    setDirection(index > activeIndex ? 1 : -1);
+    panelRefs.current[index]?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+    requestAnimationFrame(() => setIsExpanded(true));
+  };
+
+  const handleClose = () => {
+    setIsExpanded(false);
+  };
+
+  const handleNext = () => {
+    setDirection(1);
+    setActiveIndex((prev) => clampIndex(prev + 1));
+  };
+
+  const handlePrev = () => {
+    setDirection(-1);
+    setActiveIndex((prev) => clampIndex(prev - 1));
+  };
 
   return (
-    <section id="work" className="theme-surface relative bg-transparent border-y border-white/10">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute left-1/4 top-1/4 h-[28rem] w-[28rem] rounded-full bg-indigo-500/20 blur-[160px]" />
-        <div className="absolute right-1/5 bottom-1/4 h-[30rem] w-[30rem] rounded-full bg-emerald-500/20 blur-[180px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(59,130,246,0.12),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(99,102,241,0.12),transparent_32%)]" />
+    <section
+      id="work"
+      className="work-force-white relative h-screen w-full overflow-hidden text-white"
+    >
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/10 via-emerald-400/10 to-indigo-500/10" />
+      <div className="relative z-10 mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8 lg:pt-12">
+        <div className="max-w-2xl">
+          <h2 className="work-text-force mt-2 font-display text-3xl font-extrabold text-white sm:text-4xl">
+            Featured Prints
+          </h2>
+          <p className="work-text-force mt-2 text-sm text-slate-200/70">
+            ForgeRealm · Curated print drops
+          </p>
+        </div>
+      </div>
+      <div className="relative z-10 mx-auto mt-6 h-[70vh] w-full max-w-[90vw] px-0">
+        <div
+          ref={carouselRef}
+          className={`flex h-full w-full overflow-y-hidden scrollbar-hidden scroll-smooth ${
+            isExpanded ? "overflow-hidden snap-none" : "snap-x snap-mandatory overflow-x-auto"
+          } ${isCoarsePointer && isNarrowScreen ? "justify-start px-[8vw]" : "justify-center"}`}
+          style={{
+            WebkitOverflowScrolling: "touch",
+            touchAction: isExpanded ? "none" : "pan-x",
+            scrollPaddingLeft: isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
+            scrollPaddingRight: isCoarsePointer && isNarrowScreen ? "8vw" : undefined,
+          }}
+        >
+          {products.map((product, index) => {
+            const isActive = isExpanded && activeIndex === index;
+            return (
+              <motion.button
+                key={product.id}
+                ref={(el) => {
+                  panelRefs.current[index] = el;
+                }}
+                type="button"
+                onMouseEnter={() => {
+                  if (!isCoarsePointer && !isExpanded) setHoveredIndex(index);
+                }}
+                onMouseLeave={() => setHoveredIndex(null)}
+                onClick={() => {
+                  handleOpen(index);
+                }}
+                className={`relative flex h-full shrink-0 ${
+                  isCoarsePointer && isNarrowScreen ? "snap-center snap-always" : "snap-start"
+                } items-center justify-center overflow-hidden border border-white/10 transition-[width] duration-500 ease-out focus:outline-none hover:border-white/30`}
+                style={{
+                  width: getPanelWidth(index),
+                  backgroundImage: product.background,
+                }}
+                aria-label={`Open ${product.name}`}
+              >
+                <span className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/30" aria-hidden />
+                <span className="absolute inset-0 opacity-0 transition duration-500 ease-out group-hover:opacity-100" aria-hidden />
+                <span className="work-text-force absolute right-6 top-10 text-6xl font-semibold text-white/20 sm:text-7xl">
+                  {(index + 1).toString().padStart(2, "0")}
+                </span>
+                <span className="work-text-force absolute left-6 top-8 rotate-180 text-[10px] uppercase tracking-[0.45em] text-white [writing-mode:vertical-rl] sm:text-xs z-10">
+                  {product.name}
+                </span>
+                <motion.img
+                  src={product.image}
+                  alt={product.name}
+                  className={`${
+                    isCoarsePointer && isNarrowScreen
+                      ? "max-h-[52vh] max-w-[70vw]"
+                      : "max-h-[40vh] max-w-[34vw] sm:max-h-[44vh] sm:max-w-[36vw]"
+                  } w-auto object-contain drop-shadow-[0_40px_80px_rgba(0,0,0,0.4)]`}
+                  animate={{
+                    scale: isActive ? 1.18 : hoveredIndex === index && !isCoarsePointer ? 1.08 : 1,
+                  }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                />
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-6 sm:px-10 py-20 lg:py-24">
-        <div className="flex items-center justify-between gap-6">
-          <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Featured Prints</p>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold text-white">Featured Prints</h2>
-            <p className="mt-2 text-sm text-slate-400">ForgeRealm - Made to Order</p>
-          </div>
-        </div>
-
-        <div className="mt-12 grid gap-6 lg:grid-cols-2">
-          {prints.map((item, idx) => (
-            <motion.button
-              key={item.id}
-              type="button"
-              onClick={() => setOpenId(item.id)}
-              whileHover={{ y: -6 }}
-              whileTap={{ scale: 0.98 }}
-              className={`group relative text-left rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-2xl p-5 transition hover:border-blue-400/60 hover:shadow-[0_20px_60px_rgba(0,0,0,0.35)] ${
-                idx % 3 === 0 ? "lg:col-span-2" : "lg:col-span-1"
-              }`}
-            >
-              <div className={`absolute inset-0 rounded-[2rem] bg-gradient-to-br ${item.accent}`} aria-hidden />
-              <div className="flex items-center justify-between text-xs text-slate-400 uppercase tracking-[0.3em]">
-                <span>{item.indexLabel}</span>
-                <span>{item.category}</span>
-              </div>
-              <div className="mt-4 grid gap-4 sm:grid-cols-[180px_1fr] items-center">
-                <div className="relative h-40 w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40">
-                  <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white">{item.name}</h3>
-                  <p className="mt-2 text-sm text-slate-300 line-clamp-3">{item.description}</p>
-                  <div className="mt-4 flex items-center gap-3 text-xs text-slate-400">
-                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">GBP {item.priceGBP}</span>
-                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{item.material}</span>
-                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{item.size}</span>
-                  </div>
-                </div>
-              </div>
-            </motion.button>
-          ))}
+      <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2">
+        <div className="rounded-lg bg-black/40 px-3 py-2 text-[10px] uppercase tracking-[0.35em] text-white/80">
+          Swipe to explore
         </div>
       </div>
 
       <AnimatePresence>
-        {openItem ? (
+        {isExpanded && (
           <motion.div
-            className="fixed inset-0 z-[120] flex items-center justify-center px-4 py-10 sm:px-6"
+            className="fixed inset-0 z-[60] flex h-full w-full items-center justify-center"
+            style={{ backgroundImage: activeProduct.background }}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: 0.2 } }}
-            exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleClose}
+            onTouchStart={(event) => {
+              touchStartXRef.current = event.touches[0]?.clientX ?? null;
+            }}
+            onTouchEnd={(event) => {
+              if (touchStartXRef.current === null) return;
+              const endX = event.changedTouches[0]?.clientX ?? touchStartXRef.current;
+              const deltaX = endX - touchStartXRef.current;
+              touchStartXRef.current = null;
+              if (Math.abs(deltaX) < 50) return;
+              if (deltaX < 0) {
+                setDirection(1);
+                handleNext();
+              } else {
+                setDirection(-1);
+                handlePrev();
+              }
+            }}
           >
-            <div
-              className="modal-overlay absolute inset-0 bg-black/70 backdrop-blur-sm"
-              onClick={() => {
-                setOpenId(null);
-                setImageOpen(false);
-              }}
+            <motion.div
+              className="absolute inset-0 bg-black/20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               aria-hidden
             />
             <motion.div
-                className="work-modal relative flex w-full max-w-5xl flex-col rounded-[2.5rem] border border-white/10 bg-slate-950/95 shadow-[0_40px_140px_rgba(0,0,0,0.55)] max-h-[85vh] sm:max-h-[90vh] overflow-hidden"
-                initial={{ opacity: 0, y: 30, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1, transition: spring }}
-                exit={{ opacity: 0, y: 10, scale: 0.98, transition: { duration: 0.2 } }}
-              >
-              <div className="modal-header flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-3 sm:px-6 sm:py-4">
-                <div>
-                  <p className="modal-label text-[9px] uppercase tracking-[0.35em] text-blue-200/80 sm:text-[10px]">Product window</p>
-                  <h3 className="text-lg font-semibold text-white sm:text-xl">{openItem.name}</h3>
-                  <p className="text-[10px] text-slate-400 sm:text-xs">{openItem.category}</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setOpenId(null);
-                    setImageOpen(false);
-                  }}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/5 text-base text-white transition hover:border-white/40 sm:h-10 sm:w-10 sm:text-lg"
-                  aria-label="Close details"
+              className={`relative flex h-full w-full px-6 sm:px-12 lg:pr-0 ${
+                isNarrowScreen
+                  ? "flex-col items-start justify-start"
+                  : "flex-col items-center justify-center lg:flex-row lg:items-center lg:justify-start lg:gap-0"
+              }`}
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1, transition: { type: "spring", stiffness: 160, damping: 22 } }}
+              exit={{ scale: 0.98, opacity: 0, transition: { duration: 0.2 } }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeProduct.id}
+                  className="relative flex h-full w-full"
+                  custom={direction}
+                  initial={{ opacity: 0, x: direction >= 0 ? 60 : -60 }}
+                  animate={{ opacity: 1, x: 0, transition: { duration: 0.35, ease: "easeOut" } }}
+                  exit={{ opacity: 0, x: direction >= 0 ? -60 : 60, transition: { duration: 0.25, ease: "easeIn" } }}
                 >
-                  <FiX />
-                </button>
-              </div>
-
-              <div className="modal-body grid min-h-0 flex-1 gap-6 overflow-y-auto overscroll-contain p-6 lg:grid-cols-[1.2fr_0.8fr] max-h-[calc(85vh-88px)] sm:max-h-[calc(90vh-88px)]">
-                <button
-                  type="button"
-                  onClick={() => setImageOpen(true)}
-                  className="modal-image relative w-full overflow-hidden rounded-3xl border border-white/10 bg-white/5 text-left"
-                  aria-label={`Open ${openItem.name} image`}
-                >
-                  <div className="relative aspect-[4/3] min-h-[220px] overflow-hidden bg-black/30">
-                    <img
-                      src={openItem.imageUrl}
-                      alt={openItem.name}
-                      className="h-full w-full object-cover object-center"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  </div>
-                  <span className="absolute bottom-4 right-4 rounded-full bg-black/60 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
-                    View image
-                  </span>
-                </button>
-                <div className="flex flex-col gap-4 text-slate-200">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.3em] text-blue-200/70 modal-label">Full description</p>
-                    <p className="mt-3 text-base leading-relaxed">{openItem.description}</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                      <p className="uppercase tracking-[0.2em] text-[10px] text-slate-400">Price</p>
-                      <p className="text-white font-semibold">GBP {openItem.priceGBP}</p>
-                    </div>
-                    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                      <p className="uppercase tracking-[0.2em] text-[10px] text-slate-400">Material</p>
-                      <p className="text-white font-semibold">{openItem.material}</p>
-                    </div>
-                    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                      <p className="uppercase tracking-[0.2em] text-[10px] text-slate-400">Size</p>
-                      <p className="text-white font-semibold">{openItem.size}</p>
-                    </div>
-                    <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                      <p className="uppercase tracking-[0.2em] text-[10px] text-slate-400">Colors</p>
-                      <div className="mt-1 flex items-center gap-2">
-                        {openItem.colors.map((color) => (
-                          <span
-                            key={color}
-                            className="h-4 w-4 rounded-full border border-white/20"
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
+                  {isNarrowScreen ? (
+                    <div className="relative z-10 w-full max-w-md space-y-6 text-left">
+                      <div className="flex w-full justify-center pt-4">
+                        <motion.img
+                          src={activeProduct.image}
+                          alt={activeProduct.name}
+                          className="h-[45vh] w-[85vw] max-h-[45vh] max-w-[92vw] object-contain drop-shadow-[0_45px_90px_rgba(0,0,0,0.55)]"
+                          animate={{ y: [0, -10, 0] }}
+                          transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
+                        />
+                      </div>
+                      <p className="work-text-force text-[10px] uppercase tracking-[0.35em] text-white/80">
+                        Featured print
+                      </p>
+                      <h3 className="work-text-force text-3xl font-semibold text-white sm:text-4xl">
+                        {activeProduct.name}
+                      </h3>
+                      <p className="work-text-force text-sm text-white/90 sm:text-base">
+                        {activeProduct.description}
+                      </p>
+                      <p className="work-text-force text-sm text-white/80 sm:text-base">
+                        {activeProduct.shopDescription}
+                      </p>
+                      <p className="work-text-force text-xs text-white/70 sm:text-sm">
+                        {activeProduct.detail}
+                      </p>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <button className="work-text-force inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:bg-white/10">
+                          View in store
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleClose}
+                          className="work-text-force inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:bg-white/10"
+                        >
+                          Close
+                        </button>
                       </div>
                     </div>
-                  </div>
-                  <div className="pt-2">
-                    <button className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-950 transition hover:bg-blue-400">
-                      Reserve print
-                      <FiArrowUpRight />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+                  ) : (
+                    <>
+                      <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2">
+                        <img
+                          src={activeProduct.image}
+                          alt={activeProduct.name}
+                          className="h-[85vh] w-[80vw] max-h-[85vh] max-w-[90vw] sm:h-[85vh] sm:w-[75vw] sm:max-w-[85vw] object-contain drop-shadow-[0_55px_110px_rgba(0,0,0,0.6)]"
+                        />
+                      </div>
 
-      <AnimatePresence>
-        {openItem && imageOpen ? (
-          <motion.div
-            className="fixed inset-0 z-[130] flex items-center justify-center bg-black/80 px-4 py-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: 0.2 } }}
-            exit={{ opacity: 0, transition: { duration: 0.2 } }}
-            onClick={() => setImageOpen(false)}
-          >
-            <motion.img
-              src={openItem.imageUrl}
-              alt={openItem.name}
-              className="max-h-[90vh] w-auto max-w-[92vw] rounded-3xl border border-white/10 object-contain shadow-[0_30px_120px_rgba(0,0,0,0.55)]"
-              initial={{ scale: 0.96, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1, transition: spring }}
-              exit={{ scale: 0.98, opacity: 0, transition: { duration: 0.2 } }}
-            />
+                      <div className="relative z-10 w-full max-w-md space-y-6 text-left lg:w-[45%] lg:ml-[6vw] lg:my-auto">
+                        <p className="work-text-force text-[10px] uppercase tracking-[0.35em] text-white/80">
+                          Featured print
+                        </p>
+                        <h3 className="work-text-force text-3xl font-semibold text-white sm:text-4xl">
+                          {activeProduct.name}
+                        </h3>
+                        <p className="work-text-force text-sm text-white/90 sm:text-base">
+                          {activeProduct.description}
+                        </p>
+                        <p className="work-text-force text-sm text-white/80 sm:text-base">
+                          {activeProduct.shopDescription}
+                        </p>
+                        <p className="work-text-force text-xs text-white/70 sm:text-sm">
+                          {activeProduct.detail}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <button className="work-text-force inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:bg-white/10">
+                            View in store
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleNext}
+                            className="work-text-force inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:bg-white/10"
+                          >
+                            Next
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleClose}
+                            className="work-text-force inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:bg-white/10"
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </div>
+
+                  <div className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden lg:block lg:w-1/2">
+                    <div className="h-full w-full overflow-hidden border-l border-white/10 bg-white/10">
+                          {activeProduct.id === "aurora-lamp" ? (
+                            <img
+                              src="/ablamp2side.png"
+                              alt="Aurora Bloom Lamp lifestyle"
+                              className="h-full w-full object-cover"
+                            />
+                          ) : activeProduct.id === "nebula-owl" ? (
+                            <img
+                              src="/reg.png"
+                              alt="Leeds Owl lifestyle"
+                              className="h-full w-full object-cover"
+                            />
+                          ) : activeProduct.id === "forest-dragon" ? (
+                            <img
+                              src="/dragonforestbg.jpg"
+                              alt="Forest Dragon lifestyle"
+                              className="h-full w-full object-cover"
+                            />
+                          ) : activeProduct.id === "dice-guardian" ? (
+                            <img
+                              src="/dicedragonbg.jpg"
+                              alt="Dice Guardian lifestyle"
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center text-xs uppercase tracking-[0.3em] text-white/70">
+                              Lifestyle image
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
+
+            <button
+              type="button"
+              aria-label="Close"
+              className="absolute right-6 top-6 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/60 bg-white/10 text-white shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition hover:bg-white/20 pointer-events-auto"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleClose();
+              }}
+            >
+              <FiX className="h-5 w-5" />
+            </button>
+            {!isNarrowScreen && (
+              <>
+                <button
+                  type="button"
+                  aria-label="Previous product"
+                  className="absolute bottom-8 left-8 z-10 rounded-full border border-white/40 bg-black/40 px-5 py-2 text-[10px] uppercase tracking-[0.4em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition hover:bg-black/60"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handlePrev();
+                  }}
+                >
+                  Previous
+                </button>
+                <button
+                  type="button"
+                  aria-label="Next product"
+                  className="absolute bottom-8 right-8 z-10 rounded-full border border-white/40 bg-black/40 px-5 py-2 text-[10px] uppercase tracking-[0.4em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition hover:bg-black/60"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleNext();
+                  }}
+                >
+                  Next
+                </button>
+              </>
+            )}
           </motion.div>
-        ) : null}
+        )}
       </AnimatePresence>
     </section>
   );

@@ -78,6 +78,22 @@ body {
   font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
+html,
+body {
+  overflow-x: hidden !important;
+}
+
+/* Keep viewport width stable when scrollbars toggle. */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Force white text in the Work carousel even under light theme overrides. */
+.work-force-white,
+.work-force-white * {
+  color: #ffffff !important;
+}
+
 /* Utility: display font for brand/headers */
 .font-display {
   font-family: "Bree Serif", serif !important;
@@ -362,6 +378,15 @@ code, pre {
 .animate-fade-in-delayed { animation: fade-in-delayed 1.5s ease-out forwards; }
 .animate-fade-in-slow { animation: fade-in-slow 2s ease-out forwards; }
 .animate-gradient-move { background-size: 200% 200%; animation: gradient-move 10s ease-in-out infinite; }
+
+/* Hide scrollbars for horizontal carousels */
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
 
 /* Intersection reveal for main page sections */
 .reveal {
