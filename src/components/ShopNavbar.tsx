@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { HiOutlineMenu, HiX } from 'react-icons/hi';
-import { FiLogOut } from 'react-icons/fi';
+import { FiLogOut, FiUser } from 'react-icons/fi';
 import { FaShoppingBag } from 'react-icons/fa';
 
 type Link = { label: string; href: string };
@@ -65,6 +65,16 @@ const ShopNavbar = () => {
           </a>
 
           <nav className="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-[0.2em] text-slate-200">
+            {hasAdminToken && (
+              <div
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-white"
+                title="Logged in"
+                aria-label="Logged in"
+              >
+                <FiUser className="text-sm" />
+                Logged in
+              </div>
+            )}
             {links.map((link) =>
               link.isLogout ? (
                 <button
@@ -126,6 +136,12 @@ const ShopNavbar = () => {
           </button>
         </div>
         <nav className="flex flex-col gap-4 text-sm uppercase tracking-wide text-slate-200">
+          {hasAdminToken && (
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-white">
+              <FiUser className="text-sm" />
+              Logged in
+            </div>
+          )}
           {links.map((link) =>
             link.isLogout ? (
               <button

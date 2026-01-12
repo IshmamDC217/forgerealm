@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { HiOutlineMenu, HiX, HiOutlineMoon, HiOutlineSun } from "react-icons/hi";
 import { FaShoppingBag } from "react-icons/fa";
+import { FiUser } from "react-icons/fi";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [hasAdminToken, setHasAdminToken] = useState(false);
 
   const navLinks = [
     ["Services", "#services"],
@@ -24,6 +26,24 @@ export default function Navbar() {
     } catch {}
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const updateToken = () => {
+      const token = localStorage.getItem("forgerealm_admin_token");
+      setHasAdminToken(Boolean(token));
+    };
+
+    updateToken();
+    window.addEventListener("storage", updateToken);
+    window.addEventListener("forgerealm-admin-token-changed", updateToken);
+
+    return () => {
+      window.removeEventListener("storage", updateToken);
+      window.removeEventListener("forgerealm-admin-token-changed", updateToken);
+    };
+  }, []);
+
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
@@ -31,6 +51,13 @@ export default function Navbar() {
       localStorage.setItem("fr-theme", next);
     } catch {}
     document.documentElement.setAttribute("data-theme", next);
+  };
+
+  const handleLogout = () => {
+    if (typeof window === "undefined") return;
+    localStorage.removeItem("forgerealm_admin_token");
+    window.dispatchEvent(new Event("forgerealm-admin-token-changed"));
+    setHasAdminToken(false);
   };
 
   return (
@@ -60,6 +87,16 @@ export default function Navbar() {
 
           {/* Right side: theme toggle + shop + subscribe */}
           <div className="hidden sm:flex items-center gap-3">
+            {hasAdminToken && (
+              <div
+                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-white"
+                title="Logged in"
+                aria-label="Logged in"
+              >
+                <FiUser className="text-sm" />
+                Logged in
+              </div>
+            )}
             <button
               onClick={toggleTheme}
               aria-label="Toggle theme"
@@ -83,13 +120,24 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setOpen(true)}
-            className="md:hidden text-white text-2xl"
-            aria-label="Open menu"
-          >
-            <HiOutlineMenu />
-          </button>
+          <div className="md:hidden flex items-center gap-3">
+            {hasAdminToken && (
+              <div
+                className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 p-2 text-white"
+                title="Logged in"
+                aria-label="Logged in"
+              >
+                <FiUser className="text-sm" />
+              </div>
+            )}
+            <button
+              onClick={() => setOpen(true)}
+              className="text-white text-2xl"
+              aria-label="Open menu"
+            >
+              <HiOutlineMenu />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -150,6 +198,19 @@ export default function Navbar() {
             >
               Subscribe
             </a>
+
+            {hasAdminToken && (
+              <button
+                type="button"
+                onClick={() => {
+                  handleLogout();
+                  setOpen(false);
+                }}
+                className="rounded-full border border-white/30 bg-white/10 px-5 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-white/20 transition-colors duration-200 text-center"
+              >
+                Log out
+              </button>
+            )}
           </div>
 
           <button
