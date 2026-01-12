@@ -222,13 +222,14 @@ const apiLocal = import.meta.env.PUBLIC_API_URL_LOCAL ? import.meta.env.PUBLIC_A
 </BaseLayout>
 
 <script is:inline>
-  const apiConfig = { apiBase: JSON.stringify(apiBase), apiLocal: JSON.stringify(apiLocal) };
+  const apiBase = ${JSON.stringify(apiBase)};
+  const apiLocal = ${JSON.stringify(apiLocal)};
   const gate = document.getElementById('shop-gate');
   const content = document.getElementById('shop-content');
   const base =
     window.location.origin.startsWith('http://localhost')
-      ? apiConfig.apiLocal || ''
-      : apiConfig.apiBase || '';
+      ? apiLocal || apiBase || ''
+      : apiBase || apiLocal || '';
   const showContent = () => {
     if (content) content.classList.remove('hidden');
     if (gate) gate.classList.add('hidden');
