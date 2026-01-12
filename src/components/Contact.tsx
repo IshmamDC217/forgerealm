@@ -32,7 +32,7 @@ export default function Contact() {
               </div>
               <div className="flex items-center gap-2">
                 <FaEnvelope className="text-blue-400" />
-                <span>forgerealmltd@gmail.com</span>
+                <span>info@forgerealm.co.uk</span>
               </div>
               <div className="flex items-center gap-2">
                 <FaPhoneAlt className="text-blue-400" />
@@ -43,7 +43,7 @@ export default function Contact() {
             <div className="mt-6 grid gap-4 sm:grid-cols-4 auto-rows-fr">
               {[
                 { title: "Location", detail: "Leeds, United Kingdom", icon: <FaMapMarkerAlt className="text-blue-400" /> },
-                { title: "Email", detail: "forgerealmltd@gmail.com", icon: <FaEnvelope className="text-blue-400" /> },
+                { title: "Email", detail: "info@forgerealm.co.uk", icon: <FaEnvelope className="text-blue-400" /> },
                 { title: "Phone", detail: "+44 (0) 7344 237800", icon: <FaPhoneAlt className="text-blue-400" /> },
                 { title: "Hours", detail: "Mon-Fri 08:00-18:00", icon: <FaClock className="text-blue-400" /> },
               ].map((item, idx) => (
@@ -85,7 +85,7 @@ export default function Contact() {
             </h2>
             <p className="text-[color:var(--fg)]/70 mt-5 mb-8 max-w-md">Reach out directly for collaborations, custom prints, or wholesale orders.</p>
 
-            <a href="mailto:forgerealmltd@gmail.com">
+            <a href="mailto:forgerealmltd@gmail.com,info@forgerealm.co.uk">
               <button className="relative inline-flex h-12 w-60 overflow-hidden rounded-lg p-[1px] focus:outline-none group">
                 {/* Animated glowing ring */}
                 <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#ffffff_0%,#3b82f6_50%,#ffffff_100%)]" />
