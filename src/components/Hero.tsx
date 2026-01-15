@@ -176,17 +176,26 @@ export default function Hero({ onLoadComplete }: HeroProps) {
   const shouldLoadHeavy = enableSpline && allowHeavy && isIntersecting;
   const { useFallback, splineVisible, markLoaded, markError } = useSplineScene(4000, shouldLoadHeavy);
   const theme = useTheme();
+  const [ecoAnimation, setEcoAnimation] = useState(null);
+  const [paintAnimation, setPaintAnimation] = useState(null);
+  const [fantasyAnimation, setFantasyAnimation] = useState(null);
   const isLight = theme === "light";
   const lightPanelStyle = undefined;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    fetch("/print.json")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data) setPrintAnimation(data);
-      })
-      .catch(() => {});
+    const load = (path, setter) => {
+      fetch(path)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) setter(data);
+        })
+        .catch(() => {});
+    };
+    load("/print.json", setPrintAnimation);
+    load("/eco.json", setEcoAnimation);
+    load("/paint.json", setPaintAnimation);
+    load("/fantasy.json", setFantasyAnimation);
   }, []);
 
   const handleSplineLoad = () => {
@@ -349,15 +358,27 @@ export default function Hero({ onLoadComplete }: HeroProps) {
           {/* Tags */}
           <div className="hidden lg:flex gap-2 mt-10">
             <div className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors border ${isLight ? "bg-white/80 border-green-300/70 hover:border-green-500" : "bg-white/5 border-white/10 hover:bg-white/10"}`}>
-              <RiLeafFill className="text-green-400 text-xl" />
+              {ecoAnimation ? (
+                <Lottie animationData={ecoAnimation} loop className="h-6 w-6" />
+              ) : (
+                <RiLeafFill className="text-green-400 text-xl" />
+              )}
               <span className={`text-base ${isLight ? "text-slate-700" : "text-gray-300"}`}>Eco-Friendly</span>
             </div>
             <div className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors border ${isLight ? "bg-white/80 border-pink-300/70 hover:border-pink-500" : "bg-white/5 border-white/10 hover:bg-white/10"}`}>
-              <MdBrush className="text-pink-400 text-xl" />
+              {paintAnimation ? (
+                <Lottie animationData={paintAnimation} loop className="h-7 w-7" />
+              ) : (
+                <MdBrush className="text-pink-400 text-xl" />
+              )}
               <span className={`text-base ${isLight ? "text-slate-700" : "text-gray-300"}`}>Paint Ready</span>
             </div>
             <div className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors border ${isLight ? "bg-white/80 border-indigo-300/70 hover:border-indigo-500" : "bg-white/5 border-white/10 hover:bg-white/10"}`}>
-              <GiDragonHead className="text-indigo-400 text-xl" />
+              {fantasyAnimation ? (
+                <Lottie animationData={fantasyAnimation} loop className="h-7 w-7" />
+              ) : (
+                <GiDragonHead className="text-indigo-400 text-xl" />
+              )}
               <span className={`text-base ${isLight ? "text-slate-700" : "text-gray-300"}`}>Fantasy Figurines</span>
             </div>
           </div>

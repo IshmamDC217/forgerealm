@@ -31,8 +31,6 @@ const SignIn = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [status, setStatus] = useState<Status>({ type: 'idle' });
   const [loading, setLoading] = useState(false);
-  const [shouldRedirect, setShouldRedirect] = useState(false);
-
   const hasToken = useMemo(() => Boolean(loggedIn), [loggedIn]);
 
   const redirectToShop = () => {
@@ -43,21 +41,19 @@ const SignIn = () => {
   };
 
   useEffect(() => {
-    if (!shouldRedirect) return;
-    redirectToShop();
-  }, [shouldRedirect]);
-
-  useEffect(() => {
     const checkSession = async () => {
       try {
         const token = typeof window !== 'undefined' ? localStorage.getItem('forgerealm_admin_token') : null;
+        if (!token) {
+          setLoggedIn(false);
+          return;
+        }
         const res = await fetch(`${API_BASE}/api/auth/me`, {
           method: 'GET',
           credentials: 'include',
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+          headers: { Authorization: `Bearer ${token}` },
         });
         setLoggedIn(res.ok);
-        if (res.ok) redirectToShop();
       } catch {
         setLoggedIn(false);
       }
@@ -90,7 +86,7 @@ const SignIn = () => {
       }
       setLoggedIn(true);
       setStatus({ type: 'success', message: 'Signed in successfully' });
-      setShouldRedirect(true);
+      redirectToShop();
     } catch (err: any) {
       setLoggedIn(false);
       setStatus({ type: 'error', message: err.message || 'Login failed' });
