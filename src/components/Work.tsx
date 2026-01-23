@@ -3,6 +3,26 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiX } from "react-icons/fi";
 
+const useTheme = () => {
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+
+  useEffect(() => {
+    const getTheme = () =>
+      (typeof document !== "undefined" && (document.documentElement.getAttribute("data-theme") as "light" | "dark" | null)) ||
+      "dark";
+
+    setTheme(getTheme());
+
+    if (typeof MutationObserver !== "undefined") {
+      const observer = new MutationObserver(() => setTheme(getTheme()));
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+      return () => observer.disconnect();
+    }
+  }, []);
+
+  return theme;
+};
+
 type Product = {
   id: string;
   name: string;
@@ -16,15 +36,15 @@ type Product = {
 const products: Product[] = [
   {
     id: "aurora-lamp",
-    name: "Aurora Bloom Lamp",
+    name: "Aurora Bloom",
     description:
-      "A layered spiral lamp shade that glows warm and soft, printed in high-detail PLA for a clean, modern finish.",
+      "A gradient lamp shade with a soft spiral that diffuses light into a warm glow, bringing ambient color to desks and shelves.",
     shopDescription:
       "Aurora Bloom is a gradient lamp shade with a soft spiral that diffuses light into a warm glow. Printed in precision PLA with smooth layering, it brings ambient color to desks, shelves, and bedside tables.",
     detail:
-      "The spiral fins catch light in layers, creating a subtle gradient halo that feels calm and cozy in the evening.",
+      "The soft spiral diffuser creates beautiful ambient lighting effects, perfect for creating a cozy atmosphere in any space.",
     image: "/ablamp-nbg.webp",
-    background: "linear-gradient(140deg, #16213e 0%, #1b2f4a 45%, #2d4c73 100%)",
+    background: "linear-gradient(140deg, #1a1b2d 0%, #1d2038 10%, #1e2142 20%, #202545 30%, #23274a 40%, #252a4a 50%, #282d52 60%, #2d2f5a 70%, #36305f 80%, #3a2a5a 90%, #4a3a6a 100%)",
   },
   {
     id: "nebula-owl",
@@ -36,7 +56,7 @@ const products: Product[] = [
     detail:
       "The owl is a symbol woven through Leeds, appearing across the city and in the Leeds United crest, making this piece a small tribute to home.",
     image: "/owl-nbg.webp",
-    background: "linear-gradient(140deg, #3b1f2b 0%, #4a2a2a 50%, #6d3b3b 100%)",
+    background: "linear-gradient(140deg, #3b1f2b 0%, #3f2330 10%, #412532 20%, #442833 30%, #472b36 40%, #4a2a2a 50%, #532e2e 60%, #5a3232 70%, #653737 80%, #6d3b3b 90%, #7a4a4a 100%)",
   },
   {
     id: "forest-dragon",
@@ -48,7 +68,7 @@ const products: Product[] = [
     detail:
       "Layered scales and a balanced stance give it a lifelike posture, perfect for collectors who want a mythic centerpiece.",
     image: "/dragon-nbg.webp",
-    background: "linear-gradient(140deg, #0e2b1f 0%, #184234 50%, #1f5a44 100%)",
+    background: "linear-gradient(140deg, #0e2b1f 0%, #0f2d22 10%, #103024 20%, #113326 30%, #12352a 40%, #143a2a 50%, #163f2f 60%, #184234 70%, #1c5739 80%, #1f5a44 90%, #256a54 100%)",
   },
   {
     id: "dice-guardian",
@@ -60,11 +80,13 @@ const products: Product[] = [
     detail:
       "The open jaw holds a full set of dice while the PETG build keeps it tough enough for regular game nights.",
     image: "/dice-dragon-nbg.webp",
-    background: "linear-gradient(140deg, #1b1f3a 0%, #2a2f52 55%, #3b4a7a 100%)",
+    background: "linear-gradient(140deg, #1b1f3a 0%, #1c2245 10%, #1e2352 20%, #202552 30%, #222755 40%, #232752 50%, #262c58 60%, #2a2f52 70%, #2f355e 80%, #333a6a 90%, #3b4a7a 100%)",
   },
 ];
 
 export default function Work() {
+  const theme = useTheme();
+  const isLight = theme === "light";
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -292,15 +314,20 @@ export default function Work() {
   return (
     <section
       id="work"
-      className="work-force-white relative h-screen w-full overflow-hidden text-white"
+      className={`work-force-white relative h-screen w-full overflow-hidden ${isLight ? "text-slate-900" : "text-white"}`}
     >
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/10 via-emerald-400/10 to-indigo-500/10" />
+      <div className={`pointer-events-none absolute inset-0 -z-10 ${isLight ? "bg-gradient-to-br from-amber-50 via-orange-50/40 to-yellow-50/30" : "bg-gradient-to-r from-blue-500/10 via-emerald-400/10 to-indigo-500/10"}`} />
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8 lg:pt-12">
         <div className="max-w-2xl">
-          <h2 className="work-text-force mt-2 font-display text-3xl font-extrabold text-white sm:text-4xl">
-            Featured Prints
-          </h2>
-          <p className="work-text-force mt-2 text-sm text-slate-200/70">
+          <div className="relative">
+            <h2 className="work-text-force mt-2 font-display text-3xl font-extrabold sm:text-4xl text-white drop-shadow-[0_0_25px_rgba(255,255,255,0.8)] tracking-wide">
+              <span className="relative inline-block">
+                Featured Prints
+                <div className={`absolute -inset-1 blur-lg rounded-lg -z-10 ${isLight ? "bg-gradient-to-r from-amber-300/30 via-orange-200/30 to-yellow-300/30" : "bg-gradient-to-r from-blue-400/20 via-cyan-300/20 to-blue-400/20"} animate-pulse`} />
+              </span>
+            </h2>
+          </div>
+          <p className={`work-text-force mt-2 text-sm ${isLight ? "text-slate-700" : "text-slate-200/70"}`}>
             ForgeRealm · Curated print drops
           </p>
         </div>
@@ -345,10 +372,10 @@ export default function Work() {
               >
                 <span className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/30" aria-hidden />
                 <span className="absolute inset-0 opacity-0 transition duration-500 ease-out group-hover:opacity-100" aria-hidden />
-                <span className="work-text-force absolute right-6 top-10 text-6xl font-semibold text-white/20 sm:text-7xl">
+                <span className={`work-text-force absolute right-6 top-10 text-6xl font-semibold sm:text-7xl ${isLight ? "text-slate-900/20" : "text-white/20"}`}>
                   {(index + 1).toString().padStart(2, "0")}
                 </span>
-                <span className="work-text-force absolute left-6 top-8 rotate-180 text-[10px] uppercase tracking-[0.45em] text-white [writing-mode:vertical-rl] sm:text-xs z-10">
+                <span className={`work-text-force absolute left-6 top-8 rotate-180 text-[10px] uppercase tracking-[0.45em] [writing-mode:vertical-rl] sm:text-xs z-10 ${isLight ? "text-slate-900" : "text-white"}`}>
                   {product.name}
                 </span>
                 <motion.img
@@ -371,7 +398,7 @@ export default function Work() {
       </div>
 
       <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2">
-        <div className="rounded-lg bg-black/40 px-3 py-2 text-[10px] uppercase tracking-[0.35em] text-white/80">
+        <div className={`rounded-lg px-3 py-2 text-[10px] uppercase tracking-[0.35em] ${isLight ? "bg-white/70 text-slate-800 shadow-[0_4px_12px_rgba(0,0,0,0.15)]" : "bg-black/40 text-white/80"}`}>
           Swipe to explore
         </div>
       </div>
@@ -461,29 +488,29 @@ export default function Work() {
                           transition={{ duration: 3.5, ease: "easeInOut", repeat: Infinity }}
                         />
                       </div>
-                      <p className="work-text-force text-[10px] uppercase tracking-[0.35em] text-white/80">
+                      <p className={`work-text-force text-[10px] uppercase tracking-[0.35em] ${isLight ? "text-slate-700" : "text-white/80"}`}>
                         Featured print
                       </p>
-                      <h3 className="work-text-force text-3xl font-semibold text-white sm:text-4xl">
+                      <h3 className={`work-text-force text-3xl font-semibold sm:text-4xl ${isLight ? "text-slate-900" : "text-white"}`}>
                         {activeProduct.name}
                       </h3>
-                      <p className="work-text-force text-sm text-white/90 sm:text-base">
+                      <p className={`work-text-force text-sm sm:text-base ${isLight ? "text-slate-700" : "text-white/90"}`}>
                         {activeProduct.description}
                       </p>
-                      <p className="work-text-force text-sm text-white/80 sm:text-base">
+                      <p className={`work-text-force text-sm sm:text-base ${isLight ? "text-slate-600" : "text-white/80"}`}>
                         {activeProduct.shopDescription}
                       </p>
-                      <p className="work-text-force text-xs text-white/70 sm:text-sm">
+                      <p className={`work-text-force text-xs sm:text-sm ${isLight ? "text-slate-500" : "text-white/70"}`}>
                         {activeProduct.detail}
                       </p>
                       <div className="flex flex-wrap items-center gap-3">
-                        <button className="work-text-force inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:bg-white/10">
+                        <button className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}>
                           View in store
                         </button>
                         <button
                           type="button"
                           onClick={handleClose}
-                          className="work-text-force inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:bg-white/10"
+                          className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
                         >
                           Close
                         </button>
@@ -500,36 +527,36 @@ export default function Work() {
                       </div>
 
                       <div className="relative z-10 w-full max-w-md space-y-6 text-left lg:w-[45%] lg:ml-[6vw] lg:my-auto">
-                        <p className="work-text-force text-[10px] uppercase tracking-[0.35em] text-white/80">
+                        <p className={`work-text-force text-[10px] uppercase tracking-[0.35em] ${isLight ? "text-slate-700" : "text-white/80"}`}>
                           Featured print
                         </p>
-                        <h3 className="work-text-force text-3xl font-semibold text-white sm:text-4xl">
+                        <h3 className={`work-text-force text-3xl font-semibold sm:text-4xl ${isLight ? "text-slate-900" : "text-white"}`}>
                           {activeProduct.name}
                         </h3>
-                        <p className="work-text-force text-sm text-white/90 sm:text-base">
+                        <p className={`work-text-force text-sm sm:text-base ${isLight ? "text-slate-700" : "text-white/90"}`}>
                           {activeProduct.description}
                         </p>
-                        <p className="work-text-force text-sm text-white/80 sm:text-base">
+                        <p className={`work-text-force text-sm sm:text-base ${isLight ? "text-slate-600" : "text-white/80"}`}>
                           {activeProduct.shopDescription}
                         </p>
-                        <p className="work-text-force text-xs text-white/70 sm:text-sm">
+                        <p className={`work-text-force text-xs sm:text-sm ${isLight ? "text-slate-500" : "text-white/70"}`}>
                           {activeProduct.detail}
                         </p>
                         <div className="flex flex-wrap items-center gap-3">
-                          <button className="work-text-force inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:bg-white/10">
+                          <button className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}>
                             View in store
                           </button>
                           <button
                             type="button"
                             onClick={handleNext}
-                            className="work-text-force inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:bg-white/10"
+                            className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
                           >
                             Next
                           </button>
                           <button
                             type="button"
                             onClick={handleClose}
-                            className="work-text-force inline-flex items-center gap-2 rounded-full border border-white/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:bg-white/10"
+                            className={`work-text-force inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/40 text-white hover:bg-white/10"}`}
                           >
                             Close
                           </button>
@@ -578,7 +605,7 @@ export default function Work() {
             <button
               type="button"
               aria-label="Close"
-              className="absolute right-6 top-6 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/60 bg-white/10 text-white shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition hover:bg-white/20 pointer-events-auto"
+              className={`absolute right-6 top-6 z-20 flex h-11 w-11 items-center justify-center rounded-full border shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition pointer-events-auto ${isLight ? "border-slate-300 bg-white/80 text-slate-700 hover:bg-white" : "border-white/60 bg-white/10 text-white hover:bg-white/20"}`}
               onClick={(event) => {
                 event.stopPropagation();
                 handleClose();

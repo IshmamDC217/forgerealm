@@ -3,7 +3,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Subscribe | ForgeRealm" description="Subscribe to get notified about ForgeRealm booths, products, and offers.">
-  <section class="min-h-screen bg-slate-950 text-white px-5">
+  <section class="min-h-screen bg-slate-950 text-white px-5 relative overflow-hidden">
+    {/* Enhanced ambient lighting for subscribe page */}
+    <div class="pointer-events-none absolute inset-0 -z-10">
+      <div class="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-blue-500/30 to-cyan-400/20 blur-[160px] animate-pulse" />
+      <div class="absolute bottom-1/4 right-1/4 h-80 w-80 rounded-full bg-gradient-to-r from-fuchsia-500/25 to-purple-400/20 blur-[140px] animate-pulse" style={{ animationDelay: '1s' }} />
+      <div class="absolute top-1/2 right-1/3 h-64 w-64 rounded-full bg-gradient-to-r from-indigo-500/20 to-blue-400/15 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+
+      {/* Floating particles */}
+      <div class="absolute inset-0 overflow-hidden">
+        {Array.from({ length: 15 }, (_, i) => (
+          <div
+            key={i}
+            class="absolute w-1 h-1 bg-blue-400/40 rounded-full animate-bounce"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${2 + Math.random() * 2}s`
+            }}
+          />
+        ))}
+      </div>
+    </div>
     <div class="h-24 md:h-28" />
     <div class="mx-auto flex w-full max-w-6xl flex-wrap overflow-hidden rounded-3xl border border-white/10 bg-slate-900/60 shadow-2xl shadow-blue-500/10">
       {/* Left panel */}
@@ -14,7 +36,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </a>
         </div>
         <div class="my-auto flex flex-col justify-center px-6 pt-8 sm:px-14 md:justify-start md:px-8 md:pt-4 lg:px-10">
-          <p class="text-center text-3xl font-bold">Stay in the Realm</p>
+          <p class="text-center text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-cyan-200 drop-shadow-lg">Stay in the Realm</p>
           <p class="mt-2 text-center text-slate-300">Get early drops, booth intel, and special offers.</p>
           <div class="pt-6 md:pt-10">
             <form
@@ -22,7 +44,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               method="post"
               target="_blank"
               noValidate
-              class="flex flex-col gap-5 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-blue-500/10 backdrop-blur"
+              class="flex flex-col gap-5 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-blue-500/10 backdrop-blur hover:bg-white/10 hover:border-blue-400/30 transition-all duration-300"
             >
               <label class="block text-sm text-white/80 font-semibold" for="mce-FNAME">
                 First Name
@@ -59,9 +81,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
               <button
                 type="submit"
-                class="mt-2 w-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-3 font-semibold uppercase tracking-wider text-white shadow-md transition hover:from-blue-400 hover:to-indigo-500 hover:shadow-[0_0_20px_rgba(96,165,250,0.5)]"
+                class="relative mt-2 w-full overflow-hidden rounded-2xl p-[2px] focus:outline-none group"
               >
-                Subscribe
+                {/* Multi-layered animated border */}
+                <span class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#ffffff_0%,#3b82f6_20%,#06b6d4_40%,#3b82f6_60%,#ffffff_80%,#3b82f6_100%)]" />
+                <span class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite_reverse] bg-[conic-gradient(from_90deg_at_50%_50%,#ffffff_0%,#06b6d4_25%,#3b82f6_50%,#06b6d4_75%,#ffffff_100%)] opacity-60" />
+
+                {/* Inner glow */}
+                <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-cyan-400/20 to-blue-500/20 blur-sm group-hover:blur-md transition-all duration-300" />
+
+                {/* Inner button */}
+                <span class="relative inline-flex h-full w-full items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 px-6 py-3 font-bold text-white backdrop-blur-3xl transition-all duration-300 group-hover:bg-gradient-to-br group-hover:from-blue-400 group-hover:to-indigo-500 gap-2 border border-white/20 group-hover:border-blue-400/50 group-hover:shadow-[0_0_40px_rgba(59,130,246,0.4)]">
+                  Subscribe
+                </span>
               </button>
             </form>
           </div>

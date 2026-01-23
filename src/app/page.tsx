@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Slider from "@/components/Slider";
 import Services from "@/components/Services";
-import Materials from "@/components/Materials";
+// import Materials from "@/components/Materials";
 import Work from "@/components/Work";
 // import Process from "@/components/Process";
 // import Pricing from "@/components/Pricing";
@@ -24,7 +24,7 @@ export default function Home() {
       <div id="theme-scope">
         <Slider />
         <Services />
-        <Materials />
+        {/* <Materials /> */}
         <Work />
         {/* <Process />
         <Pricing /> */}

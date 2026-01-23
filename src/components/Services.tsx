@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   FaShoppingCart,
   FaStore,
@@ -14,15 +14,57 @@ import { TbLeaf } from "react-icons/tb";
 export default function Services() {
   const ref = useRef(null);
   const materialsRef = useRef(null);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const isLight = theme === "light";
+
+  useEffect(() => {
+    const getTheme = () => {
+      const attr =
+        typeof document !== "undefined"
+          ? (document.documentElement.getAttribute("data-theme") as "light" | "dark" | null)
+          : null;
+      if (attr) return attr;
+      try {
+        return (localStorage.getItem("fr-theme") as "light" | "dark" | null) || "dark";
+      } catch {
+        return "dark";
+      }
+    };
+
+    setTheme(getTheme());
+
+    if (typeof MutationObserver !== "undefined") {
+      const observer = new MutationObserver(() => setTheme(getTheme()));
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+      return () => observer.disconnect();
+    }
+  }, []);
 
   return (
     <>
       <div className="theme-surface relative overflow-hidden border-b border-white/10">
         {/* Shared background accent lights */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute left-1/5 top-1/3 h-64 w-64 rounded-full bg-blue-500/20 blur-[140px]" />
-          <div className="absolute right-1/6 bottom-1/4 h-72 w-72 rounded-full bg-emerald-500/15 blur-[150px]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(59,130,246,0.08),transparent_36%),radial-gradient(circle_at_78%_18%,rgba(94,234,212,0.07),transparent_28%),radial-gradient(circle_at_55%_80%,rgba(129,140,248,0.06),transparent_30%)]" />
+          <div className={`absolute left-1/5 top-1/3 h-80 w-80 rounded-full blur-[160px] animate-pulse ${isLight ? "bg-gradient-to-r from-blue-200/60 to-cyan-100/50" : "bg-blue-500/20 blur-[140px]"}`} />
+          <div className={`absolute right-1/6 bottom-1/4 h-96 w-96 rounded-full blur-[170px] animate-pulse ${isLight ? "bg-gradient-to-r from-emerald-200/55 to-teal-100/45" : "bg-emerald-500/15 blur-[150px]"}`} style={{ animationDelay: '1s' }} />
+          <div className={`absolute top-1/2 left-1/2 h-64 w-64 rounded-full blur-[130px] animate-pulse ${isLight ? "bg-gradient-to-r from-indigo-200/50 to-purple-100/40" : "bg-gradient-to-r from-indigo-300/30 to-purple-200/20"}`} style={{ animationDelay: '2s' }} />
+          <div className={`absolute inset-0 ${isLight ? "bg-[radial-gradient(circle_at_18%_12%,rgba(59,130,246,0.12),transparent_40%),radial-gradient(circle_at_78%_18%,rgba(16,185,129,0.08),transparent_32%),radial-gradient(circle_at_55%_80%,rgba(139,92,246,0.06),transparent_35%),radial-gradient(circle_at_30%_60%,rgba(245,158,11,0.04),transparent_30%)]" : "bg-[radial-gradient(circle_at_18%_12%,rgba(59,130,246,0.08),transparent_36%),radial-gradient(circle_at_78%_18%,rgba(94,234,212,0.07),transparent_28%),radial-gradient(circle_at_55%_80%,rgba(129,140,248,0.06),transparent_30%)]"}`} />
+
+          {/* Floating particles */}
+          <div className="absolute inset-0 overflow-hidden">
+            {Array.from({ length: 18 }, (_, i) => (
+              <div
+                key={i}
+                className={`absolute w-1 h-1 rounded-full animate-bounce ${isLight ? "bg-blue-300/70 shadow-[0_0_8px_rgba(59,130,246,0.6)]" : "bg-blue-400/40"}`}
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 4}s`,
+                  animationDuration: `${3 + Math.random() * 3}s`
+                }}
+              />
+            ))}
+          </div>
         </div>
 
         <section
@@ -34,15 +76,18 @@ export default function Services() {
         <div ref={ref} className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           {/* Header with icon */}
           <div className="max-w-2xl flex items-center gap-4">
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white flex items-center">
-              Our Services
-            </h2>
-            <div className="text-indigo-200 drop-shadow-[0_0_16px_rgba(129,140,248,0.6)]">
+            <div className="relative">
+              <h2 className={`font-display text-3xl sm:text-4xl font-extrabold ${isLight ? "text-slate-900" : "text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-cyan-200 drop-shadow-[0_0_20px_rgba(125,200,255,0.5)]"} flex items-center`}>
+                Our Services
+              </h2>
+              <div className={`absolute -inset-2 blur-xl rounded-lg -z-10 ${isLight ? "bg-gradient-to-r from-blue-200/40 to-cyan-100/30" : "bg-gradient-to-r from-blue-500/20 to-cyan-400/20"}`} />
+            </div>
+            <div className={`drop-shadow-[0_0_24px_rgba(129,140,248,0.8)] animate-pulse ${isLight ? "text-blue-500" : "text-indigo-200"}`}>
               <FiLayers className="w-8 h-8 sm:w-10 sm:h-10" aria-hidden />
             </div>
           </div>
 
-          <p className="mt-3 text-slate-200/80 max-w-2xl">
+          <p className={`mt-3 max-w-2xl ${isLight ? "text-slate-700" : "text-slate-200/80"}`}>
             ForgeRealm is a UK-based business offering unique, customisable
             3D-printed products. You can order online, contact us for bespoke
             prints, or visit us at our pop-up stalls and booths around Leeds.
@@ -134,9 +179,12 @@ export default function Services() {
             className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative"
           >
             <div className="max-w-2xl flex items-center gap-3">
-              <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white whitespace-nowrap">
-                Materials
-              </h2>
+              <div className="relative">
+                <h2 className={`font-display text-3xl sm:text-4xl font-extrabold whitespace-nowrap ${isLight ? "text-emerald-700" : "text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-green-300 to-lime-200 drop-shadow-[0_0_20px_rgba(110,231,183,0.55)]"}`}>
+                  Materials
+                </h2>
+                <div className={`absolute -inset-2 blur-xl rounded-lg -z-10 ${isLight ? "bg-gradient-to-r from-emerald-200/45 to-lime-100/35" : "bg-gradient-to-r from-emerald-400/25 to-green-300/20"}`} />
+              </div>
               <div className="relative flex-shrink-0 flex items-center text-emerald-200 drop-shadow-[0_0_16px_rgba(110,231,183,0.55)]">
                 <TbLeaf className="w-8 h-8 sm:w-10 sm:h-10" aria-hidden />
               </div>

@@ -12,11 +12,34 @@ import Footer from '../components/Footer';
 
 <BaseLayout>
   <div class="relative isolate bg-slate-950 text-white overflow-x-clip">
-    <div class="pointer-events-none absolute inset-0">
-      <div class="absolute -left-24 -top-24 h-[380px] w-[380px] rounded-full bg-blue-600/25 blur-[140px]" />
-      <div class="absolute right-[-120px] top-16 h-[320px] w-[320px] rounded-full bg-emerald-500/15 blur-[160px]" />
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(59,130,246,0.08),transparent_32%),radial-gradient(circle_at_88%_8%,rgba(167,139,250,0.07),transparent_30%),radial-gradient(circle_at_50%_78%,rgba(16,185,129,0.08),transparent_35%)]" />
-      <div class="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-transparent" />
+    <div class="pointer-events-none absolute inset-0 -z-10">
+      {/* Enhanced ambient lighting with mobile optimization */}
+      <div className="absolute -left-24 -top-24 h-[380px] w-[380px] rounded-full bg-gradient-to-r from-blue-500/30 to-cyan-400/20 blur-[140px] animate-pulse md:h-[380px] md:w-[380px] sm:h-[280px] sm:w-[280px]" />
+      <div className="absolute right-[-120px] top-16 h-[320px] w-[320px] rounded-full bg-gradient-to-r from-fuchsia-500/25 to-purple-400/20 blur-[160px] animate-pulse md:h-[320px] md:w-[320px] sm:h-[240px] sm:w-[240px]" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-gradient-to-r from-indigo-500/20 to-blue-400/15 blur-[120px] animate-pulse md:h-64 md:w-64 sm:h-48 sm:w-48" style={{ animationDelay: '2s' }} />
+      <div className="absolute bottom-1/4 left-1/4 h-48 w-48 rounded-full bg-gradient-to-r from-emerald-500/15 to-teal-400/10 blur-[100px] animate-pulse md:h-48 md:w-48 sm:h-36 sm:w-36" style={{ animationDelay: '0.5s' }} />
+
+      {/* Enhanced radial gradients */}
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(59,130,246,0.12),transparent_40%),radial-gradient(circle_at_88%_8%,rgba(167,139,250,0.10),transparent_35%),radial-gradient(circle_at_50%_78%,rgba(16,185,129,0.12),transparent_45%),radial-gradient(circle_at_25%_60%,rgba(6,182,212,0.08),transparent_35%)]" />
+
+      {/* Mobile-optimized floating particles */}
+      <div className="absolute inset-0 overflow-hidden">
+        {Array.from({ length: 15 }, (_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-blue-400/60 rounded-full animate-bounce md:w-1 md:h-1 sm:w-0.5 sm:h-0.5"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 4}s`,
+              animationDuration: `${3 + Math.random() * 3}s`
+            }}
+          />
+        ))}
+      </div>
+
+      <div class="absolute inset-0 bg-gradient-to-b from-white/8 via-transparent to-transparent" />
+      <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white/5 to-transparent" />
     </div>
 
     <Navbar client:load />
